@@ -162,7 +162,7 @@ public class Demo {
         .staleIfError(Duration.ofSeconds(60)).build();
     MutableRequest request1 = MutableRequest.GET("/api/data").cacheControl(cacheControl);
 
-    MutableRequest request2 = MutableRequest.GET("...").header("Cache-Control",
+    MutableRequest request2 = MutableRequest.GET("/api/data").header("Cache-Control",
         "max-age=1800, stale-if-error=60");
   }
 }
