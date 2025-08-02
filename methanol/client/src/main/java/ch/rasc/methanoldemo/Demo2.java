@@ -22,7 +22,7 @@ public class Demo2 {
 
     Methanol client = builder.build();
   }
-  
+
   public static void disableDecompression() {
     Methanol client = Methanol.newBuilder().autoAcceptEncoding(false).build();
   }
@@ -32,13 +32,13 @@ public class Demo2 {
         .cacheOnDisk(Path.of(".cache"), (long) (100 * 1024 * 1024)).build();
     Methanol client = Methanol.newBuilder().cache(cache).build();
   }
-  
+
   public static void memoryCache() {
     HttpCache cache = HttpCache.newBuilder().cacheOnMemory((long) (100 * 1024 * 1024))
         .build();
     Methanol client = Methanol.newBuilder().cache(cache).build();
   }
-  
+
   public static void redisCache() {
     RedisURI redisUri = RedisURI.create("redis://localhost:6379");
     HttpCache cache = HttpCache.newBuilder()
