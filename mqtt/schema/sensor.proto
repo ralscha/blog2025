@@ -1,0 +1,8 @@
+syntax = "proto3";
+package ch.rasc.mqttdemo;
+
+option go_package = "./mqttdemo";
+
+message SensorReading {
+    float value = 1;    
+}
