@@ -1,0 +1,125 @@
+<div class="lang-switch" role="group" aria-label="Language switch">
+  <button
+    type="button"
+    (click)="setLang('en')"
+    [disabled]="activeLang === 'en'">
+    EN
+  </button>
+  <button
+    type="button"
+    (click)="setLang('de')"
+    [disabled]="activeLang === 'de'">
+    DE
+  </button>
+  <span class="sr-only">Current: {{ activeLang | uppercase }}</span>
+</div>
+
+<section class="demo-controls" aria-labelledby="demo-controls-title">
+  <h2 id="demo-controls-title" class="sr-only">Demo controls</h2>
+  <div class="controls-grid">
+    <label>
+      <span>Name</span>
+      <input
+        type="text"
+        [value]="name"
+        (input)="name = $any($event.target).value"
+        autocomplete="off" />
+    </label>
+
+    <label>
+      <span>Gender</span>
+      <select [value]="gender" (change)="gender = $any($event.target).value">
+        <option value="male">male</option>
+        <option value="female">female</option>
+        <option value="other">other</option>
+      </select>
+    </label>
+
+    <label>
+      <span>Unread count</span>
+      <input
+        type="number"
+        min="0"
+        [value]="unreadCount"
+        (input)="
+          unreadCount =
+            $any($event.target).valueAsNumber || +$any($event.target).value || 0
+        " />
+    </label>
+
+    <label>
+      <span>Item count</span>
+      <input
+        type="number"
+        min="0"
+        [value]="itemCount"
+        (input)="
+          itemCount =
+            $any($event.target).valueAsNumber || +$any($event.target).value || 0
+        " />
+    </label>
+  </div>
+</section>
+
+<ng-container *transloco="let t">
+  <h1>{{ t('homeTitle') }}</h1>
+</ng-container>
+
+<p *transloco="let t">
+  {{ t('introText') }}
+</p>
+
+<p transloco="introText"></p>
+
+<button [title]="'detailsButtonTitle' | transloco">
+  {{ 'detailsButton' | transloco }}
+</button>
+
+<p *transloco="let t">
+  {{ t('greeting', { name }) }}
+</p>
+
+<p>
+  {{ 'greeting' | transloco: { name } }}
+</p>
+
+<p transloco="greeting" [translocoParams]="{ name }"></p>
+
+<p transloco="itemsInfoRule" [translocoParams]="{ itemCount }"></p>
+
+<p transloco="genderSelectRule" [translocoParams]="{ gender }"></p>
+
+<p transloco="nestedIcu" [translocoParams]="{ unreadCount, gender }"></p>
+
+<p><transloco key="instructions" /></p>
+
+<p *transloco="let t" [innerHtml]="t('learn', { name })"></p>
+
+<input
+  *transloco="let t"
+  [placeholder]="t('searchPlaceholder')"
+  [attr.aria-label]="t('searchAriaLabel')" />
+
+<ul *transloco="let t">
+  <li>
+    {{ t('todayInfo') }}
+    {{ today | translocoDate: { dateStyle: 'full' } }}
+  </li>
+  <li>
+    {{ t('currentTimeInfo') }}
+    {{ today | translocoDate: { timeStyle: 'medium' } }}
+  </li>
+  <li>{{ t('priceInfo') }} {{ price | translocoCurrency }}</li>
+  <li>{{ t('completionInfo') }} {{ percent | translocoDecimal }}</li>
+</ul>
+
+<p transloco="listIntro"></p>
+<ul>
+  @for (item of items; track item) {
+    <li>{{ $index + 1 }} — {{ item }}</li>
+  }
+</ul>
+
+<p transloco="downloadAction"></p>
+<p transloco="downloadCountNoun"></p>
+<div transloco="changeLanguageHint"></div>

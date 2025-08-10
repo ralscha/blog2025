@@ -1,0 +1,123 @@
+<h1 i18n="Title|Title on the home page">Welcome to the i18n Showcase</h1>
+
+<p i18n>
+  This page demonstrates the built-in internationalization features of Angular.
+  Explore text, attributes, ICUs (plural/select), and date/number formatting.
+</p>
+
+<section class="demo-controls" aria-labelledby="demo-controls-title">
+  <h2 id="demo-controls-title" class="sr-only">Demo controls</h2>
+  <div class="controls-grid">
+    <label>
+      <span>Name</span>
+      <input
+        type="text"
+        [value]="name"
+        (input)="name = $any($event.target).value"
+        autocomplete="off" />
+    </label>
+
+    <label>
+      <span>Gender</span>
+      <select [value]="gender" (change)="gender = $any($event.target).value">
+        <option value="male">male</option>
+        <option value="female">female</option>
+        <option value="other">other</option>
+      </select>
+    </label>
+
+    <label>
+      <span>Unread count</span>
+      <input
+        type="number"
+        min="0"
+        [value]="unreadCount"
+        (input)="
+          unreadCount =
+            $any($event.target).valueAsNumber || +$any($event.target).value || 0
+        " />
+    </label>
+
+    <label>
+      <span>Item count</span>
+      <input
+        type="number"
+        min="0"
+        [value]="itemCount"
+        (input)="
+          itemCount =
+            $any($event.target).valueAsNumber || +$any($event.target).value || 0
+        " />
+    </label>
+  </div>
+</section>
+
+<button i18n i18n-title title="Show more details">Details</button>
+
+<p i18n="greeting|Greeting users with their name">Hello, {{ name }}!</p>
+
+<p i18n>
+  You have
+  {itemCount, plural, =0 {no items} =1 {one item} other {more than one item}} in
+  your cart.
+</p>
+
+<p i18n>
+  {gender, select, male {He} female {She} other {They}} added a new comment.
+</p>
+
+<p i18n>
+  {unreadCount, plural,
+    =0 {
+      {gender, select, male {He has} female {She has} other {They have}}
+      no unread messages
+    }
+    =1 {
+      {gender, select, male {He has} female {She has} other {They have}}
+      one unread message
+    }
+    other {
+      {gender, select, male {He has} female {She has} other {They have}}
+      multiple unread messages
+    }
+  }
+</p>
+
+<p i18n>
+  Learn more in the
+  <a href="https://angular.dev/guide/i18n" target="_blank" rel="noopener"
+    >Angular i18n guide</a
+  >.
+</p>
+
+<input
+  placeholder="Search"
+  i18n-placeholder
+  aria-label="Search"
+  i18n-aria-label />
+
+<ul>
+  <li i18n>Today is: {{ today | date: 'fullDate' }}</li>
+  <li i18n>Current time: {{ today | date: 'mediumTime' }}</li>
+  <li i18n>Price: {{ price | currency }}</li>
+  <li i18n>Completion: {{ percent | percent }}</li>
+</ul>
+
+<p i18n>Your favorite fruits:</p>
+<ul>
+  @for (item of items; track item) {
+    <li>{{ $index + 1 }} — {{ item }}</li>
+  }
+</ul>
+
+<p i18n="downloadAction|Button label to start a download@@downloadLabel">
+  Download
+</p>
+
+<div i18n>
+  Change language via build-time configuration and runtime locale providers.
+</div>
+
+<div>
+  {{ greeting }}
+</div>

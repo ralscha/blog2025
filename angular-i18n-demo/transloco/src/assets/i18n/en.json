@@ -1,0 +1,29 @@
+{
+  "homeTitle": "Welcome to the i18n Showcase",
+  "introText": "This page demonstrates the built-in internationalization features of Angular. Explore text, attributes, ICUs (plural/select), and date/number formatting.",
+  "detailsButton": "Details",
+  "detailsButtonTitle": "Show more details",
+  "greeting": "Hello, {{name}}",
+  "greetingWithTime": "{{greeting}}. The current time is {{time}}.",
+  "searchPlaceholder": "Search",
+  "searchAriaLabel": "Search",
+  "listIntro": "Your favorite fruits:",
+  "downloadAction": "Download",
+  "downloadCountNoun": "Download",
+  "changeLanguageHint": "Change language via build-time configuration and runtime locale providers.",
+  "itemsInfoRule": "You have {itemCount, plural, =0 {no items} =1 {one item} other {more than one item}} in your cart.",
+  "genderSelectRule": "{gender, select, male {He} female {She} other {They}} added a new comment.",
+  "nestedIcu": "{unreadCount, plural, =0 { {{genderMessageRule}} no unread messages} =1 { {{genderMessageRule}} one unread message} other { {{genderMessageRule}} {unreadCount} unread messages}}",
+  "genderMessageRule": "{gender, select, male {He has} female {She has} other {They have}}",
+  "todayInfo": "Today is:",
+  "currentTimeInfo": "Current time:",
+  "priceInfo": "Price:",
+  "completionInfo": "Completion:",
+  "fruits": {
+    "apples": "Apples",
+    "bananas": "Bananas",
+    "cherries": "Cherries"
+  },
+  "instructions": "Please [b]read[/b] the [i]instructions[/i] carefully before proceeding.",
+  "learn": "Hi {name}. Learn more in the <a href=\"https://jsverse.gitbook.io/transloco\" target=\"_blank\" rel=\"noopener\">Transloco documentation</a>."
+}

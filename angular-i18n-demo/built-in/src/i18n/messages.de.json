@@ -1,0 +1,30 @@
+{
+  "locale": "de",
+  "translations": {
+    "430515320420964950": "Willkommen zur Internationalisierungs-Demonstration",
+    "7146059055142997455": " Diese Seite demonstriert die integrierten Internationalisierungsfunktionen von Angular. Erkunden Sie Text, Attribute, ICU-Ausdrücke (Plural/Select) sowie Datums- und Zahlenformatierung.\n",
+    "3787242567942549425": "Weitere Details anzeigen",
+    "5028777105388019087": "Details",
+    "4589483107756362260": " Hallo, {$INTERPOLATION}!\n",
+    "1858675089616134684": " Ihr Warenkorb enthält {$ICU}. ",
+    "3552487333780779696": "{VAR_PLURAL, plural, =0 {keine Artikel} =1 {einen Artikel} other {mehr als ein Artikel}}",
+    "8358857773822060171": " {$ICU} hat einen neuen Kommentar hinzugefügt. ",
+    "7002372227396569199": "{VAR_SELECT, select, male {Er} female {Sie} other {Diese Person}}",
+    "2380939390102386148": " {$ICU}\n",
+    "8669727839388115370": "{VAR_PLURAL, plural, =0 {{VAR_SELECT, select, male {Er hat} female {Sie hat} other {Diese Person hat}}\n      keine ungelesenen Nachrichten\n    } =1 {{VAR_SELECT_1, select, male {Er hat} female {Sie hat} other {Diese Person hat}}\n      eine ungelesene Nachricht\n    } other {{VAR_SELECT_2, select, male {Er hat} female {Sie hat} other {Diese Person hat}} mehrere ungelesene Nachrichten\n    }}",
+    "70427434874075415": " Bitte {$START_TAG_STRONG}lesen Sie{$CLOSE_TAG_STRONG} die {$START_EMPHASISED_TEXT}Anweisungen{$CLOSE_EMPHASISED_TEXT} sorgfältig, bevor Sie fortfahren.\n",
+    "3817731957081890177": " Weitere Informationen finden Sie im {$START_LINK}Angular i18n-Leitfaden{$CLOSE_LINK}.\n",
+    "4580988005648117665": "Suchen",
+    "838435101657310914": "Heute ist: {$INTERPOLATION}",
+    "7696227552569460732": "Aktuelle Uhrzeit: {$INTERPOLATION}",
+    "5696244706071223399": "Preis: {$INTERPOLATION}",
+    "403764240757325387": "Fertigstellung: {$INTERPOLATION}",
+    "9112267420530914102": "Ihre Lieblingsfrüchte:",
+    "downloadLabel": " Herunterladen\n",
+    "4709143945354106670": " Ändern Sie die Sprache über Build-Zeit-Konfiguration und Locale-Provider zur Laufzeit.\n",
+    "2906771170664311663": "Äpfel",
+    "3056695266440474707": "Bananen",
+    "316767256995770974": "Kirschen",
+    "4919866309608356425": "Hallo {$PH}, du hast {$PH_1} Artikel in deinem Warenkorb."
+  }
+}
