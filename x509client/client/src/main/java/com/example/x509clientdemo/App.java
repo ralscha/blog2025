@@ -99,7 +99,7 @@ public class App {
         .getInstance(KeyManagerFactory.getDefaultAlgorithm());
     kmf.init(clientKeyStore, this.clientKeystorePassword.toCharArray());
 
-    // Trust store with CA certificates
+    // Trust store with CA certificate
     KeyStore trustStore = KeyStore.getInstance("PKCS12");
     try (FileInputStream fis = new FileInputStream(this.truststorePath)) {
       trustStore.load(fis, this.truststorePassword.toCharArray());
