@@ -1,0 +1,122 @@
+version: '3'
+silent: true
+
+vars:
+  SERVER_ALIAS: server
+  CLIENT_ALIAS: client
+  CA_ALIAS: ca
+  KEYSTORE_PASSWORD: changeit
+  VALIDITY_DAYS: 365
+  SERVER_PORT: 8443
+  CRYPTO_ALGORITHM: Ed448  # Options: Ed448, Ed25519, RSA
+
+tasks:
+  default:
+    cmds:
+      - task --list
+
+  clean:
+    desc: Clean up all generated certificates and temporary files
+    cmds:
+      - rm -f *.p12 *.crt *.csr *.key *.pem *.srl ./server/src/main/resources/*.p12 ./client/*.p12
+      - echo "Cleaned up certificate files"
+
+  generate-ca:
+    cmds:
+      - echo "Creating Certificate Authority (CA) with {{.CRYPTO_ALGORITHM}}..."
+      - openssl genpkey -algorithm {{.CRYPTO_ALGORITHM}} -out ca-key.pem
+      - cmd: openssl req -new -x509 -key ca-key.pem -out ca-cert.pem -days {{.VALIDITY_DAYS}} -subj "/C=CH/ST=BE/L=Bern/O=Demo AG/OU=IT Department/CN=Demo CA"
+        platforms: [windows]
+      - cmd: openssl req -new -x509 -key ca-key.pem -out ca-cert.pem -days {{.VALIDITY_DAYS}} -subj '/C=CH/ST=BE/L=Bern/O=Demo AG/OU=IT Department/CN=Demo CA'
+        platforms: [linux, darwin]
+
+  generate-server-cert:
+    cmds:
+      - echo "Creating server certificate with {{.CRYPTO_ALGORITHM}}..."
+      - openssl genpkey -algorithm {{.CRYPTO_ALGORITHM}} -out server-key.pem
+      - cmd: openssl req -new -key server-key.pem -out server.csr -subj "/C=CH/ST=BE/L=Bern/O=Demo AG/OU=Server/CN=localhost"
+        platforms: [windows]
+      - cmd: openssl req -new -key server-key.pem -out server.csr -subj '/C=CH/ST=BE/L=Bern/O=Demo AG/OU=Server/CN=localhost'
+        platforms: [linux, darwin]
+      - openssl x509 -req -in server.csr -CA ca-cert.pem -CAkey ca-key.pem -CAcreateserial -out server-cert.pem -days {{.VALIDITY_DAYS}}
+
+  generate-client-cert:
+    cmds:
+      - echo "Creating client certificate with {{.CRYPTO_ALGORITHM}}..."
+      - openssl genpkey -algorithm {{.CRYPTO_ALGORITHM}} -out client-key.pem
+      - cmd: openssl req -new -key client-key.pem -out client.csr -subj "/C=CH/ST=BE/L=Bern/O=Demo AG/OU=Client/CN=demo-client"
+        platforms: [windows]
+      - cmd: openssl req -new -key client-key.pem -out client.csr -subj '/C=CH/ST=BE/L=Bern/O=Demo AG/OU=Client/CN=demo-client'
+        platforms: [linux, darwin]
+      - openssl x509 -req -in client.csr -CA ca-cert.pem -CAkey ca-key.pem -CAcreateserial -out client-cert.pem -days {{.VALIDITY_DAYS}}
+
+  create-keystores:
+    cmds:
+      - echo "Creating keystores..."
+      - openssl pkcs12 -export -in server-cert.pem -inkey server-key.pem -out keystore.p12 -name {{.SERVER_ALIAS}} -CAfile ca-cert.pem -caname root -passout pass:{{.KEYSTORE_PASSWORD}}
+      - openssl pkcs12 -export -in client-cert.pem -inkey client-key.pem -out client-keystore.p12 -name {{.CLIENT_ALIAS}} -CAfile ca-cert.pem -caname root -passout pass:{{.KEYSTORE_PASSWORD}}
+      - echo "Creating server truststore (contains CA and client certificates)..."
+      - keytool -import -file ca-cert.pem -alias {{.CA_ALIAS}} -keystore server-truststore.p12 -storetype PKCS12 -storepass {{.KEYSTORE_PASSWORD}} -noprompt
+      - keytool -import -file client-cert.pem -alias {{.CLIENT_ALIAS}} -keystore server-truststore.p12 -storetype PKCS12 -storepass {{.KEYSTORE_PASSWORD}} -noprompt
+      - echo "Creating client truststore (contains only CA certificate)..."
+      - keytool -import -file ca-cert.pem -alias {{.CA_ALIAS}} -keystore client-truststore.p12 -storetype PKCS12 -storepass {{.KEYSTORE_PASSWORD}} -noprompt
+
+  copy-certificates:
+    cmds:
+      - echo "Copying certificates to appropriate locations..."
+      - cp keystore.p12 server/src/main/resources/
+      - cp server-truststore.p12 server/src/main/resources/truststore.p12
+      - cp client-keystore.p12 client/
+      - cp client-truststore.p12 client/truststore.p12
+
+  cleanup-temp-files:
+    cmds:
+      - rm -f *.csr *.pem *.srl
+
+  generate-certs:
+    desc: Generate all certificates and keystores
+    cmds:
+      - task: clean
+      - task: generate-ca
+      - task: generate-server-cert
+      - task: generate-client-cert
+      - task: create-keystores
+      - task: copy-certificates
+      - task: cleanup-temp-files
+      - echo "Server keystore -> keystore.p12 (password {{.KEYSTORE_PASSWORD}})"
+      - echo "Client keystore -> client-keystore.p12 (password {{.KEYSTORE_PASSWORD}})"
+      - echo "Server truststore -> server/src/main/resources/truststore.p12 (contains CA + client certs)"
+      - echo "Client truststore -> client/truststore.p12 (contains only CA cert)"
+      - echo ""
+      - echo "Server certificate subject -> CN=localhost"
+      - echo "Client certificate subject -> CN=demo-client"
+      - echo "CA certificate subject -> CN=Demo CA"
+      - echo ""
+      - echo "All certificates use {{.CRYPTO_ALGORITHM}} algorithm"
+      - echo "All certificates are valid for {{.VALIDITY_DAYS}} days"
+      - echo ""
+      - echo "Certificate generation completed successfully!"
+
+  start-server:
+    desc: Start the Spring Boot server
+    dir: server
+    cmds:
+      - echo "Starting X.509 Demo Server..."
+      - echo "Server will be available at -> https://localhost:{{.SERVER_PORT}}"
+      - echo "Press Ctrl+C to stop"
+      - echo ""
+      - cmd: cmd /c "mvnw.cmd spring-boot:run"
+        platforms: [windows]
+      - cmd: ./mvnw spring-boot:run
+        platforms: [linux, darwin]
+
+  start-client:
+    desc: Start the Java HTTP client
+    dir: client
+    cmds:
+      - cmd: cmd /c "mvnw.cmd compile exec:java -Dexec.mainClass=com.example.x509clientdemo.App"
+        platforms: [windows]
+      - cmd: ./mvnw compile exec:java -Dexec.mainClass="com.example.x509clientdemo.App"
+        platforms: [linux, darwin]
+
+
