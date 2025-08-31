@@ -5,3 +5,6 @@ check-dep:
 	cd ./mqtt/subscriber && ./mvnw.cmd versions:display-dependency-updates && ./mvnw.cmd versions:display-plugin-updates
 	cd ./angular-i18n-demo/built-in && ncu
 	cd ./angular-i18n-demo/transloco && ncu
+	cd ./x509client/client && ./mvnw.cmd versions:display-dependency-updates && ./mvnw.cmd versions:display-plugin-updates
+	cd ./x509client/server && ./mvnw.cmd versions:display-dependency-updates && ./mvnw.cmd versions:display-plugin-updates
+	
