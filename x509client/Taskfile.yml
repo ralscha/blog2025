@@ -55,10 +55,9 @@ tasks:
       - echo "Creating keystores..."
       - openssl pkcs12 -export -in server-cert.pem -inkey server-key.pem -out keystore.p12 -name {{.SERVER_ALIAS}} -CAfile ca-cert.pem -caname root -passout pass:{{.KEYSTORE_PASSWORD}}
       - openssl pkcs12 -export -in client-cert.pem -inkey client-key.pem -out client-keystore.p12 -name {{.CLIENT_ALIAS}} -CAfile ca-cert.pem -caname root -passout pass:{{.KEYSTORE_PASSWORD}}
-      - echo "Creating server truststore (contains CA and client certificates)..."
+      - echo "Creating server truststore (contains CA certificate)..."
       - keytool -import -file ca-cert.pem -alias {{.CA_ALIAS}} -keystore server-truststore.p12 -storetype PKCS12 -storepass {{.KEYSTORE_PASSWORD}} -noprompt
-      - keytool -import -file client-cert.pem -alias {{.CLIENT_ALIAS}} -keystore server-truststore.p12 -storetype PKCS12 -storepass {{.KEYSTORE_PASSWORD}} -noprompt
-      - echo "Creating client truststore (contains only CA certificate)..."
+      - echo "Creating client truststore (contains CA certificate)..."
       - keytool -import -file ca-cert.pem -alias {{.CA_ALIAS}} -keystore client-truststore.p12 -storetype PKCS12 -storepass {{.KEYSTORE_PASSWORD}} -noprompt
 
   copy-certificates:
@@ -85,8 +84,8 @@ tasks:
       - task: cleanup-temp-files
       - echo "Server keystore -> keystore.p12 (password {{.KEYSTORE_PASSWORD}})"
       - echo "Client keystore -> client-keystore.p12 (password {{.KEYSTORE_PASSWORD}})"
-      - echo "Server truststore -> server/src/main/resources/truststore.p12 (contains CA + client certs)"
-      - echo "Client truststore -> client/truststore.p12 (contains only CA cert)"
+      - echo "Server truststore -> server/src/main/resources/truststore.p12 (contains CA cert)"
+      - echo "Client truststore -> client/truststore.p12 (contains CA cert)"
       - echo ""
       - echo "Server certificate subject -> CN=localhost"
       - echo "Client certificate subject -> CN=demo-client"
