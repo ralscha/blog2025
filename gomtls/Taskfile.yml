@@ -1,0 +1,125 @@
+version: '3'
+silent: true
+
+vars:
+  SERVER_ALIAS: server
+  CLIENT_ALIAS: client
+  CA_ALIAS: ca
+  VALIDITY_DAYS: 365
+  SERVER_PORT: 8443
+  CRYPTO_ALGORITHM: Ed25519  # Options: RSA, Ed25519
+
+tasks:
+  default:
+    cmds:
+      - task --list
+
+  clean:
+    desc: Clean up all generated certificates and temporary files
+    cmds:
+      - rm -f *.p12 *.crt *.csr *.key *.pem *.srl server.conf ./server/*.pem ./client/*.pem
+      - echo "Cleaned up certificate files"
+
+  generate-ca:
+    cmds:
+      - echo "Creating Certificate Authority (CA) with {{.CRYPTO_ALGORITHM}}..."
+      - openssl genpkey -algorithm {{.CRYPTO_ALGORITHM}} -out ca-key.pem
+      - cmd: openssl req -new -x509 -key ca-key.pem -out ca-cert.pem -days {{.VALIDITY_DAYS}} -subj "/C=CH/ST=BE/L=Bern/O=Demo AG/OU=IT Department/CN=Demo CA"
+        platforms: [windows]
+      - cmd: openssl req -new -x509 -key ca-key.pem -out ca-cert.pem -days {{.VALIDITY_DAYS}} -subj '/C=CH/ST=BE/L=Bern/O=Demo AG/OU=IT Department/CN=Demo CA'
+        platforms: [linux, darwin]
+
+  generate-server-cert:
+    cmds:
+      - echo "Creating server certificate with {{.CRYPTO_ALGORITHM}}..."
+      - openssl genpkey -algorithm {{.CRYPTO_ALGORITHM}} -out server-key.pem
+      - cmd: openssl req -new -key server-key.pem -out server.csr -subj "/C=CH/ST=BE/L=Bern/O=Demo AG/OU=Server/CN=localhost"
+        platforms: [windows]
+      - cmd: openssl req -new -key server-key.pem -out server.csr -subj '/C=CH/ST=BE/L=Bern/O=Demo AG/OU=Server/CN=localhost'
+        platforms: [linux, darwin]
+      - |
+        cat > server.conf << EOF
+        [req]
+        distinguished_name = req_distinguished_name
+        req_extensions = v3_req
+        prompt = no
+
+        [req_distinguished_name]
+        C = CH
+        ST = BE
+        L = Bern
+        O = Demo AG
+        OU = Server
+        CN = localhost
+
+        [v3_req]
+        keyUsage = keyEncipherment, dataEncipherment
+        extendedKeyUsage = serverAuth
+        subjectAltName = @alt_names
+
+        [alt_names]
+        DNS.1 = localhost
+        DNS.2 = *.localhost
+        IP.1 = 127.0.0.1
+        IP.2 = ::1
+        EOF
+      - openssl x509 -req -in server.csr -CA ca-cert.pem -CAkey ca-key.pem -CAcreateserial -out server-cert.pem -days {{.VALIDITY_DAYS}} -extensions v3_req -extfile server.conf
+
+  generate-client-cert:
+    cmds:
+      - echo "Creating client certificate with {{.CRYPTO_ALGORITHM}}..."
+      - openssl genpkey -algorithm {{.CRYPTO_ALGORITHM}} -out client-key.pem
+      - cmd: openssl req -new -key client-key.pem -out client.csr -subj "/C=CH/ST=BE/L=Bern/O=Demo AG/OU=Client/CN=demo-client"
+        platforms: [windows]
+      - cmd: openssl req -new -key client-key.pem -out client.csr -subj '/C=CH/ST=BE/L=Bern/O=Demo AG/OU=Client/CN=demo-client'
+        platforms: [linux, darwin]
+      - openssl x509 -req -in client.csr -CA ca-cert.pem -CAkey ca-key.pem -CAcreateserial -out client-cert.pem -days {{.VALIDITY_DAYS}}
+
+  copy-certificates:
+    cmds:
+      - echo "Copying certificates to appropriate locations..."
+      - cp server-cert.pem server-key.pem ca-cert.pem server/
+      - cp client-cert.pem client-key.pem ca-cert.pem client/
+
+  cleanup-temp-files:
+    cmds:
+      - rm -f *.csr *.pem *.srl server.conf
+
+  generate-certs:
+    desc: Generate all certificates and copy to server/client directories
+    cmds:
+      - task: clean
+      - task: generate-ca
+      - task: generate-server-cert
+      - task: generate-client-cert
+      - task: copy-certificates
+      - task: cleanup-temp-files
+      - echo "Server certificates -> server/ (server-cert.pem, server-key.pem, ca-cert.pem, client-cert.pem)"
+      - echo "Client certificates -> client/ (client-cert.pem, client-key.pem, ca-cert.pem)"
+      - echo ""
+      - echo "Server certificate subject -> CN=localhost"
+      - echo "Client certificate subject -> CN=demo-client"
+      - echo "CA certificate subject -> CN=Demo CA"
+      - echo ""
+      - echo "All certificates use {{.CRYPTO_ALGORITHM}} algorithm"
+      - echo "All certificates are valid for {{.VALIDITY_DAYS}} days"
+      - echo ""
+      - echo "Certificate generation completed successfully!"
+
+  start-server:
+    desc: Start the Go server
+    dir: server
+    cmds:
+      - echo "Starting Go mTLS Demo Server..."
+      - echo "Server will be available at -> https://localhost:{{.SERVER_PORT}}"
+      - echo "Press Ctrl+C to stop"
+      - echo ""
+      - go run .
+
+  start-client:
+    desc: Start the Go HTTP client
+    dir: client
+    cmds:
+      - echo "Starting Go mTLS Demo Client..."
+      - go run .
+
