@@ -65,18 +65,20 @@ func main() {
 		MinVersion:   tls.VersionTLS13,
 	}
 
+	mux := http.NewServeMux()
+
 	server := &http.Server{
 		Addr:         ":8443",
 		TLSConfig:    tlsConfig,
 		ReadTimeout:  15 * time.Second,
 		WriteTimeout: 15 * time.Second,
 		IdleTimeout:  60 * time.Second,
-		Handler:      http.DefaultServeMux,
+		Handler:      mux,
 	}
 
-	http.HandleFunc("GET /api/public/health", healthHandler)
-	http.HandleFunc("GET /api/secure/data", secureDataHandler)
-	http.HandleFunc("POST /api/secure/update", updateDataHandler)
+	mux.HandleFunc("GET /api/public/health", healthHandler)
+	mux.HandleFunc("GET /api/secure/data", secureDataHandler)
+	mux.HandleFunc("POST /api/secure/update", updateDataHandler)
 
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
