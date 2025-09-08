@@ -195,10 +195,9 @@ func updateDataHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func getCN(subject string) string {
-	parts := strings.Split(subject, ",")
-	for _, part := range parts {
-		if strings.HasPrefix(strings.TrimSpace(part), "CN=") {
-			return strings.TrimPrefix(strings.TrimSpace(part), "CN=")
+	for part := range strings.SplitSeq(subject, ",") {
+		if after, ok := strings.CutPrefix(strings.TrimSpace(part), "CN="); ok {
+			return after
 		}
 	}
 	return ""
