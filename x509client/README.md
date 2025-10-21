@@ -1,1 +1,1 @@
-Code for blog post: https://golb.hplar.ch/2025/08/spring-mtls.html
+Code for blog post: https://blog.rasc.ch/2025/08/spring-mtls.html

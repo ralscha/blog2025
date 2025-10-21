@@ -1,1 +1,1 @@
-Code for blog post: https://golb.hplar.ch/2025/08/angular-i18n-builtin.html
+Code for blog post: https://blog.rasc.ch/2025/08/angular-i18n-builtin.html
