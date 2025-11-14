@@ -55,7 +55,7 @@ public class App {
     System.out.println(withViewDisabled);
     // Output: {"title":"Hello Views","notes":"internal notes"}
 
-    String noView = withInclusion.writeValueAsString(article);
+    String noView = mapper.writeValueAsString(article);
     System.out.println(noView);
     // Output: {"title":"Hello Views","notes":"internal notes"}
 
