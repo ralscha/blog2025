@@ -1,0 +1,47 @@
+version: '3'
+
+tasks:
+  inspector:
+    desc: Start the MCP inspector
+    cmds:
+      - npx @modelcontextprotocol/inspector
+
+  run:mcp-server-io:
+    desc: Run the mcp-server-io binary
+    cmds:
+      - go run ./cmd/mcp-server-io
+
+  run:mcp-server-http:
+    desc: Run the mcp-server-http binary
+    cmds:
+      - go run ./cmd/mcp-server-http
+
+  run:mcp-client:
+    desc: Run the mcp-client application
+    cmds:
+      - go run ./cmd/mcp-client
+
+  run:mcp-tool:
+    desc: Run the tool example with mcp
+    cmds:
+      - go run ./cmd/mcp-tool    
+
+  run:tool:
+    desc: Run the tool/main.go application
+    cmds:
+      - go run ./cmd/tool
+
+  playwright:
+    desc: Start the Playwright MCP server with Docker
+    cmds:
+      - docker run -i --rm --init --pull=always mcr.microsoft.com/playwright/mcp
+
+  run:mcp-playwright:
+    desc: Run the playwright example with mcp
+    cmds:
+      - go run ./cmd/mcp-playwright
+
+  default:
+    desc: List all available tasks
+    cmds:
+      - task --list
