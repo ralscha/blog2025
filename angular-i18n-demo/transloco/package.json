@@ -31,12 +31,12 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/common": "20.3.13",
-    "@angular/compiler": "20.3.13",
-    "@angular/core": "20.3.13",
-    "@angular/forms": "20.3.13",
-    "@angular/platform-browser": "20.3.13",
-    "@angular/router": "20.3.13",
+    "@angular/common": "20.3.15",
+    "@angular/compiler": "20.3.15",
+    "@angular/core": "20.3.15",
+    "@angular/forms": "20.3.15",
+    "@angular/platform-browser": "20.3.15",
+    "@angular/router": "20.3.15",
     "@jsverse/transloco": "7.6.1",
     "@jsverse/transloco-locale": "7.0.1",
     "@jsverse/transloco-messageformat": "7.0.1",
@@ -48,13 +48,13 @@
     "tslib": "2.8.1"
   },
   "devDependencies": {
-    "@angular/build": "20.3.11",
-    "@angular/cli": "20.3.11",
-    "@angular/compiler-cli": "20.3.13",
+    "@angular/build": "20.3.12",
+    "@angular/cli": "20.3.12",
+    "@angular/compiler-cli": "20.3.15",
     "@jsverse/transloco-keys-manager": "7.0.2",
     "@jsverse/transloco-optimize": "7.0.1",
     "@jsverse/transloco-validator": "7.0.1",
-    "prettier": "3.7.3",
+    "prettier": "3.7.4",
     "typescript": "5.9.3"
   }
 }

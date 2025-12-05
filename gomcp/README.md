@@ -1,1 +1,1 @@
-Code for blog post: 
+Code for blog post: https://blog.rasc.ch/2025/12/go-mcp.html

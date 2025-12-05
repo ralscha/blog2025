@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CurrencyPipe, DatePipe, PercentPipe } from '@angular/common';
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule],
+  imports: [CurrencyPipe, DatePipe, PercentPipe],
   templateUrl: './home.html'
 })
 export class Home {
