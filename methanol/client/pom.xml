@@ -16,17 +16,17 @@
 		<dependency>
 			<groupId>com.github.mizosoft.methanol</groupId>
 			<artifactId>methanol</artifactId>
-			<version>1.8.4</version>
+			<version>1.9.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.mizosoft.methanol</groupId>
 			<artifactId>methanol-jackson</artifactId>
-			<version>1.8.4</version>
+			<version>1.9.0</version>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>1.5.21</version>
+			<version>1.5.29</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.mizosoft.methanol</groupId>
@@ -36,8 +36,20 @@
         <dependency>
             <groupId>com.github.mizosoft.methanol</groupId>
             <artifactId>methanol-brotli</artifactId>
-            <version>1.8.4</version>
+            <version>1.9.0</version>
         </dependency>
     </dependencies>
+
+	<build>
+	    <plugins>
+	        <plugin>
+	            <groupId>org.apache.maven.plugins</groupId>
+	            <artifactId>maven-compiler-plugin</artifactId>
+	            <version>3.15.0</version> <configuration>
+	                <release>25</release>
+	            </configuration>
+	        </plugin>
+	    </plugins>
+	</build>
 
 </project>

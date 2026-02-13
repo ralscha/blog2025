@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.zip.GZIPOutputStream;
 
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.aayushatharva.brotli4j.encoder.BrotliOutputStream;
+
 import com.aayushatharva.brotli4j.encoder.Encoder;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -118,5 +119,18 @@ public class DemoController {
     System.out.println("Received email: " + email);
     return ResponseEntity.ok(
         Map.of("receivedName", name, "receivedEmail", email, "status", "form processed"));
+  }
+
+  // GET endpoint that fails around 80% of requests
+  @GetMapping("/api/flaky")
+  public ResponseEntity<?> flaky() {
+    boolean shouldFail = ThreadLocalRandom.current().nextInt(10) < 8;
+    if (shouldFail) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body(Map.of("status", "error", "message", "Transient server failure"));
+    }
+
+    return ResponseEntity.ok(
+        Map.of("status", "success", "message", "Flaky endpoint response"));
   }
 }

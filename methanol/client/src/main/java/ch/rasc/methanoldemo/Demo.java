@@ -1,6 +1,8 @@
 package ch.rasc.methanoldemo;
 
 import java.io.IOException;
+import java.net.ConnectException;
+import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.nio.file.Files;
@@ -13,10 +15,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mizosoft.methanol.AdapterCodec;
 import com.github.mizosoft.methanol.CacheControl;
 import com.github.mizosoft.methanol.FormBodyPublisher;
+import com.github.mizosoft.methanol.HttpStatus;
 import com.github.mizosoft.methanol.MediaType;
 import com.github.mizosoft.methanol.Methanol;
 import com.github.mizosoft.methanol.MultipartBodyPublisher;
 import com.github.mizosoft.methanol.MutableRequest;
+import com.github.mizosoft.methanol.RetryInterceptor;
 import com.github.mizosoft.methanol.adapter.jackson.JacksonAdapterFactory;
 
 public class Demo {
@@ -49,6 +53,7 @@ public class Demo {
     formSubmissionDemo();
     timeoutConfigDemo();
     cookieManagementDemo();
+    retryingRequestsDemo();
   }
 
   // GET /api/data - String
@@ -164,5 +169,30 @@ public class Demo {
 
     MutableRequest request2 = MutableRequest.GET("/api/data").header("Cache-Control",
         "max-age=1800, stale-if-error=60");
+  }
+
+  // GET /api/flaky - Retry on occasional 5xx responses
+  private static void retryingRequestsDemo() throws IOException, InterruptedException {
+    RetryInterceptor retryInterceptor = RetryInterceptor.newBuilder().maxRetries(3)
+        .onException(ConnectException.class).onStatus(HttpStatus::isServerError)
+        .backoff(RetryInterceptor.BackoffStrategy
+            .exponential(Duration.ofMillis(100), Duration.ofSeconds(5)).withJitter())
+        .listener(new RetryInterceptor.Listener() {
+          @Override
+          public void onRetry(RetryInterceptor.Context<?> context,
+              HttpRequest nextRequest, Duration delay) {
+            System.out.println(
+                "Retrying request " + nextRequest.uri() + " in " + delay);
+          }
+        })
+        .build();
+
+    try (Methanol retryClient = Methanol.newBuilder().baseUri("http://localhost:8080")
+        .interceptor(retryInterceptor).build()) {
+      var response = retryClient.send(MutableRequest.GET("/api/flaky"),
+          BodyHandlers.ofString());
+      System.out.println("\nGET /api/flaky with retries: " + response.statusCode());
+      System.out.println(response.body());
+    }
   }
 }
