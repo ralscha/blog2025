@@ -54,7 +54,7 @@
     "@jsverse/transloco-keys-manager": "7.0.2",
     "@jsverse/transloco-optimize": "7.0.1",
     "@jsverse/transloco-validator": "7.0.1",
-    "prettier": "3.7.4",
+    "prettier": "3.8.1",
     "typescript": "5.9.3"
   }
 }
