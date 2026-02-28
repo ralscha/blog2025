@@ -17,13 +17,13 @@ func main() {
 	demoWaitGroupWithResult(tasks)
 
 	fmt.Println("\nerrgroup.Group:")
-	demo3Errgroup(tasks)
+	demoErrgroup(tasks)
 
 	errorTasks := sampleTasksMultipleFailures()
 
 	fmt.Println("\nerrgroup.Group fail-fast:")
-	demo3ErrgroupFailFastCollect(errorTasks)
+	demoErrgroupFailFastCollect(errorTasks)
 
 	fmt.Println("\nerrgroup.Group, collecting all errors and results:")
-	demo3ErrgroupCollectAllWithResults(tasks)
+	demoErrgroupCollectAllWithResults(tasks)
 }
