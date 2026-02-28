@@ -12,7 +12,6 @@ import (
 
 func demoErrgroup(tasks []task) {
 	var g errgroup.Group
-	g.SetLimit(2)
 
 	for _, currentTask := range tasks {
 		g.Go(func() error {
