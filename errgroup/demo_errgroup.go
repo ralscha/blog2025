@@ -25,9 +25,9 @@ func demoErrgroup(tasks []task) {
 	}
 }
 
-func demoErrgroupWithContext(tasks []task) {
-	baseCtx := context.Background()
-	g, ctx := errgroup.WithContext(baseCtx)
+func demoErrgroupLimit(tasks []task) {
+	ctx := context.Background()
+	var g errgroup.Group
 	g.SetLimit(2)
 	for _, currentTask := range tasks {
 		g.Go(func() error {
