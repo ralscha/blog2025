@@ -1,1 +1,1 @@
-Code for blog post: 
+Code for blog post: https://blog.rasc.ch/2026/02/errgroup.html
