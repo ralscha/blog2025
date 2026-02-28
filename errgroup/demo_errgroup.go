@@ -40,6 +40,20 @@ func demoErrgroupLimit(tasks []task) {
 	}
 }
 
+func demoErrgroupFailFast(tasks []task) {
+	baseCtx := context.Background()
+	g, ctx := errgroup.WithContext(baseCtx)
+	for _, currentTask := range tasks {
+		g.Go(func() error {
+			return runTaskWithCtx(ctx, currentTask)
+		})
+	}
+
+	if err := g.Wait(); err != nil {
+		log.Printf("failed with first error: %v", err)
+	}
+}
+
 func demoErrgroupFailFastCollect(tasks []task) {
 	baseCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
