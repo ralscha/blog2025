@@ -1,0 +1,39 @@
+version: '3'
+
+vars:
+  Z3_LIB_DIR: '{{.ROOT_DIR}}/z3'
+  MINGW_DIR: '{{.ROOT_DIR}}/llvm'
+  BIN_DIR: '{{.ROOT_DIR}}/bin'
+  APP_NAME: 'z3demo{{exeExt}}'
+
+env:
+  CGO_ENABLED: '1'
+  CGO_CFLAGS: '-I{{.Z3_LIB_DIR}}/include'
+  CGO_LDFLAGS: '-L{{.Z3_LIB_DIR}}/bin -lz3'
+  CC: '{{.MINGW_DIR}}/bin/gcc.exe'
+
+tasks:
+  build:
+    desc: Build binary and copy libz3.dll next to it
+    cmds:
+      - mkdir -p '{{.BIN_DIR}}'
+      - go build -o '{{.BIN_DIR}}/{{.APP_NAME}}' .
+      - cp -f '{{.Z3_LIB_DIR}}/bin/libz3.dll' '{{.BIN_DIR}}/libz3.dll'
+
+  run:
+    desc: Build and run the binary with colocated libz3.dll
+    deps:
+      - build
+    cmds:
+      - './bin/{{.APP_NAME}}'
+
+  fmt:
+    desc: Format all Go files
+    cmds:
+      - go fix ./...
+      - go fmt ./...
+
+  default:
+    desc: List available tasks
+    cmds:
+      - task --list
