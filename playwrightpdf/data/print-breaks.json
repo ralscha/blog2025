@@ -1,0 +1,17 @@
+{
+  "documentTitle": "Print Break Controls Showcase",
+  "sections": [
+    {
+      "title": "Section 1",
+      "text": "This section demonstrates regular flow content before a forced page break. It includes enough text to occupy space and make the break behavior visible in print output."
+    },
+    {
+      "title": "Section 2",
+      "text": "This section intentionally starts on a new page using break-before: page. Content here verifies that block-level elements can be moved to a fresh page in paged media mode."
+    },
+    {
+      "title": "Section 3",
+      "text": "This section contains nested blocks with break-inside: avoid, useful for keeping cards or critical groups together and reducing awkward split content."
+    }
+  ]
+}

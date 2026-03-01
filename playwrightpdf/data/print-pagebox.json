@@ -1,0 +1,17 @@
+{
+  "title": "@page Size, Margins, and Color Fidelity",
+  "cards": [
+    {
+      "heading": "A5 Landscape Page",
+      "text": "This template uses @page to set a custom page size and margin. With preferCSSPageSize enabled in Playwright, CSS page dimensions control the output page box."
+    },
+    {
+      "heading": "Color Adjust",
+      "text": "The sample uses print-color-adjust and -webkit-print-color-adjust to preserve background colors in print output where supported."
+    },
+    {
+      "heading": "Break Safety",
+      "text": "Cards use break-inside: avoid so individual blocks are less likely to split between pages."
+    }
+  ]
+}

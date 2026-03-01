@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ .Title }}</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 12mm;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      color: #1f2937;
+      margin: 0;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: 21px;
+    }
+
+    p.note {
+      margin: 0 0 12px;
+      color: #4b5563;
+      font-size: 13px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      table-layout: fixed;
+    }
+
+    thead {
+      display: table-header-group;
+    }
+
+    tfoot {
+      display: table-footer-group;
+    }
+
+    th,
+    td {
+      border: 1px solid #cbd5e1;
+      padding: 6px;
+      vertical-align: top;
+      word-wrap: break-word;
+    }
+
+    th {
+      background: #e2e8f0;
+      text-align: left;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    tbody tr {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .num {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .sticky-footer {
+      font-size: 11px;
+      color: #334155;
+      padding-top: 6px;
+    }
+  </style>
+</head>
+<body>
+  <h1>{{ .Title }}</h1>
+  <p class="note">Demonstrates table pagination with repeated header/footer groups and row split protection.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 16%;">SKU</th>
+        <th style="width: 44%;">Description</th>
+        <th style="width: 12%;" class="num">Qty</th>
+        <th style="width: 14%;" class="num">Unit</th>
+        <th style="width: 14%;" class="num">Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{ range .Rows }}
+      <tr>
+        <td>{{ .SKU }}</td>
+        <td>{{ .Description }}</td>
+        <td class="num">{{ .Qty }}</td>
+        <td class="num">{{ .Unit }}</td>
+        <td class="num">{{ .Amount }}</td>
+      </tr>
+      {{ end }}
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="5" class="sticky-footer">Table footer is declared with <strong>display: table-footer-group</strong> so it can repeat in paged output where supported.</td>
+      </tr>
+    </tfoot>
+  </table>
+</body>
+</html>

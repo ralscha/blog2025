@@ -1,0 +1,13 @@
+{
+  "name": "playwright-pdf-service",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Small Playwright service that turns HTML into PDF",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "playwright": "1.58.2"
+  }
+}

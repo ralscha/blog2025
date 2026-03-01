@@ -1,0 +1,43 @@
+{
+  "Number": "2026-001",
+  "Date": "14.02.2026",
+  "DueDate": "01.03.2026",
+  "LogoDataURI": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPScxNzAnIGhlaWdodD0nNDgnIHZpZXdCb3g9JzAgMCAxNzAgNDgnPjxwb2x5Z29uIHBvaW50cz0nMjQsMTIgMjcuNCwxOS4zIDM1LjQsMjAuMyAyOS41LDI1LjggMzEuMSwzMy43IDI0LDI5LjYgMTYuOSwzMy43IDE4LjUsMjUuOCAxMi42LDIwLjMgMjAuNiwxOS4zJyBmaWxsPScjMGVhNWU5Jy8+PHRleHQgeD0nNDMnIHk9JzI5JyBmb250LWZhbWlseT0nQXJpYWwsc2Fucy1zZXJpZicgZm9udC1zaXplPScxNCcgZm9udC13ZWlnaHQ9JzcwMCcgZmlsbD0nIzExMTgyNyc+TVVTVEVSIENPPC90ZXh0Pjwvc3ZnPg==",
+  "From": {
+    "Name": "Muster Consulting GmbH",
+    "Address": "Bahnhofstrasse 18, 8001 Zürich, Schweiz",
+    "Email": "buchhaltung@muster-consulting.ch"
+  },
+  "To": {
+    "Name": "Alpen Technik AG",
+    "Address": "Seestrasse 112, 6300 Zug, Schweiz",
+    "Email": "finance@alpentechnik.ch"
+  },
+  "Items": [
+    {
+      "Description": "Strategieberatung Q1",
+      "Quantity": 1,
+      "UnitPrice": "CHF 1'500.00",
+      "Amount": "CHF 1'500.00"
+    },
+    {
+      "Description": "Workshop Prozessoptimierung",
+      "Quantity": 2,
+      "UnitPrice": "CHF 600.00",
+      "Amount": "CHF 1'200.00"
+    },
+    {
+      "Description": "Dokumentation und Reporting",
+      "Quantity": 4,
+      "UnitPrice": "CHF 95.00",
+      "Amount": "CHF 380.00"
+    }
+  ],
+  "Notes": "Please transfer the invoice amount within 15 days without deduction.",
+  "Subtotal": "CHF 3'080.00",
+  "TaxLabel": "VAT (8.1%)",
+  "TaxAmount": "CHF 249.50",
+  "Total": "CHF 3'329.50",
+  "Currency": "CHF",
+  "PaymentRef": "IBAN: CH93 0076 2011 6238 5295 7 | Referenz: RF18 5390 0754 7034"
+}

@@ -1,0 +1,35 @@
+version: '3'
+
+tasks:
+  default:
+    desc: List all available tasks
+    cmds:
+      - task --list-all
+    silent: true
+
+  service:up:
+    desc: Start Playwright PDF service
+    cmds:
+      - docker compose up -d --build
+
+  service:down:
+    desc: Stop Playwright PDF service
+    cmds:
+      - docker compose down
+
+  invoice:
+    desc: Generate invoice PDF
+    cmds:
+      - go run ./cmd/invoice --data {{.DATA}} --out {{.OUT}} --service-url {{.SERVICE_URL}}
+    vars:
+      DATA: '{{default "./data/invoice.json" .DATA}}'
+      OUT: '{{default "./invoice.pdf" .OUT}}'
+      SERVICE_URL: '{{default "http://localhost:3000/pdf" .SERVICE_URL}}'
+
+  print-showcase:
+    desc: Generate print CSS showcase PDFs
+    cmds:
+      - go run ./cmd/print-showcase --out-dir {{.OUT_DIR}} --service-url {{.SERVICE_URL}}
+    vars:
+      OUT_DIR: '{{default "." .OUT_DIR}}'
+      SERVICE_URL: '{{default "http://localhost:3000/pdf" .SERVICE_URL}}'

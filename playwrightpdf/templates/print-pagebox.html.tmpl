@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ .Title }}</title>
+  <style>
+    @page {
+      size: A5 landscape;
+      margin: 10mm;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      color: #0f172a;
+      background: #f8fafc;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: 20px;
+      background: #c7d2fe;
+      padding: 8px;
+      border-radius: 8px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .card {
+      border: 1px solid #94a3b8;
+      border-radius: 8px;
+      background: #dbeafe;
+      padding: 10px;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .card h2 {
+      margin: 0 0 6px;
+      font-size: 15px;
+    }
+
+    .filler {
+      margin-top: 10px;
+      font-size: 12px;
+      color: #334155;
+      line-height: 1.35;
+    }
+
+    .forced-next {
+      break-before: page;
+      page-break-before: always;
+      margin-top: 12px;
+    }
+  </style>
+</head>
+<body>
+  <h1>{{ .Title }}</h1>
+
+  <section class="grid">
+    {{ range .Cards }}
+      <article class="card">
+        <h2>{{ .Heading }}</h2>
+        <p>{{ .Text }}</p>
+      </article>
+    {{ end }}
+  </section>
+
+  <section class="forced-next">
+    <h1>Second Page Block</h1>
+    <p class="filler">This section starts on a new page to confirm page-break behavior with custom page sizing from @page.</p>
+    <p class="filler">{{ (repeat "Custom page size + print color adjust + break controls. " 20) }}</p>
+  </section>
+</body>
+</html>

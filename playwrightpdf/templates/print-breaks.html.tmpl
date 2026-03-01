@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ .DocumentTitle }}</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 14mm;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.45;
+      color: #1f2937;
+      margin: 0;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 24px;
+    }
+
+    .lead {
+      margin: 0 0 18px;
+      color: #4b5563;
+    }
+
+    .section {
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 14px;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .section h2 {
+      margin: 0 0 10px;
+      font-size: 17px;
+    }
+
+    .new-page {
+      break-before: page;
+      page-break-before: always;
+    }
+
+    .split-columns {
+      columns: 2;
+      column-gap: 16px;
+      margin-top: 12px;
+    }
+
+    .chip {
+      display: inline-block;
+      border: 1px solid #94a3b8;
+      border-radius: 999px;
+      padding: 4px 9px;
+      margin-right: 6px;
+      margin-bottom: 6px;
+      font-size: 12px;
+      background: #f8fafc;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+  </style>
+</head>
+<body>
+  <h1>{{ .DocumentTitle }}</h1>
+  <p class="lead">Demonstrates <strong>break-before</strong>, <strong>break-inside</strong>, multi-column text flow, and color-adjust behavior in print mode.</p>
+
+  {{ range $idx, $s := .Sections }}
+    <section class="section {{ if eq $idx 1 }}new-page{{ end }}">
+      <h2>{{ $s.Title }}</h2>
+      <p>{{ $s.Text }}</p>
+      <div class="split-columns">
+        <p>{{ $s.Text }} {{ $s.Text }} {{ $s.Text }}</p>
+        <p>{{ $s.Text }} {{ $s.Text }} {{ $s.Text }}</p>
+      </div>
+      <div style="margin-top: 10px;">
+        <span class="chip">break-inside: avoid</span>
+        <span class="chip">break-before: page</span>
+        <span class="chip">columns: 2</span>
+      </div>
+    </section>
+  {{ end }}
+</body>
+</html>

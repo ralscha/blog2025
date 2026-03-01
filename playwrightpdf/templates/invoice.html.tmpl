@@ -1,0 +1,232 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Invoice {{ .Number }}</title>
+  <style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 28px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #111827;
+    background: #f8fafc;
+  }
+  .invoice {
+    max-width: 800px;
+    margin: 0 auto;
+    border: 1px solid #d1d5db;
+    padding: 26px;
+    background: #ffffff;
+  }
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 1px solid #d1d5db;
+    padding-bottom: 14px;
+    margin-bottom: 18px;
+  }
+  .brand {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .logo-box {
+    width: 170px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    overflow: hidden;
+  }
+  .logo-box img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+  .logo-fallback {
+    font-size: 11px;
+    letter-spacing: 0.8px;
+    color: #374151;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  h1 {
+    margin: 0;
+    letter-spacing: 0.8px;
+    font-size: 26px;
+    font-weight: 600;
+  }
+  h2 {
+    margin: 0 0 8px 0;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    color: #374151;
+  }
+  h3 {
+    margin: 0 0 8px 0;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #4b5563;
+  }
+  p { margin: 3px 0; }
+  .meta { text-align: right; font-size: 13px; }
+  .meta p { margin: 2px 0; }
+  .invoice-id {
+    margin-top: 2px;
+    display: inline-block;
+    padding: 4px 8px;
+    background: #f3f4f6;
+    border-radius: 999px;
+  }
+  .muted { color: #6b7280; font-size: 12px; }
+  .parties {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin: 18px 0;
+  }
+  .card {
+    border: 1px solid #d1d5db;
+    padding: 12px;
+    min-height: 108px;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+  .section {
+    margin-top: 18px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 14px;
+  }
+  th, td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #d1d5db;
+    font-size: 13px;
+  }
+  th {
+    background: #f3f4f6;
+    text-align: left;
+    font-weight: 600;
+  }
+  .right {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .totals {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    margin-top: 10px;
+  }
+  .payment {
+    flex: 1;
+    border-top: 1px solid #d1d5db;
+    padding-top: 10px;
+  }
+  .summary {
+    width: 320px;
+    border: 1px solid #d1d5db;
+    padding: 10px 12px;
+  }
+  .summary p {
+    display: flex;
+    justify-content: space-between;
+    margin: 7px 0;
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+  }
+  .summary .grand {
+    border-top: 1.5px solid #111827;
+    padding-top: 8px;
+    margin-top: 8px;
+    font-size: 16px;
+    font-weight: 700;
+  }
+  </style>
+</head>
+<body>
+  <div class="invoice">
+    <header>
+      <div class="brand">
+        <div class="logo-box">
+          {{- if .LogoDataURI }}
+          <img src="{{ .LogoDataURI }}" alt="Company logo" />
+          {{- else }}
+          <span class="logo-fallback">Company Logo</span>
+          {{- end }}
+        </div>
+        <div>
+        <h1>INVOICE</h1>
+        <p class="muted invoice-id">Invoice Number {{ .Number }}</p>
+        </div>
+      </div>
+      <div class="meta">
+        <p><strong>Invoice Date:</strong> {{ .Date }}</p>
+        <p><strong>Due Date:</strong> {{ .DueDate }}</p>
+        <p><strong>Currency:</strong> {{ .Currency }}</p>
+      </div>
+    </header>
+
+    <section class="parties">
+      <div class="card">
+        <h3>Supplier</h3>
+        <p>{{ .From.Name }}</p>
+        <p>{{ .From.Address }}</p>
+        <p>{{ .From.Email }}</p>
+      </div>
+      <div class="card">
+        <h3>Bill To</h3>
+        <p>{{ .To.Name }}</p>
+        <p>{{ .To.Address }}</p>
+        <p>{{ .To.Email }}</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Invoice Items</h2>
+    </section>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Description</th>
+          <th class="right">Qty</th>
+          <th class="right">Unit Price</th>
+          <th class="right">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{- range .Items }}
+        <tr>
+          <td>{{ .Description }}</td>
+          <td class="right">{{ .Quantity }}</td>
+          <td class="right">{{ .UnitPrice }}</td>
+          <td class="right">{{ .Amount }}</td>
+        </tr>
+        {{- end }}
+      </tbody>
+    </table>
+
+    <section class="totals">
+      <div class="payment">
+        <h3>Payment Information</h3>
+        <p class="muted">{{ .PaymentRef }}</p>
+        <p class="muted">{{ .Notes }}</p>
+      </div>
+      <div class="summary">
+        <p><span>Subtotal</span><strong>{{ .Subtotal }}</strong></p>
+        <p><span>{{ .TaxLabel }}</span><strong>{{ .TaxAmount }}</strong></p>
+        <p class="grand"><span>Total Amount</span><strong>{{ .Total }}</strong></p>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
