@@ -15,7 +15,6 @@ func runRBAC() error {
 	nodeRunning := ctx.MkConst(ctx.MkStringSymbol("node_running"), strSort)
 	fooapp := ctx.MkString("fooapp")
 
-	// Policy 1: node must be in the SAME country as the user and run "fooapp".
 	policy := ctx.MkAnd(
 		ctx.MkEq(nodeLocation, userCountry),
 		ctx.MkEq(nodeRunning, fooapp),
@@ -23,10 +22,8 @@ func runRBAC() error {
 
 	solver := ctx.NewSolver()
 
-	// User 1: user in Canada, node in Canada running "fooapp" → should allow
 	solver.Assert(policy)
 
-	// user role
 	solver.Assert(ctx.MkEq(userCountry, ctx.MkString("Canada")))
 	solver.Assert(ctx.MkEq(nodeLocation, ctx.MkString("Canada")))
 	solver.Assert(ctx.MkEq(nodeRunning, fooapp))
@@ -37,11 +34,9 @@ func runRBAC() error {
 		fmt.Println("User 1: Access Denied")
 	}
 
-	// User 2: user in Canada, node in USA running "fooapp" → should deny
 	solver.Reset()
 	solver.Assert(policy)
 
-	// user role
 	solver.Assert(ctx.MkEq(userCountry, ctx.MkString("Canada")))
 	solver.Assert(ctx.MkEq(nodeLocation, ctx.MkString("USA")))
 	solver.Assert(ctx.MkEq(nodeRunning, fooapp))
@@ -51,7 +46,6 @@ func runRBAC() error {
 		fmt.Println("User 2: Access Denied")
 	}
 
-	// User 3: user in Canada, node in Canada running "barapp" → should deny
 	solver.Reset()
 	solver.Assert(policy)
 	solver.Assert(ctx.MkEq(userCountry, ctx.MkString("Canada")))
@@ -63,8 +57,6 @@ func runRBAC() error {
 		fmt.Println("User 3: Access Denied")
 	}
 
-	// Regex-based policy
-	// Policy: node location must match /us-east-[a-z]+/ and run "fooapp".
 	{
 		az := ctx.MkReRange(ctx.MkString("a"), ctx.MkString("z"))
 		locationRegex := ctx.MkReConcat(
