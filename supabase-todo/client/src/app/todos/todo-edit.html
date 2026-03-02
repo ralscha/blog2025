@@ -1,0 +1,160 @@
+<div class="min-h-screen bg-base-200">
+  <div class="bg-base-100 px-4 pt-6 pb-4 shadow-sm">
+    <div class="flex items-center gap-3">
+      <button class="btn btn-ghost btn-sm btn-circle" (click)="goBack()" aria-label="Go back">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="w-5 h-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M15 19l-7-7 7-7"
+          />
+        </svg>
+      </button>
+      <div>
+        <h1 class="text-xl font-bold">{{ isNew() ? 'New Todo' : 'Edit Todo' }}</h1>
+        <p class="text-sm text-base-content/60">
+          {{ isNew() ? 'Add a new task' : 'Update your task' }}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="p-4 pb-24 max-w-lg mx-auto">
+    @if (pageLoading()) {
+      <div class="flex justify-center py-12">
+        <span class="loading loading-spinner loading-lg text-primary"></span>
+      </div>
+    } @else {
+      <div class="card bg-base-100 shadow-sm">
+        <div class="card-body gap-4">
+          @if (errorMessage()) {
+            <div role="alert" class="alert alert-error alert-soft">
+              <span>{{ errorMessage() }}</span>
+            </div>
+          }
+
+          <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-3">
+            <fieldset class="fieldset">
+              <legend class="fieldset-legend">Title <span class="text-error">*</span></legend>
+              <input
+                type="text"
+                formControlName="title"
+                placeholder="What needs to be done?"
+                class="input w-full"
+                [class.input-error]="submitted() && form.controls.title.invalid"
+                autocomplete="off"
+              />
+              @if (submitted() && form.controls.title.invalid) {
+                <p class="label text-error text-xs">Title is required</p>
+              }
+            </fieldset>
+
+            <fieldset class="fieldset">
+              <legend class="fieldset-legend">Description</legend>
+              <textarea
+                formControlName="description"
+                placeholder="Add details (optional)…"
+                class="textarea w-full"
+                rows="3"
+              ></textarea>
+            </fieldset>
+
+            <div class="grid grid-cols-2 gap-3">
+              <fieldset class="fieldset">
+                <legend class="fieldset-legend">Priority</legend>
+                <select formControlName="priority" class="select w-full">
+                  <option value="low">🟢 Low</option>
+                  <option value="medium">🟡 Medium</option>
+                  <option value="high">🔴 High</option>
+                </select>
+              </fieldset>
+
+              <fieldset class="fieldset">
+                <legend class="fieldset-legend">Due Date</legend>
+                <input type="date" formControlName="due_date" class="input w-full" />
+              </fieldset>
+            </div>
+
+            <div class="flex gap-2 mt-2">
+              <button type="submit" class="btn btn-primary flex-1" [disabled]="saving()">
+                @if (saving()) {
+                  <span class="loading loading-spinner loading-sm"></span>
+                  Saving…
+                } @else {
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="w-4 h-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                  {{ isNew() ? 'Create Todo' : 'Save Changes' }}
+                }
+              </button>
+
+              @if (!isNew()) {
+                <button
+                  type="button"
+                  class="btn btn-error btn-outline"
+                  (click)="deleteTodo()"
+                  [disabled]="deleting()"
+                  aria-label="Delete todo"
+                >
+                  @if (deleting()) {
+                    <span class="loading loading-spinner loading-sm"></span>
+                  } @else {
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="w-4 h-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                      />
+                    </svg>
+                  }
+                </button>
+              }
+            </div>
+          </form>
+        </div>
+      </div>
+    }
+  </div>
+
+  <dialog #deleteModal class="modal">
+    <div class="modal-box">
+      <h3 class="text-lg font-bold">Delete Todo</h3>
+      <p class="py-4">Are you sure you want to delete this todo? This action cannot be undone.</p>
+      <div class="modal-action">
+        <button class="btn" (click)="cancelDelete()">Cancel</button>
+        <button class="btn btn-error" (click)="confirmDelete()" [disabled]="deleting()">
+          @if (deleting()) {
+            <span class="loading loading-spinner loading-sm"></span>
+          }
+          Delete
+        </button>
+      </div>
+    </div>
+    <form method="dialog" class="modal-backdrop"><button>close</button></form>
+  </dialog>
+</div>

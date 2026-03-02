@@ -1,0 +1,176 @@
+<div class="min-h-screen bg-base-200">
+  <div class="bg-base-100 px-4 pt-4 pb-3 shadow-sm">
+    <div class="pl-14">
+      <h1 class="text-lg font-bold">My Todos</h1>
+      <p class="text-sm text-base-content/60">
+        {{ completedCount() }} of {{ todos().length }} completed
+      </p>
+      <label class="flex items-center gap-2 mt-1 text-sm cursor-pointer select-none w-fit">
+        <input
+          type="checkbox"
+          class="toggle toggle-sm toggle-primary"
+          [checked]="showCompleted()"
+          (change)="showCompleted.set(!showCompleted())"
+          [attr.aria-label]="showCompleted() ? 'Hide completed todos' : 'Show completed todos'"
+        />
+        <span class="text-base-content/70">{{
+          showCompleted() ? 'Hide completed' : 'Show completed'
+        }}</span>
+      </label>
+    </div>
+  </div>
+
+  <div class="p-4 pb-28 max-w-lg mx-auto">
+    @if (loading()) {
+      <div class="flex justify-center py-12">
+        <span class="loading loading-spinner loading-lg text-primary"></span>
+      </div>
+    } @else if (todos().length === 0) {
+      <div
+        class="flex flex-col items-center justify-center py-16 gap-4 text-base-content/40"
+        aria-live="polite"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="w-20 h-20"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1"
+            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
+          />
+        </svg>
+        <div class="text-center">
+          <p class="font-medium text-lg">No todos yet</p>
+          <p class="text-sm">Tap the <strong>+</strong> button to add your first todo</p>
+        </div>
+      </div>
+    } @else if (visibleTodos().length === 0) {
+      <div
+        class="flex flex-col items-center justify-center py-16 gap-4 text-base-content/40"
+        aria-live="polite"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="w-20 h-20"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1"
+            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
+        <div class="text-center">
+          <p class="font-medium text-lg">All done!</p>
+          <p class="text-sm">Toggle <strong>Show completed</strong> to see finished todos</p>
+        </div>
+      </div>
+    } @else {
+      <ul class="list bg-base-100 rounded-box shadow-sm">
+        @for (todo of visibleTodos(); track todo.id) {
+          <li
+            class="list-row items-start py-3 cursor-pointer hover:bg-base-200 transition-colors"
+            (click)="goToEdit(todo)"
+            (keydown.enter)="goToEdit(todo)"
+            tabindex="0"
+            role="button"
+            [attr.aria-label]="'Edit ' + todo.title"
+            [class.opacity-60]="todo.is_complete"
+          >
+            <div class="pt-0.5" (click)="$event.stopPropagation()">
+              <input
+                type="checkbox"
+                class="checkbox checkbox-primary checkbox-sm"
+                [checked]="todo.is_complete"
+                (change)="toggleComplete(todo)"
+                [attr.aria-label]="
+                  'Mark ' + todo.title + ' as ' + (todo.is_complete ? 'incomplete' : 'complete')
+                "
+              />
+            </div>
+
+            <div class="list-col-grow min-w-0">
+              <p class="font-medium truncate" [class.line-through]="todo.is_complete">
+                {{ todo.title }}
+              </p>
+              @if (todo.description) {
+                <p class="text-sm text-base-content/60 truncate">{{ todo.description }}</p>
+              }
+              <div class="flex flex-wrap items-center gap-2 mt-1">
+                <span
+                  class="badge badge-sm"
+                  [class.badge-info]="todo.priority === 'low'"
+                  [class.badge-warning]="todo.priority === 'medium'"
+                  [class.badge-error]="todo.priority === 'high'"
+                  >{{ todo.priority }}</span
+                >
+
+                @if (todo.due_date) {
+                  <span class="text-xs text-base-content/50 flex items-center gap-1">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="w-3 h-3"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
+                    </svg>
+                    {{ todo.due_date | localeDate }}
+                  </span>
+                }
+              </div>
+            </div>
+
+            <div class="text-base-content/30 self-center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-4 h-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            </div>
+          </li>
+        }
+      </ul>
+    }
+  </div>
+
+  <button
+    class="btn btn-primary btn-circle btn-lg fixed bottom-6 right-6 shadow-xl z-20"
+    (click)="goToNew()"
+    aria-label="Add new todo"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="w-7 h-7"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      aria-hidden="true"
+    >
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+    </svg>
+  </button>
+</div>

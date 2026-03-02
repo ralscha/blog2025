@@ -1,0 +1,97 @@
+<div class="min-h-screen bg-base-200">
+  <div class="bg-base-100 px-4 pt-4 pb-3 shadow-sm">
+    <div class="pl-14">
+      <h1 class="text-lg font-bold">Profile</h1>
+      <p class="text-sm text-base-content/60">Manage your account details</p>
+    </div>
+  </div>
+
+  <div class="p-4 pb-24 flex flex-col gap-4 max-w-lg mx-auto">
+    <div class="card bg-base-100 shadow-sm">
+      <div class="card-body items-center py-6">
+        <app-avatar [avatarUrl]="avatarUrl()" (upload)="onAvatarUploaded($event)" />
+      </div>
+    </div>
+
+    <div class="card bg-base-100 shadow-sm">
+      <div class="card-body gap-4">
+        @if (successMessage()) {
+          <div role="alert" class="alert alert-success alert-soft">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 shrink-0"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+            <span>{{ successMessage() }}</span>
+          </div>
+        }
+
+        @if (errorMessage()) {
+          <div role="alert" class="alert alert-error alert-soft">
+            <span>{{ errorMessage() }}</span>
+          </div>
+        }
+
+        <form [formGroup]="form" (ngSubmit)="updateProfile()" class="flex flex-col gap-3">
+          <fieldset class="fieldset">
+            <legend class="fieldset-legend">Email</legend>
+            <input
+              type="email"
+              [value]="userEmail()"
+              class="input w-full"
+              disabled
+              aria-label="Email address (read-only)"
+            />
+            <p class="label text-base-content/50">Cannot be changed</p>
+          </fieldset>
+
+          <button type="submit" class="btn btn-primary w-full mt-2" [disabled]="loading()">
+            @if (loading()) {
+              <span class="loading loading-spinner loading-sm"></span>
+              Saving…
+            } @else {
+              Save Profile
+            }
+          </button>
+        </form>
+
+        <div class="divider my-0"></div>
+
+        <button
+          class="btn btn-error btn-outline w-full"
+          (click)="signOut()"
+          [disabled]="signingOut()"
+        >
+          @if (signingOut()) {
+            <span class="loading loading-spinner loading-sm"></span>
+          } @else {
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-4 h-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+              />
+            </svg>
+          }
+          Sign Out
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
