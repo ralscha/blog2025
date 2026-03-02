@@ -1,0 +1,292 @@
+#cloud-config
+package_update: true
+packages:
+  - wget
+  - curl
+  - ufw
+  - unzip
+  - openssl
+
+write_files:
+  - path: /etc/frps.toml
+    content: |
+      # frp server configuration
+      bindPort = FRP_SERVER_PORT_PLACEHOLDER
+      
+      # Dashboard configuration (localhost only - accessible via SSH tunnel)
+      webServer.addr = "127.0.0.1"
+      webServer.port = FRP_DASHBOARD_PORT_PLACEHOLDER
+      webServer.user = "FRP_DASHBOARD_USER_PLACEHOLDER"
+      webServer.password = "FRP_DASHBOARD_PASSWORD_PLACEHOLDER"
+      
+      # Authentication token
+      auth.method = "token"
+      auth.token = "FRP_SERVER_TOKEN_PLACEHOLDER"
+      
+      # Log configuration
+      log.to = "/var/log/frps.log"
+      log.level = "info"
+      log.maxDays = 7
+      
+      # Enable TCP mux for better performance
+      transport.tcpMux = true
+      transport.tcpMuxKeepaliveInterval = 60
+      
+      # Set maximum connections per client
+      transport.maxPoolCount = 5
+      
+      # TLS Configuration - Force encryption for control connection
+      transport.tls.force = true
+      transport.tls.certFile = "/etc/ssl/certs/frps.crt"
+      transport.tls.keyFile = "/etc/ssl/private/frps.key"
+      transport.tls.trustedCaFile = "/etc/ssl/private/frp-ca.crt"
+    permissions: '0644'
+    owner: root:root
+
+  - path: /etc/systemd/system/frps.service
+    content: |
+      [Unit]
+      Description=frp server
+      After=network.target
+      Wants=network.target
+      
+      [Service]
+      Type=simple
+      User=root
+      Restart=on-failure
+      RestartSec=5s
+      ExecStart=/usr/local/bin/frps -c /etc/frps.toml
+      ExecReload=/bin/kill -s HUP $MAINPID
+      KillMode=control-group
+      TimeoutStopSec=10
+      
+      # Security settings
+      NoNewPrivileges=true
+      PrivateTmp=true
+      ProtectSystem=strict
+      ProtectHome=true
+      ReadWritePaths=/var/log
+      
+      [Install]
+      WantedBy=multi-user.target
+    permissions: '0644'
+    owner: root:root
+
+  - path: /usr/local/bin/install-frp.sh
+    content: |
+      #!/bin/bash
+      set -euo pipefail
+      
+      # Get the latest release version
+      LATEST_VERSION=$(curl -s https://api.github.com/repos/fatedier/frp/releases/latest | grep '"tag_name":' | cut -d'"' -f4)
+      echo "Installing frp version: $LATEST_VERSION"
+      
+      # Download and install frp
+      cd /tmp
+      wget -q "https://github.com/fatedier/frp/releases/download/${LATEST_VERSION}/frp_${LATEST_VERSION:1}_linux_amd64.tar.gz"
+      tar -xzf "frp_${LATEST_VERSION:1}_linux_amd64.tar.gz"
+      
+      # Install frps binary
+      sudo mv "frp_${LATEST_VERSION:1}_linux_amd64/frps" /usr/local/bin/
+      sudo chmod +x /usr/local/bin/frps
+      
+      # Clean up
+      rm -rf "frp_${LATEST_VERSION:1}_linux_amd64"*
+      
+      echo "frp server installed successfully"
+    permissions: '0755'
+    owner: root:root
+
+  - path: /etc/logrotate.d/frps
+    content: |
+      /var/log/frps.log {
+          daily
+          rotate 7
+          compress
+          delaycompress
+          missingok
+          notifempty
+          create 0644 root root
+          postrotate
+              systemctl reload frps > /dev/null 2>&1 || true
+          endscript
+      }
+    permissions: '0644'
+    owner: root:root
+
+  - path: /usr/local/bin/generate-frp-certs.sh
+    content: |
+      #!/bin/bash
+      set -euo pipefail
+      
+      # Create SSL directories
+      mkdir -p /etc/ssl/certs /etc/ssl/private
+      
+      # Get the external IP address of this server
+      EXTERNAL_IP=$(curl -s http://169.254.169.254/hetzner/v1/metadata/public-ipv4)
+      echo "Generating certificates for IP: $EXTERNAL_IP"
+      
+      # Generate CA private key (ED25519)
+      openssl genpkey -algorithm Ed25519 -out /etc/ssl/private/frp-ca.key
+      
+      # Generate CA certificate
+      openssl req -new -x509 -days 3650 -key /etc/ssl/private/frp-ca.key \
+        -out /etc/ssl/private/frp-ca.crt \
+        -subj "/C=US/ST=CA/L=San Francisco/O=FRP Server/OU=Certificate Authority/CN=FRP CA"
+      
+      # Generate server private key (ED25519)
+      openssl genpkey -algorithm Ed25519 -out /etc/ssl/private/frps.key
+      
+      # Create certificate signing request
+      openssl req -new -key /etc/ssl/private/frps.key \
+        -out /tmp/frps.csr \
+        -subj "/C=US/ST=CA/L=San Francisco/O=FRP Server/OU=Server/CN=$EXTERNAL_IP"
+      
+      # Create certificate extensions file for SAN
+      cat > /tmp/frps.ext << EOF
+      [v3_req]
+      authorityKeyIdentifier=keyid,issuer
+      basicConstraints=CA:FALSE
+      keyUsage = digitalSignature
+      extendedKeyUsage = serverAuth
+      subjectAltName = @alt_names
+      
+      [alt_names]
+      IP.1 = $EXTERNAL_IP
+      EOF
+      
+      # Generate server certificate signed by CA
+      openssl x509 -req -in /tmp/frps.csr \
+        -CA /etc/ssl/private/frp-ca.crt \
+        -CAkey /etc/ssl/private/frp-ca.key \
+        -CAcreateserial \
+        -out /etc/ssl/certs/frps.crt \
+        -days 365 \
+        -extensions v3_req \
+        -extfile /tmp/frps.ext
+      
+      # Generate client private key (ED25519)
+      openssl genpkey -algorithm Ed25519 -out /etc/ssl/private/frpc.key
+      
+      # Create certificate signing request for client
+      openssl req -new -key /etc/ssl/private/frpc.key \
+        -out /tmp/frpc.csr \
+        -subj "/C=US/ST=CA/L=San Francisco/O=FRP Client/OU=Client/CN=client"
+      
+      # Create certificate extensions file for client SAN
+      cat > /tmp/frpc.ext << EOF
+      [v3_req]
+      authorityKeyIdentifier=keyid,issuer
+      basicConstraints=CA:FALSE
+      keyUsage = digitalSignature
+      extendedKeyUsage = clientAuth
+      subjectAltName = @alt_names
+      
+      [alt_names]
+      DNS.1 = localhost
+      EOF
+      
+      # Generate client certificate signed by CA
+      openssl x509 -req -in /tmp/frpc.csr \
+        -CA /etc/ssl/private/frp-ca.crt \
+        -CAkey /etc/ssl/private/frp-ca.key \
+        -CAcreateserial \
+        -out /etc/ssl/certs/frpc.crt \
+        -days 365 \
+        -extensions v3_req \
+        -extfile /tmp/frpc.ext
+      
+      # Set proper permissions
+      chmod 600 /etc/ssl/private/frps.key /etc/ssl/private/frp-ca.key /etc/ssl/private/frpc.key
+      chmod 644 /etc/ssl/certs/frps.crt /etc/ssl/private/frp-ca.crt /etc/ssl/certs/frpc.crt
+      
+      # Clean up temporary files
+      rm -f /tmp/frps.csr /tmp/frps.ext /tmp/frpc.csr /tmp/frpc.ext
+      
+      echo "Certificates generated successfully for IP: $EXTERNAL_IP"
+      echo "CA certificate: /etc/ssl/private/frp-ca.crt"
+      echo "Server certificate: /etc/ssl/certs/frps.crt"
+      echo "Server private key: /etc/ssl/private/frps.key"
+      echo "Client certificate: /etc/ssl/certs/frpc.crt"
+      echo "Client private key: /etc/ssl/private/frpc.key"
+    permissions: '0755'
+    owner: root:root
+
+runcmd:
+  # Install frp
+  - /usr/local/bin/install-frp.sh
+  
+  # Generate TLS certificates for the external IP
+  - /usr/local/bin/generate-frp-certs.sh
+  
+  # Configure firewall (dashboard port not exposed publicly)
+  - ufw --force reset
+  - ufw default deny incoming
+  - ufw default allow outgoing
+  - ufw allow 22/tcp comment 'SSH'
+  - ufw allow FRP_SERVER_PORT_PLACEHOLDER/tcp comment 'frp server'
+  - ufw allow FRP_EXPOSED_TCP_PORT_PLACEHOLDER/tcp comment 'Configured TCP port for web service'
+  - ufw --force enable
+  
+  # Enable and start frps service
+  - systemctl daemon-reload
+  - systemctl enable frps
+  - systemctl start frps
+  
+  # Wait a moment and check status
+  - sleep 5
+  - systemctl status frps --no-pager -l
+  
+  # Create a simple health check script
+  - |
+    cat > /usr/local/bin/frp-health-check.sh << 'EOF'
+    #!/bin/bash
+    # Check if frps is running and responding
+    if systemctl is-active --quiet frps; then
+        echo "frps service is running"
+        if curl -f -s http://127.0.0.1:FRP_DASHBOARD_PORT_PLACEHOLDER >/dev/null; then
+            echo "frps dashboard is responding on localhost"
+            exit 0
+        else
+            echo "frps dashboard is not responding on localhost"
+            exit 1
+        fi
+    else
+        echo "frps service is not running"
+        exit 1
+    fi
+    EOF
+  - chmod +x /usr/local/bin/frp-health-check.sh
+
+# Set timezone
+timezone: UTC
+
+# Disable root login via password (SSH keys only)
+users:
+  - name: root
+    lock_passwd: true
+
+# Final message
+final_message: |
+  frp server setup completed successfully!
+  
+  Server details:
+  - frp server port: FRP_SERVER_PORT_PLACEHOLDER
+  - Dashboard: http://localhost:FRP_DASHBOARD_PORT_PLACEHOLDER (via SSH tunnel only)
+  - Dashboard user: FRP_DASHBOARD_USER_PLACEHOLDER
+  
+  To access dashboard:
+  1. Create SSH tunnel: ssh -L FRP_DASHBOARD_PORT_PLACEHOLDER:localhost:FRP_DASHBOARD_PORT_PLACEHOLDER root@$public_ipv4
+  2. Open browser: http://localhost:FRP_DASHBOARD_PORT_PLACEHOLDER
+  
+  Service status: $(systemctl is-active frps)
+  
+  To check logs: journalctl -u frps -f
+  To check health: /usr/local/bin/frp-health-check.sh
+  
+  Your frp server is ready for client connections!
+
+power_state:
+  mode: reboot
+  timeout: 300
+  condition: true

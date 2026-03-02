@@ -1,0 +1,21 @@
+# frpc.toml
+serverAddr = "your-frps-server-ip"
+serverPort = SERVER_PORT_PLACEHOLDER
+
+auth.method = "token"
+auth.token = "your-frp-server-token"
+
+transport.tls.enable = true
+transport.tls.serverName = "your-frps-server-ip"
+transport.tls.certFile = "/etc/frpc.crt"
+transport.tls.keyFile = "/etc/frpc.key"
+transport.tls.trustedCaFile = "/etc/frp-ca.crt"
+
+[[proxies]]
+name = "web"
+type = "tcp"
+localIP = "127.0.0.1"
+localPort = 8080
+remotePort = FRP_EXPOSED_TCP_PORT_PLACEHOLDER
+transport.useEncryption = true
+transport.useCompression = true

@@ -1,0 +1,10 @@
+name: frpdemo
+description: Example with frp and Hetzner
+runtime:
+  name: nodejs
+  options:
+    packagemanager: npm
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: typescript

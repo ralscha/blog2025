@@ -1,0 +1,11 @@
+/bin/
+/node_modules/
+frp-server-key
+frp-server-key.pub
+package-lock.json
+temp-private-key.pem
+frp-ca.crt
+frpc.toml
+frpc.crt
+frpc.key
+bun.lock

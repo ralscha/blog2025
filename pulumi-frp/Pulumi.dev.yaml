@@ -1,0 +1,13 @@
+encryptionsalt: v1:w760A9
+config:
+  hcloud:token:
+    secure: v1:MCLUsMfrnCR
+  frpdemo:serverRegion: hel1
+  frpdemo:frpServerPort: "7000"
+  frpdemo:frpDashboardPort: "7500"
+  frpdemo:frpDashboardUser: admin
+  frpdemo:exposedTcpPort: "8080"
+  frpdemo:frpServerToken:
+    secure: v1:uTlOhp
+  frpdemo:frpDashboardPassword:
+    secure: v1:7xuYJc
