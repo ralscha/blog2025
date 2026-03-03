@@ -14,7 +14,7 @@ import {
   provideTranslocoLoadingTpl
 } from '@jsverse/transloco';
 import { provideTranslocoMessageformat } from '@jsverse/transloco-messageformat';
-import { defaultTranslocoMarkupTranspilers } from 'ngx-transloco-markup';
+import { defaultTranslocoMarkupTranspilers } from 'dfx-transloco-markup';
 import { provideTranslocoLocale } from '@jsverse/transloco-locale';
 
 export const appConfig: ApplicationConfig = {

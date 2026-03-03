@@ -1,5 +1,5 @@
 import { Component, effect, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { UpperCasePipe } from '@angular/common';
 import {
   translateObjectSignal,
   translateSignal,
@@ -14,18 +14,18 @@ import {
   TranslocoDecimalPipe,
   TranslocoLocaleService
 } from '@jsverse/transloco-locale';
-import { TranslocoMarkupComponent } from 'ngx-transloco-markup';
+import { TranslocoMarkupComponent } from 'dfx-transloco-markup';
 
 @Component({
   selector: 'app-home',
   imports: [
-    CommonModule,
     TranslocoDatePipe,
     TranslocoCurrencyPipe,
     TranslocoDecimalPipe,
     TranslocoDirective,
     TranslocoMarkupComponent,
-    TranslocoPipe
+    TranslocoPipe,
+    UpperCasePipe
   ],
   templateUrl: './home.html',
   styleUrl: './home.css'
