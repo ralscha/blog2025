@@ -1,0 +1,162 @@
+#cloud-config
+package_update: true
+package_upgrade: true
+
+packages:
+  - ca-certificates
+  - curl
+  - gnupg
+  - ufw
+
+write_files:
+  - path: /opt/bitwarden/docker-compose.yml
+    content: |
+      services:
+        db:
+          image: postgres:18.3-alpine3.23
+          container_name: postgres_db
+          restart: always
+          env_file: .env
+          environment:
+            - POSTGRES_DB=bitwarden
+          volumes:
+            - postgres_data:/var/lib/postgresql/data
+          healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d bitwarden"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+
+        bitwarden:
+          image: ghcr.io/bitwarden/lite:latest
+          container_name: bitwarden_app
+          restart: always
+          depends_on:
+            db:
+              condition: service_healthy
+          env_file: .env
+          environment:
+            - BW_DB_PROVIDER=postgresql
+            - BW_DB_SERVER=db
+            - BW_DB_DATABASE=bitwarden
+            - BW_DB_USERNAME=${POSTGRES_USER}
+            - BW_DB_PASSWORD=${POSTGRES_PASSWORD}
+          volumes:
+            - bitwarden_data:/etc/bitwarden
+
+        backup:
+          image: ghcr.io/ralscha/postgres-s3-backup
+          container_name: postgres_backup
+          restart: always
+          depends_on:
+            db:
+              condition: service_healthy
+          env_file: .env
+          environment:
+            - POSTGRES_HOST=db
+            - POSTGRES_DATABASE=bitwarden
+            - SCHEDULE=0 2 * * *
+            - BACKUP_KEEP_DAYS=7
+
+        caddy:
+          image: caddy:2-alpine
+          container_name: caddy_proxy
+          restart: always
+          ports:
+            - "80:80"
+            - "443:443"
+            - "443:443/udp"
+          env_file: .env
+          volumes:
+            - ./Caddyfile:/etc/caddy/Caddyfile
+            - caddy_data:/data
+            - caddy_config:/config
+
+      volumes:
+        postgres_data:
+        bitwarden_data:
+        caddy_data:
+        caddy_config:
+
+  - path: /opt/bitwarden/Caddyfile
+    content: |
+      {
+          email {$ACME_EMAIL}
+      }
+      {$DOMAIN} {
+          reverse_proxy bitwarden:8080
+          header {
+              Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+              X-Content-Type-Options "nosniff"
+              X-XSS-Protection "1; mode=block"
+          }
+      }
+
+  - path: /opt/bitwarden/.env
+    permissions: '0600'
+    content: |
+      DOMAIN=vault.example.com
+      ACME_EMAIL=admin@example.com
+
+      POSTGRES_USER=bw_admin
+      POSTGRES_PASSWORD=CHANGE_ME_TO_A_LONG_RANDOM_PASSWORD
+
+      BW_INSTALLATION_ID=REPLACE_WITH_BITWARDEN_ID
+      BW_INSTALLATION_KEY=REPLACE_WITH_BITWARDEN_KEY
+
+      S3_REGION=REPLACE_ME
+      S3_ACCESS_KEY_ID=REPLACE_ME
+      S3_SECRET_ACCESS_KEY=REPLACE_ME
+      S3_BUCKET=CHANGE_ME_TO_A_UNIQUE_BUCKET_NAME
+      PASSPHRASE=CHANGE_ME_TO_A_LONG_RANDOM_PASSPHRASE
+
+  - path: /opt/bitwarden/update-stack.sh
+    permissions: '0700'
+    content: |
+      #!/bin/bash
+      set -e
+      cd /opt/bitwarden
+      /usr/bin/docker compose pull
+      /usr/bin/docker compose up -d
+      /usr/bin/docker image prune -f
+
+  - path: /etc/systemd/system/bitwarden-update.service
+    content: |
+      [Unit]
+      Description=Weekly Bitwarden Stack Update
+      After=docker.service
+
+      [Service]
+      Type=oneshot
+      ExecStart=/opt/bitwarden/update-stack.sh
+
+  - path: /etc/systemd/system/bitwarden-update.timer
+    content: |
+      [Unit]
+      Description=Run Weekly Bitwarden Stack Update
+
+      [Timer]
+      OnCalendar=Sun *-*-* 03:00:00
+      RandomizedDelaySec=1h
+      Persistent=true
+
+      [Install]
+      WantedBy=timers.target
+
+runcmd:
+  - for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do apt-get remove -y $pkg || true; done
+  - install -m 0755 -d /etc/apt/keyrings
+  - curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
+  - chmod a+r /etc/apt/keyrings/docker.asc
+  - echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian $(. /etc/os-release; echo $VERSION_CODENAME) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+  - apt-get update
+  - apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+  - systemctl enable --now docker
+  - ufw allow 22/tcp
+  - ufw allow 80/tcp
+  - ufw allow 443/tcp
+  - ufw allow 443/udp
+  - ufw --force enable
+  - systemctl daemon-reload
+  - systemctl enable --now bitwarden-update.timer
+  # Intentionally no docker compose up here (manual trigger after DNS is ready)
