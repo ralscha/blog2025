@@ -16,9 +16,7 @@ import java.util.stream.Stream;
 public class Main {
   public static void main(String[] args) {
     customCollectorTerminalExample();
-    gatherMethodSignatureExample();
-    builtInExactExamples();
-    window();
+    builtInExamples();
     windowSliding();
     scan();
     fold();
@@ -37,65 +35,52 @@ public class Main {
   }
 
   private static void customCollectorTerminalExample() {
-    Collector<String, ?, List<String>> toUpperCaseList = Collector.of(ArrayList::new,
+    Collector<String, ?, List<String>> toUpperCaseList = Collector.of(
+    	// Supplier
+    	ArrayList::new,
+    	// Accumulator
         (list, s) -> {
           if (!s.isBlank()) {
             list.add(s.toUpperCase());
           }
-        }, (left, right) -> {
+        }, 
+        // Combiner
+        (left, right) -> {
           left.addAll(right);
           return left;
         });
 
     List<String> result = Stream.of("the", "", "fox", "jumps")
-        .filter(s -> !s.isBlank())
-        .map(String::toUpperCase)
         .collect(toUpperCaseList);
 
-    System.out.println("custom collector result: " + result);
+    System.out.println(result);
+    // [THE, FOX, JUMPS]
   }
 
-  private static void gatherMethodSignatureExample() {
-    Stream<Integer> source = Stream.of(1, 2, 3, 4);
-    List<Integer> gathered = gather(source, Gatherers.scan(() -> 0, Integer::sum))
-        .toList();
-    System.out.println("gather signature example: " + gathered);
-  }
-
-  private static <T, R> Stream<R> gather(Stream<T> source,
-      Gatherer<? super T, ?, R> gatherer) {
-    return source.gather(gatherer);
-  }
-
-  private static void builtInExactExamples() {
+  private static void builtInExamples() {
     List<List<Integer>> fixed = Stream.of(1, 2, 3, 4, 5, 6, 7)
         .gather(Gatherers.windowFixed(3))
         .toList();
-    System.out.println("windowFixed: " + fixed);
+    System.out.println(fixed);
+    // [[1, 2, 3], [4, 5, 6], [7]]
 
     List<List<Integer>> sliding = Stream.of(1, 2, 3, 4, 5)
         .gather(Gatherers.windowSliding(3))
         .toList();
-    System.out.println("windowSliding: " + sliding);
+    System.out.println(sliding);
+    // [[1, 2, 3], [2, 3, 4], [3, 4, 5]]
 
     Optional<Integer> folded = Stream.of(1, 2, 3, 4)
         .gather(Gatherers.fold(() -> 0, Integer::sum))
         .findFirst();
-    System.out.println("fold: " + folded);
+    System.out.println(folded);
+    // Optional[10]
 
     List<Integer> scanned = Stream.of(1, 2, 3, 4)
         .gather(Gatherers.scan(() -> 0, Integer::sum))
         .toList();
-    System.out.println("scan: " + scanned);
-  }
-
-  private static void window() {
-    List<Integer> source = List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
-    List<List<Integer>> result = source.stream().gather(Gatherers.windowFixed(3))
-        .toList();
-
-    System.out.println(result);
-	// [[1, 2, 3], [4, 5, 6], [7, 8, 9], [10]]
+    System.out.println(scanned);
+    // [1, 3, 6, 10]
   }
 
   record Reading(float value, int id) {
@@ -171,10 +156,9 @@ public class Main {
             URI.create("https://cdn.example.com/products/" + i + ".jpg"), i))
         .toList();
 
-    System.out.println("Starting parallel processing (max 4 threads)...");
-    List<String> results = images.stream().gather(Gatherers.mapConcurrent(4,
-        // Max parallel tasks
-        image -> {
+    List<String> results = images.stream().gather(Gatherers.mapConcurrent(
+    	4, // Max parallel tasks
+        image -> { // Mapper
           System.out.printf("Processing %s%n", image.productId());
           try {
             return image.processImage();
@@ -333,9 +317,12 @@ public class Main {
   }
 
   private static void quickRefresher() {
-    List<String> result = Stream.of("the", "", "fox", "jumps").filter(s -> !s.isBlank())
-        .map(String::toUpperCase).toList();
-    System.out.println("Quick refresher: " + result);
+	  List<String> result = Stream.of("the", "", "fox", "jumps")
+			    .filter(s -> !s.isBlank())      // intermediate
+			    .map(String::toUpperCase)       // intermediate
+			    .toList();                      // terminal
+    System.out.println(result);
+    // [THE, FOX, JUMPS]
   }
 
   private static void sequentialTemplateDemo() {
@@ -350,7 +337,8 @@ public class Main {
         });
 
     List<Integer> result = Stream.of(1, 2, 3, 4, 5, 6).gather(everySecondElement).toList();
-    System.out.println("sequential template demo: " + result);
+    System.out.println(result);
+    // [2, 4, 6]
   }
 
   private static void greedyVsNonGreedyDemo() {
@@ -369,8 +357,10 @@ public class Main {
     List<Integer> greedyResult = Stream.iterate(1, i -> i + 1).gather(greedy).limit(3).toList();
     List<Integer> nonGreedyResult = Stream.of(1, 2, 3, 4, 5, 6, 7).gather(nonGreedy).toList();
 
-    System.out.println("greedy integrator (stopped by downstream limit): " + greedyResult);
-    System.out.println("non-greedy integrator (self short-circuit): " + nonGreedyResult);
+    System.out.println(greedyResult);
+    // [1, 2, 3]
+    System.out.println(nonGreedyResult);
+    // [5]
   }
 
   private static void compositionDemo() {
@@ -380,7 +370,8 @@ public class Main {
         (acc, n) -> acc.isEmpty() ? n.toString() : acc + ";" + n);
 
     String out = Stream.of(1, 2, 3, 4).gather(running.andThen(asCsv)).findFirst().orElse("");
-    System.out.println("composition andThen: " + out);
+    System.out.println(out);
+    // 1;3;6;10
   }
 
 }

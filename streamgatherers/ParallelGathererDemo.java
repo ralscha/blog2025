@@ -52,6 +52,7 @@ public class ParallelGathererDemo {
     double weightedAverage = grades.stream().parallel()
       .gather(demo.weightedAverage(weightFunction)).findFirst().get();
     System.out.println("Weighted Average: " + weightedAverage);
+    // Weighted Average: 81.92307692307692
 
     grades = List.of();
     grades.stream().parallel().gather(demo.weightedAverage(weightFunction)).findFirst()
@@ -60,6 +61,7 @@ public class ParallelGathererDemo {
         }, () -> {
           System.out.println("No data");
         });
+    // No data
 
   }
 }
