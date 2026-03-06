@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "ch.rasc.springgrpc.proto";
+option java_outer_classname = "IotAnomalyProto";
+
+package iot.anomaly;
+
+service IotAnomalyService {
+  rpc EvaluateReading (SensorReadingRequest) returns (ReadingAssessment);
+  rpc SubscribeAlerts (AlertSubscriptionRequest) returns (stream AnomalyAlert);
+}
+
+message SensorReadingRequest {
+  string sensor_id = 1;
+  string site_id = 2;
+  string metric_type = 3;
+  double value = 4;
+  double baseline = 5;
+  int64 captured_at_epoch_ms = 6;
+}
+
+message ReadingAssessment {
+  string sensor_id = 1;
+  bool anomaly = 2;
+  double z_score = 3;
+  string severity = 4;
+  string summary = 5;
+  int64 recommended_check_after_seconds = 6;
+}
+
+message AlertSubscriptionRequest {
+  string site_id = 1;
+  string device_group = 2;
+  int32 max_events = 3;
+}
+
+message AnomalyAlert {
+  string alert_id = 1;
+  string sensor_id = 2;
+  string site_id = 3;
+  string metric_type = 4;
+  double observed_value = 5;
+  double threshold = 6;
+  string severity = 7;
+  string message = 8;
+  int64 detected_at_epoch_ms = 9;
+}

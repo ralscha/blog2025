@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: springgrpc-server
+  security:
+    user:
+      name: iot-client
+      password: iot-secret
+  grpc:
+    server:
+      port: 9090

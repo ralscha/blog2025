@@ -1,0 +1,33 @@
+version: '3'
+
+vars:
+  SERVER_MVNW: '{{if eq OS "windows"}}cmd /c server\\mvnw.cmd{{else}}./server/mvnw{{end}}'
+  CLIENT_MVNW: '{{if eq OS "windows"}}cmd /c client\\mvnw.cmd{{else}}./client/mvnw{{end}}'
+
+tasks:
+  default:
+    desc: List all available tasks
+    cmds:
+      - task --list-all
+
+  clean:
+    desc: Clean server and client
+    cmds:
+      - '{{.SERVER_MVNW}} -f server/pom.xml clean'
+      - '{{.CLIENT_MVNW}} -f client/pom.xml clean'
+
+  verify:
+    desc: Verify server and client builds
+    cmds:
+      - '{{.SERVER_MVNW}} -f server/pom.xml clean verify'
+      - '{{.CLIENT_MVNW}} -f client/pom.xml clean verify'
+
+  run-server:
+    desc: Run the Spring gRPC server
+    cmds:
+      - '{{.SERVER_MVNW}} -f server/pom.xml spring-boot:run'
+
+  run-client:
+    desc: Run the Spring gRPC client
+    cmds:
+      - '{{.CLIENT_MVNW}} -f client/pom.xml spring-boot:run'

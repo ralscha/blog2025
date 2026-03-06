@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: springgrpc-client
+  grpc:
+    client:
+      channels:
+        anomaly-server:
+          address: localhost:9090
+
+app:
+  grpc:
+    username: iot-client
+    password: iot-secret
