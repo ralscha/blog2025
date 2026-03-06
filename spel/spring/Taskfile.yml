@@ -1,0 +1,30 @@
+version: '3'
+
+vars:
+  MVNW: '{{if eq OS "windows"}}cmd /c mvnw.cmd{{else}}./mvnw{{end}}'
+
+tasks:
+  default:
+    desc: "List all available tasks"
+    cmds:
+      - task --list-all
+
+  clean:
+    desc: "Clean the Maven project"
+    cmds:
+      - '{{.MVNW}} clean'
+
+  compile:
+    desc: "Compile the project"
+    cmds:
+      - '{{.MVNW}} compile'
+
+  package:
+    desc: "Package the Spring Boot application"
+    cmds:
+      - '{{.MVNW}} package'
+
+  run:
+    desc: "Run the SpEL demo application"
+    cmds:
+      - '{{.MVNW}} spring-boot:run'

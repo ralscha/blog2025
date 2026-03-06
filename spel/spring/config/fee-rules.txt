@@ -1,0 +1,11 @@
+# name|condition|feeExpression|description
+BASE_CARD|paymentMethod == 'CARD'|amount * 0.0115 + 0.18|Card processing base fee
+BASE_ACH|paymentMethod == 'ACH'|amount * 0.0025 + 0.05|ACH processing base fee
+CROSS_BORDER|crossBorder|amount * 0.0065|Cross-border surcharge
+HIGH_RISK|riskScore >= 80 or chargebackRate > 0.018|amount * 0.009 * riskMultiplier|High-risk surcharge
+INSTALLMENTS|installments > 1|installments * 0.12|Installment handling surcharge
+INSTANT_PAYOUT|channel == 'INSTANT_PAYOUT'|amount * 0.003|Instant payout surcharge
+VOLUME_DISCOUNT|merchantTier == 'ENTERPRISE' and monthlyVolume > 200000|-(amount * 0.0025)|Enterprise volume discount
+LARGE_TRANSACTION_DISCOUNT|amount > 10000 and merchantTier != 'STARTER'|-(amount * 0.001)|Large transaction discount
+RISK_REVIEW|riskScoreDistanceFrom50 > 35|0.25|Manual risk review fee
+NON_ENTERPRISE_CAP|merchantTier != 'ENTERPRISE' and #runningTotal > 120|-(#runningTotal - 120)|Cap for non-enterprise merchants

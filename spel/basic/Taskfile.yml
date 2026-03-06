@@ -1,0 +1,40 @@
+version: '3'
+
+vars:
+  MVNW: '{{if eq OS "windows"}}cmd /c mvnw.cmd{{else}}./mvnw{{end}}'
+
+tasks:
+  default:
+    desc: "List all available tasks"
+    cmds:
+      - task --list-all
+
+  clean:
+    desc: "Clean the Maven project"
+    cmds:
+      - '{{.MVNW}} clean'
+
+  compile:
+    desc: "Compile the project"
+    cmds:
+      - '{{.MVNW}} compile'
+
+  package:
+    desc: "Package the project"
+    cmds:
+      - '{{.MVNW}} package'
+
+  spel-examples:
+    desc: "Run the SpEL examples"
+    cmds:
+      - '{{.MVNW}} -q compile exec:exec -Dexec.executable=java -Dexec.args="-ea -classpath %classpath ch.rasc.speldemo.SpelExamples"'
+
+  simple-evaluation-context:
+    desc: "Run SimpleEvaluationContext examples"
+    cmds:
+      - '{{.MVNW}} -q compile exec:exec -Dexec.executable=java -Dexec.args="-ea -classpath %classpath ch.rasc.speldemo.SimpleEvaluationContextExamples"'
+
+  compilation-performance:
+    desc: "Run interpreted vs compiled SpEL performance example"
+    cmds:
+      - '{{.MVNW}} -q compile exec:exec -Dexec.executable=java -Dexec.args="-ea -classpath %classpath ch.rasc.speldemo.SpelCompilationPerformanceExample"'
