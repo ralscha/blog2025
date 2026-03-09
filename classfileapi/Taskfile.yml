@@ -14,7 +14,7 @@ tasks:
   format:
     desc: Format source code with Spring Java Format
     cmds:
-      - '{{.MVNW}} spring-javaformat:apply'
+      - '{{.MVNW}} spotless:apply'
 
   compile:
     desc: Compile the project
