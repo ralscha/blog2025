@@ -1,0 +1,55 @@
+body {
+  font-family: system-ui, Arial, sans-serif;
+  margin: 12px;
+}
+
+h1 {
+  margin-top: 0;
+  color: #333;
+}
+
+.description {
+  margin-bottom: 16px;
+  color: #666;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.map-shell {
+  position: relative;
+}
+
+#map {
+  height: 600px;
+  border: 1px solid #ddd;
+}
+
+.calculation-box {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  max-width: 240px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  padding: 12px;
+}
+
+.calculation-box p {
+  margin: 0;
+  color: #444;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.calculation-box strong {
+  color: #111;
+}
+
+#calculated-area {
+  margin-top: 8px;
+}
+
+#calculated-area p + p {
+  margin-top: 4px;
+}

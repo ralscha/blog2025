@@ -1,0 +1,62 @@
+.map-controls {
+  margin-bottom: 16px;
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox-container input[type="checkbox"] {
+  margin: 0;
+  cursor: pointer;
+}
+
+.map-container {
+  height: 600px;
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+:host ::ng-deep .mountain-marker {
+  width: 20px;
+  height: 20px;
+  background-color: #e74c3c;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  transition: all 0.2s ease;
+}
+
+:host ::ng-deep .mountain-marker:hover {
+  transform: scale(1.2);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+:host ::ng-deep .maplibregl-popup-content {
+  max-width: 300px;
+  padding: 12px;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+:host ::ng-deep .popup-title {
+  font-weight: bold;
+  font-size: 16px;
+  color: #2c3e50;
+  margin-bottom: 8px;
+  border-bottom: 1px solid #ecf0f1;
+  padding-bottom: 4px;
+}
+
+:host ::ng-deep .popup-info {
+  font-size: 14px;
+  line-height: 1.4;
+  color: #34495e;
+}

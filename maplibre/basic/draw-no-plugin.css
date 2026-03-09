@@ -1,0 +1,104 @@
+body {
+  font-family: system-ui, Arial, sans-serif;
+  margin: 12px;
+}
+
+h1 {
+  margin-top: 0;
+  color: #333;
+}
+
+.description {
+  max-width: 900px;
+  margin-bottom: 16px;
+  color: #666;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.panel {
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #fafafa;
+  padding: 14px;
+}
+
+.panel-section + .panel-section {
+  margin-top: 16px;
+}
+
+.panel-title {
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #555;
+}
+
+.button-row,
+.button-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+button {
+  padding: 8px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+  color: #1f2937;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #f8fafc;
+}
+
+button.active {
+  border-color: #1d4ed8;
+  background: #dbeafe;
+  color: #1e3a8a;
+}
+
+.instructions {
+  margin: 0;
+  padding-left: 18px;
+  color: #444;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.metrics {
+  color: #333;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.map-shell {
+  min-width: 0;
+}
+
+#map {
+  height: 600px;
+  border: 1px solid #ddd;
+}
+
+#map .maplibregl-canvas {
+  cursor: crosshair;
+}
+
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}

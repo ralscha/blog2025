@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>GeoJSON on a Map</title>
+  <link href="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css" rel="stylesheet"/>
+  <link href="geojson.css" rel="stylesheet"/>
+  <script src="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js"></script>
+</head>
+<body>
+<h1>GeoJSON on a Map</h1>
+<p class="description">Example that draws one GeoJSON polygon on top of the basemap.</p>
+
+<div id="map"></div>
+
+<script>
+  const geojson = {
+    type: 'FeatureCollection',
+    features: [
+      {
+        type: 'Feature',
+        properties: {
+          name: 'Sample area'
+        },
+        geometry: {
+          type: 'Polygon',
+          coordinates: [[
+            [7.95, 46.75],
+            [8.35, 46.75],
+            [8.35, 47.0],
+            [7.95, 47.0],
+            [7.95, 46.75]
+          ]]
+        }
+      }
+    ]
+  };
+
+  const map = new maplibregl.Map({
+    container: 'map',
+    style: 'https://vectortiles.geo.admin.ch/styles/ch.swisstopo.basemap.vt/style.json',
+    center: [8.15, 46.875],
+    zoom: 8,
+  });
+
+  map.addControl(new maplibregl.NavigationControl());
+  map.addControl(new maplibregl.ScaleControl({
+    maxWidth: 100,
+    unit: 'metric'
+  }));
+
+  map.on('load', () => {
+    map.addSource('sample-area', {
+      type: 'geojson',
+      data: geojson
+    });
+
+    map.addLayer({
+      id: 'sample-area-fill',
+      type: 'fill',
+      source: 'sample-area',
+      paint: {
+        'fill-color': '#1f78b4',
+        'fill-opacity': 0.35
+      }
+    });
+
+    map.addLayer({
+      id: 'sample-area-outline',
+      type: 'line',
+      source: 'sample-area',
+      paint: {
+        'line-color': '#0b3c5d',
+        'line-width': 2
+      }
+    });
+  });
+</script>
+</body>
+</html>

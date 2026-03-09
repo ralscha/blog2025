@@ -8,26 +8,8 @@
     "extract-i18n": "ng extract-i18n --output-path src/i18n --format json",
     "serve:de": "ng serve --configuration=de",
     "serve:en": "ng serve --configuration=development",
-    "prettier": "prettier --write ."
-  },
-  "prettier": {
-    "tabWidth": 2,
-    "useTabs": false,
-    "singleQuote": true,
-    "semi": true,
-    "bracketSpacing": true,
-    "arrowParens": "avoid",
-    "trailingComma": "none",
-    "bracketSameLine": true,
-    "printWidth": 80,
-    "overrides": [
-      {
-        "files": "*.html",
-        "options": {
-          "parser": "angular"
-        }
-      }
-    ]
+    "prettier": "prettier --write .",
+    "format": "npx prettier --write ."
   },
   "private": true,
   "dependencies": {

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Map with WMS Overlays</title>
+  <link href="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css" rel="stylesheet"/>
+  <link href="overlay.css" rel="stylesheet"/>
+  <script src="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js"></script>
+</head>
+<body>
+<h1>Map with WMS Overlays</h1>
+
+<div class="controls">
+  <div>
+    <input id="toggleOfficialStations" type="checkbox"/>
+    <label for="toggleOfficialStations">Show Base Stations</label>
+  </div>
+</div>
+
+<div class="controls">
+  <div>
+    <input id="toggle3G" type="checkbox"/>
+    <label for="toggle3G">Show 3G Coverage</label>
+  </div>
+  <div>
+    <input id="toggle4G" type="checkbox"/>
+    <label for="toggle4G">Show 4G/LTE Coverage</label>
+  </div>
+  <div>
+    <input id="toggle5G" type="checkbox"/>
+    <label for="toggle5G">Show 5G Coverage</label>
+  </div>
+</div>
+
+<div id="map"></div>
+
+<script>
+  const toggleOfficialStations = document.getElementById('toggleOfficialStations');
+  const toggle3G = document.getElementById('toggle3G');
+  const toggle4G = document.getElementById('toggle4G');
+  const toggle5G = document.getElementById('toggle5G');
+
+  const map = new maplibregl.Map({
+    container: 'map',
+    style: 'https://vectortiles.geo.admin.ch/styles/ch.swisstopo.basemap.vt/style.json',
+    center: [8.2312, 46.8182],
+    zoom: 7,
+  });
+
+  map.addControl(new maplibregl.NavigationControl());
+  map.addControl(new maplibregl.ScaleControl({
+    maxWidth: 100,
+    unit: 'metric'
+  }));
+
+  let officialStationsVisible = toggleOfficialStations.checked;
+  let coverage3GVisible = toggle3G.checked;
+  let coverage4GVisible = toggle4G.checked;
+  let coverage5GVisible = toggle5G.checked;
+
+  function addMobileCoverageLayers() {
+    if (!map.getSource('coverage-3g')) {
+      map.addSource('coverage-3g', {
+        type: 'raster',
+        tiles: ['https://wms.geo.admin.ch/?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=ch.bakom.mobilnetz-3g&STYLES=&CRS=EPSG:3857&WIDTH=256&HEIGHT=256&FORMAT=image/png&TRANSPARENT=true&BBOX={bbox-epsg-3857}'],
+        tileSize: 256
+      });
+
+      map.addLayer({
+        id: 'coverage-3g-layer',
+        type: 'raster',
+        source: 'coverage-3g',
+        layout: {
+          visibility: coverage3GVisible ? 'visible' : 'none'
+        },
+        paint: {
+          'raster-opacity': 0.6
+        }
+      });
+    }
+
+    if (!map.getSource('coverage-4g')) {
+      map.addSource('coverage-4g', {
+        type: 'raster',
+        tiles: ['https://wms.geo.admin.ch/?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=ch.bakom.mobilnetz-4g&STYLES=&CRS=EPSG:3857&WIDTH=256&HEIGHT=256&FORMAT=image/png&TRANSPARENT=true&BBOX={bbox-epsg-3857}'],
+        tileSize: 256
+      });
+
+      map.addLayer({
+        id: 'coverage-4g-layer',
+        type: 'raster',
+        source: 'coverage-4g',
+        layout: {
+          visibility: coverage4GVisible ? 'visible' : 'none'
+        },
+        paint: {
+          'raster-opacity': 0.6
+        }
+      });
+    }
+
+    if (!map.getSource('coverage-5g')) {
+      map.addSource('coverage-5g', {
+        type: 'raster',
+        tiles: ['https://wms.geo.admin.ch/?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=ch.bakom.mobilnetz-5g&STYLES=&CRS=EPSG:3857&WIDTH=256&HEIGHT=256&FORMAT=image/png&TRANSPARENT=true&BBOX={bbox-epsg-3857}'],
+        tileSize: 256
+      });
+
+      map.addLayer({
+        id: 'coverage-5g-layer',
+        type: 'raster',
+        source: 'coverage-5g',
+        layout: {
+          visibility: coverage5GVisible ? 'visible' : 'none'
+        },
+        paint: {
+          'raster-opacity': 0.6
+        }
+      });
+    }
+  }
+
+  function addOfficialBaseStations() {
+    if (!map.getSource('official-base-stations')) {
+      map.addSource('official-base-stations', {
+        type: 'raster',
+        tiles: ['https://wms.geo.admin.ch/?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=ch.bakom.standorte-mobilfunkanlagen&STYLES=&CRS=EPSG:3857&WIDTH=256&HEIGHT=256&FORMAT=image/png&TRANSPARENT=true&BBOX={bbox-epsg-3857}'],
+        tileSize: 256
+      });
+
+      map.addLayer({
+        id: 'official-base-stations-layer',
+        type: 'raster',
+        source: 'official-base-stations',
+        layout: {
+          visibility: 'visible'
+        },
+        paint: {
+          'raster-opacity': 0.8
+        }
+      });
+    }
+  }
+
+  function removeOfficialBaseStations() {
+    if (map.getLayer('official-base-stations-layer')) {
+      map.removeLayer('official-base-stations-layer');
+    }
+    if (map.getSource('official-base-stations')) {
+      map.removeSource('official-base-stations');
+    }
+  }
+
+  map.on('load', () => {
+    addMobileCoverageLayers();
+  });
+
+  toggleOfficialStations.addEventListener('change', function () {
+    officialStationsVisible = this.checked;
+    if (officialStationsVisible) {
+      addOfficialBaseStations();
+    } else {
+      removeOfficialBaseStations();
+    }
+  });
+
+  toggle3G.addEventListener('change', function () {
+    coverage3GVisible = this.checked;
+    if (map.getLayer('coverage-3g-layer')) {
+      map.setLayoutProperty('coverage-3g-layer', 'visibility', coverage3GVisible ? 'visible' : 'none');
+    }
+  });
+
+  toggle4G.addEventListener('change', function () {
+    coverage4GVisible = this.checked;
+    if (map.getLayer('coverage-4g-layer')) {
+      map.setLayoutProperty('coverage-4g-layer', 'visibility', coverage4GVisible ? 'visible' : 'none');
+    }
+  });
+
+  toggle5G.addEventListener('change', function () {
+    coverage5GVisible = this.checked;
+    if (map.getLayer('coverage-5g-layer')) {
+      map.setLayoutProperty('coverage-5g-layer', 'visibility', coverage5GVisible ? 'visible' : 'none');
+    }
+  });
+</script>
+</body>
+</html>

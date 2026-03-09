@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Basic Raster Map</title>
+  <link href="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css" rel="stylesheet"/>
+  <link href="basic-raster.css" rel="stylesheet"/>
+  <script src="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js"></script>
+</head>
+<body>
+<h1>Basic Raster Map</h1>
+
+<div id="map"></div>
+
+<script>
+  const map = new maplibregl.Map({
+    container: 'map',
+    style: {
+      "version": 8,
+      "sources": {
+        "swisstopo-raster": {
+          "type": "raster",
+          "tiles": [
+            "https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-farbe/default/current/3857/{z}/{x}/{y}.jpeg"
+          ],
+          "tileSize": 256,
+          "attribution": "© swisstopo"
+        }
+      },
+      "layers": [
+        {
+          "id": "swisstopo-raster-layer",
+          "type": "raster",
+          "source": "swisstopo-raster",
+          "minzoom": 0,
+          "maxzoom": 18
+        }
+      ]
+    },
+    center: [8.2312, 46.8182],
+    zoom: 7,
+  });
+
+  map.addControl(new maplibregl.NavigationControl());
+
+  map.addControl(new maplibregl.ScaleControl({
+    maxWidth: 100,
+    unit: 'metric'
+  }));
+
+  map.addControl(new maplibregl.AttributionControl({
+    compact: false
+  }));
+</script>
+</body>
+</html>

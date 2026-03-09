@@ -1,0 +1,46 @@
+body {
+  font-family: system-ui, Arial, sans-serif;
+  margin: 12px;
+}
+
+#map {
+  height: 600px;
+  border: 1px solid #ddd;
+}
+
+h1 {
+  margin-top: 0;
+  color: #333;
+}
+
+.description {
+  margin-bottom: 20px;
+  color: #666;
+  font-size: 14px;
+}
+
+.controls {
+  margin: 8px 0;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.legend {
+  background: #fff;
+  padding: 6px 8px;
+  border-radius: 4px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  font-size: 12px;
+  color: #666;
+}
+
+input[type="checkbox"] {
+  margin-right: 5px;
+}
+
+label {
+  font-size: 14px;
+  cursor: pointer;
+}

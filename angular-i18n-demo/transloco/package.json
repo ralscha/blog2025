@@ -8,26 +8,8 @@
     "watch": "ng build --watch --configuration development",
     "prettier": "prettier --write .",
     "i18n:extract": "transloco-keys-manager extract",
-    "i18n:find": "transloco-keys-manager find"
-  },
-  "prettier": {
-    "tabWidth": 2,
-    "useTabs": false,
-    "singleQuote": true,
-    "semi": true,
-    "bracketSpacing": true,
-    "arrowParens": "avoid",
-    "trailingComma": "none",
-    "bracketSameLine": true,
-    "printWidth": 80,
-    "overrides": [
-      {
-        "files": "*.html",
-        "options": {
-          "parser": "angular"
-        }
-      }
-    ]
+    "i18n:find": "transloco-keys-manager find",
+    "format": "npx prettier --write ."
   },
   "private": true,
   "dependencies": {

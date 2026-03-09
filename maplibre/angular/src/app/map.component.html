@@ -1,0 +1,44 @@
+<div class="map-controls">
+  <label class="checkbox-container">
+    <input
+      (change)="toggleMarkers($event)"
+      [checked]="showMarkers()"
+      type="checkbox"
+    />
+    Show Top 5 Mountain Peaks
+  </label>
+</div>
+
+<mgl-map
+  class="map-container"
+  [center]="center()"
+  [fitBounds]="showMarkers() ? (bounds() ?? undefined) : undefined"
+  [fitBoundsOptions]="fitBoundsOptions"
+  [mapStyle]="mapStyle"
+  [zoom]="zoom()"
+>
+  <mgl-control mglNavigation />
+  <mgl-control mglScale [maxWidth]="100" unit="metric" />
+
+  @for (mountain of visibleMountains(); track mountain.name) {
+    <mgl-marker #mountainMarker [lngLat]="mountain.coordinates" anchor="center">
+      <div class="mountain-marker" [title]="mountain.name"></div>
+    </mgl-marker>
+
+    <mgl-popup
+      [marker]="mountainMarker"
+      [closeButton]="true"
+      [closeOnClick]="false"
+      [offset]="25"
+    >
+      <div class="popup-title">{{ mountain.name }}</div>
+      <div class="popup-info">
+        <strong>Elevation:</strong>
+        {{ mountain.elevation.toLocaleString() }} m<br />
+        <strong>Mountain Range:</strong> {{ mountain.range }}<br />
+        <strong>First Ascent:</strong> {{ mountain.firstAscent }}<br /><br />
+        {{ mountain.description }}
+      </div>
+    </mgl-popup>
+  }
+</mgl-map>

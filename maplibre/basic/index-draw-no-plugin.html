@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Draw Lines and Polygons Without Plugins</title>
+  <link href="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css" rel="stylesheet"/>
+  <link href="draw-no-plugin.css" rel="stylesheet"/>
+  <script src="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js"></script>
+</head>
+<body>
+<h1>Draw Lines and Polygons Without Plugins</h1>
+
+<p class="description">
+  This example implements simple line and polygon drawing directly with map click events and GeoJSON sources, without any plugin.
+</p>
+
+<div class="layout">
+  <aside class="panel">
+    <div class="panel-section">
+      <div class="panel-title">Mode</div>
+      <div class="button-row">
+        <button class="mode-button active" data-mode="line" id="lineModeButton" type="button">Line</button>
+        <button class="mode-button" data-mode="polygon" id="polygonModeButton" type="button">Polygon</button>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <div class="panel-title">Actions</div>
+      <div class="button-grid">
+        <button id="finishButton" type="button">Finish shape</button>
+        <button id="undoButton" type="button">Undo last point</button>
+        <button id="clearButton" type="button">Clear all</button>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <div class="panel-title">Instructions</div>
+      <ul class="instructions">
+        <li>Click the map to add vertices.</li>
+        <li>Move the mouse to preview the next segment.</li>
+        <li>Double-click or use Finish shape to complete the current feature.</li>
+        <li>Switch between line and polygon mode at any time.</li>
+      </ul>
+    </div>
+
+    <div class="panel-section metrics">
+      <div><strong>Draft vertices:</strong> <span id="vertexCount">0</span></div>
+      <div><strong>Saved features:</strong> <span id="featureCount">0</span></div>
+      <div><strong>Status:</strong> <span id="statusText">Click the map to start a line.</span></div>
+    </div>
+  </aside>
+
+  <div class="map-shell">
+    <div id="map"></div>
+  </div>
+</div>
+
+<script>
+  const lineModeButton = document.getElementById('lineModeButton');
+  const polygonModeButton = document.getElementById('polygonModeButton');
+  const finishButton = document.getElementById('finishButton');
+  const undoButton = document.getElementById('undoButton');
+  const clearButton = document.getElementById('clearButton');
+  const vertexCount = document.getElementById('vertexCount');
+  const featureCount = document.getElementById('featureCount');
+  const statusText = document.getElementById('statusText');
+
+  const map = new maplibregl.Map({
+    container: 'map',
+    style: 'https://vectortiles.geo.admin.ch/styles/ch.swisstopo.basemap.vt/style.json',
+    center: [8.2312, 46.8182],
+    zoom: 7,
+  });
+
+  map.addControl(new maplibregl.NavigationControl());
+  map.addControl(new maplibregl.ScaleControl({
+    maxWidth: 100,
+    unit: 'metric'
+  }));
+
+  map.doubleClickZoom.disable();
+
+  let currentMode = 'line';
+  let draftCoordinates = [];
+  let pointerCoordinate = null;
+  let savedFeatures = [];
+
+  function buildSessionFeatureCollection() {
+    const features = [];
+
+    if (draftCoordinates.length > 0) {
+      features.push({
+        type: 'Feature',
+        properties: {},
+        geometry: {
+          type: 'MultiPoint',
+          coordinates: draftCoordinates,
+        },
+      });
+    }
+
+    const previewCoordinates = pointerCoordinate
+      ? [...draftCoordinates, pointerCoordinate]
+      : [...draftCoordinates];
+
+    if (previewCoordinates.length >= 2) {
+      features.push({
+        type: 'Feature',
+        properties: {
+          mode: currentMode,
+        },
+        geometry: {
+          type: 'LineString',
+          coordinates: previewCoordinates,
+        },
+      });
+    }
+
+    if (currentMode === 'polygon' && previewCoordinates.length >= 3) {
+      features.push({
+        type: 'Feature',
+        properties: {},
+        geometry: {
+          type: 'Polygon',
+          coordinates: [[...previewCoordinates, previewCoordinates[0]]],
+        },
+      });
+    }
+
+    return {
+      type: 'FeatureCollection',
+      features,
+    };
+  }
+
+  function buildSavedFeatureCollection() {
+    return {
+      type: 'FeatureCollection',
+      features: savedFeatures,
+    };
+  }
+
+  function setStatus(message) {
+    statusText.textContent = message;
+  }
+
+  function updateCounters() {
+    vertexCount.textContent = String(draftCoordinates.length);
+    featureCount.textContent = String(savedFeatures.length);
+  }
+
+  function syncSources() {
+    const sessionSource = map.getSource('draw-session');
+    const savedSource = map.getSource('draw-saved');
+
+    if (sessionSource) {
+      sessionSource.setData(buildSessionFeatureCollection());
+    }
+
+    if (savedSource) {
+      savedSource.setData(buildSavedFeatureCollection());
+    }
+
+    updateCounters();
+  }
+
+  function setMode(mode) {
+    currentMode = mode;
+    draftCoordinates = [];
+    pointerCoordinate = null;
+
+    lineModeButton.classList.toggle('active', mode === 'line');
+    polygonModeButton.classList.toggle('active', mode === 'polygon');
+
+    setStatus(mode === 'line'
+      ? 'Line mode active. Click the map to start a line.'
+      : 'Polygon mode active. Click the map to start a polygon.');
+
+    syncSources();
+  }
+
+  function completeDraft() {
+    const minimumVertices = currentMode === 'line' ? 2 : 3;
+
+    if (draftCoordinates.length < minimumVertices) {
+      setStatus(currentMode === 'line'
+        ? 'A line needs at least 2 points.'
+        : 'A polygon needs at least 3 points.');
+      return;
+    }
+
+    const geometry = currentMode === 'line'
+      ? {
+        type: 'LineString',
+        coordinates: [...draftCoordinates],
+      }
+      : {
+        type: 'Polygon',
+        coordinates: [[...draftCoordinates, draftCoordinates[0]]],
+      };
+
+    savedFeatures = [...savedFeatures, {
+      type: 'Feature',
+      properties: {
+        mode: currentMode,
+      },
+      geometry,
+    }];
+
+    draftCoordinates = [];
+    pointerCoordinate = null;
+    setStatus(currentMode === 'line'
+      ? 'Line saved. Click the map to start another line.'
+      : 'Polygon saved. Click the map to start another polygon.');
+    syncSources();
+  }
+
+  map.on('load', () => {
+    map.addSource('draw-session', {
+      type: 'geojson',
+      data: buildSessionFeatureCollection(),
+    });
+
+    map.addSource('draw-saved', {
+      type: 'geojson',
+      data: buildSavedFeatureCollection(),
+    });
+
+    map.addLayer({
+      id: 'draw-saved-polygon-fill',
+      type: 'fill',
+      source: 'draw-saved',
+      filter: ['==', '$type', 'Polygon'],
+      paint: {
+        'fill-color': '#1d4ed8',
+        'fill-opacity': 0.18,
+      },
+    });
+
+    map.addLayer({
+      id: 'draw-saved-line',
+      type: 'line',
+      source: 'draw-saved',
+      filter: ['any', ['==', '$type', 'LineString'], ['==', '$type', 'Polygon']],
+      layout: {
+        'line-cap': 'round',
+        'line-join': 'round',
+      },
+      paint: {
+        'line-color': '#1d4ed8',
+        'line-width': 3,
+      },
+    });
+
+    map.addLayer({
+      id: 'draw-session-polygon-fill',
+      type: 'fill',
+      source: 'draw-session',
+      filter: ['==', '$type', 'Polygon'],
+      paint: {
+        'fill-color': '#ea580c',
+        'fill-opacity': 0.18,
+      },
+    });
+
+    map.addLayer({
+      id: 'draw-session-line',
+      type: 'line',
+      source: 'draw-session',
+      filter: ['==', '$type', 'LineString'],
+      layout: {
+        'line-cap': 'round',
+        'line-join': 'round',
+      },
+      paint: {
+        'line-color': '#ea580c',
+        'line-width': 3,
+        'line-dasharray': [1.2, 1.2],
+      },
+    });
+
+    map.addLayer({
+      id: 'draw-session-points',
+      type: 'circle',
+      source: 'draw-session',
+      filter: ['==', '$type', 'MultiPoint'],
+      paint: {
+        'circle-radius': 5,
+        'circle-color': '#ea580c',
+        'circle-stroke-color': '#ffffff',
+        'circle-stroke-width': 2,
+      },
+    });
+
+    syncSources();
+  });
+
+  map.on('mousemove', (event) => {
+    pointerCoordinate = [event.lngLat.lng, event.lngLat.lat];
+    syncSources();
+  });
+
+  map.on('click', (event) => {
+    draftCoordinates = [...draftCoordinates, [event.lngLat.lng, event.lngLat.lat]];
+    setStatus(currentMode === 'line'
+      ? 'Line in progress. Add more points or finish the shape.'
+      : 'Polygon in progress. Add more points or finish the shape.');
+    syncSources();
+  });
+
+  map.on('dblclick', (event) => {
+    event.preventDefault();
+    completeDraft();
+  });
+
+  lineModeButton.addEventListener('click', () => {
+    setMode('line');
+  });
+
+  polygonModeButton.addEventListener('click', () => {
+    setMode('polygon');
+  });
+
+  finishButton.addEventListener('click', () => {
+    completeDraft();
+  });
+
+  undoButton.addEventListener('click', () => {
+    if (draftCoordinates.length === 0) {
+      setStatus('There is no draft point to remove.');
+      return;
+    }
+
+    draftCoordinates = draftCoordinates.slice(0, -1);
+    setStatus('Removed the last draft point.');
+    syncSources();
+  });
+
+  clearButton.addEventListener('click', () => {
+    draftCoordinates = [];
+    pointerCoordinate = null;
+    savedFeatures = [];
+    setStatus('Cleared all draft and saved features.');
+    syncSources();
+  });
+</script>
+</body>
+</html>

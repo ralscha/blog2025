@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Map with Style Chooser</title>
+  <link href="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css" rel="stylesheet"/>
+  <link href="choose.css" rel="stylesheet"/>
+  <script src="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js"></script>
+</head>
+<body>
+<h1>Map with Style Chooser</h1>
+
+<div class="controls">
+  <label for="styleSelect">Choose map style:</label>
+  <select id="styleSelect">
+    <option value="https://vectortiles.geo.admin.ch/styles/ch.swisstopo.basemap.vt/style.json">Basemap</option>
+    <option value="https://vectortiles.geo.admin.ch/styles/ch.swisstopo.lightbasemap.vt/style.json">Light Basemap
+    </option>
+    <option value="https://vectortiles.geo.admin.ch/styles/ch.swisstopo.imagerybasemap.vt/style.json">Imagery Basemap
+    </option>
+    <option value="https://vectortiles.geo.admin.ch/styles/ch.swisstopo.basemap-winter.vt/style.json">Winter Basemap
+    </option>
+  </select>
+</div>
+
+<div id="map"></div>
+
+<script>
+  const styleSelect = document.getElementById('styleSelect');
+
+  const map = new maplibregl.Map({
+    container: 'map',
+    style: styleSelect.value,
+    center: [8.2312, 46.8182],
+    zoom: 7,
+  });
+
+  map.addControl(new maplibregl.NavigationControl());
+  map.addControl(new maplibregl.ScaleControl({
+    maxWidth: 100,
+    unit: 'metric'
+  }));
+
+  styleSelect.addEventListener('change', function () {
+    map.setStyle(this.value);
+  });
+
+  map.on('styledata', () => {
+    console.log('Map style loaded successfully');
+  });
+</script>
+</body>
+</html>

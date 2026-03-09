@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Draw on a map</title>
+  <link href="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css" rel="stylesheet"/>
+  <link href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.5.1/mapbox-gl-draw.css" rel="stylesheet" type="text/css"/>
+  <link href="draw.css" rel="stylesheet"/>
+  <script src="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js"></script>
+  <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
+  <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.5.1/mapbox-gl-draw.js"></script>
+</head>
+<body>
+<h1>Draw a Polygon on the map</h1>
+
+<p class="description">
+  This example uses the Mapbox GL Draw plugin together with MapLibre.
+  Draw a polygon, then double-click the last point to finish it and calculate its area.
+</p>
+
+<div class="map-shell">
+  <div id="map"></div>
+  <div class="calculation-box">
+    <p>Click the polygon tool and draw an area on the map.</p>
+    <div id="calculated-area"></div>
+  </div>
+</div>
+
+<script>
+  window.mapboxgl = maplibregl;
+
+  MapboxDraw.constants.classes.CANVAS = 'maplibregl-canvas';
+  MapboxDraw.constants.classes.CONTROL_BASE = 'maplibregl-ctrl';
+  MapboxDraw.constants.classes.CONTROL_PREFIX = 'maplibregl-ctrl-';
+  MapboxDraw.constants.classes.CONTROL_GROUP = 'maplibregl-ctrl-group';
+  MapboxDraw.constants.classes.ATTRIBUTION = 'maplibregl-ctrl-attrib';
+
+  const calculatedArea = document.getElementById('calculated-area');
+
+  const map = new maplibregl.Map({
+    container: 'map',
+    style: 'https://vectortiles.geo.admin.ch/styles/ch.swisstopo.basemap.vt/style.json',
+    center: [8.2312, 46.8182],
+    zoom: 7,
+  });
+
+  map.addControl(new maplibregl.NavigationControl());
+  map.addControl(new maplibregl.ScaleControl({
+    maxWidth: 100,
+    unit: 'metric'
+  }));
+
+  const drawStyles = [
+    {
+      id: 'gl-draw-polygon-fill',
+      type: 'fill',
+      filter: ['all', ['==', '$type', 'Polygon']],
+      paint: {
+        'fill-color': [
+          'case',
+          ['==', ['get', 'active'], 'true'], '#fbb03b',
+          '#3bb2d0',
+        ],
+        'fill-opacity': 0.1,
+      },
+    },
+    {
+      id: 'gl-draw-lines',
+      type: 'line',
+      filter: ['any', ['==', '$type', 'LineString'], ['==', '$type', 'Polygon']],
+      layout: {
+        'line-cap': 'round',
+        'line-join': 'round',
+      },
+      paint: {
+        'line-color': [
+          'case',
+          ['==', ['get', 'active'], 'true'], '#fbb03b',
+          '#3bb2d0',
+        ],
+        'line-dasharray': [
+          'case',
+          ['==', ['get', 'active'], 'true'], ['literal', [0.2, 2]],
+          ['literal', [2, 0]],
+        ],
+        'line-width': 2,
+      },
+    },
+    {
+      id: 'gl-draw-point-outer',
+      type: 'circle',
+      filter: ['all', ['==', '$type', 'Point'], ['==', 'meta', 'feature']],
+      paint: {
+        'circle-radius': [
+          'case',
+          ['==', ['get', 'active'], 'true'], 7,
+          5,
+        ],
+        'circle-color': '#fff',
+      },
+    },
+    {
+      id: 'gl-draw-point-inner',
+      type: 'circle',
+      filter: ['all', ['==', '$type', 'Point'], ['==', 'meta', 'feature']],
+      paint: {
+        'circle-radius': [
+          'case',
+          ['==', ['get', 'active'], 'true'], 5,
+          3,
+        ],
+        'circle-color': [
+          'case',
+          ['==', ['get', 'active'], 'true'], '#fbb03b',
+          '#3bb2d0',
+        ],
+      },
+    },
+    {
+      id: 'gl-draw-vertex-outer',
+      type: 'circle',
+      filter: ['all', ['==', '$type', 'Point'], ['==', 'meta', 'vertex'], ['!=', 'mode', 'simple_select']],
+      paint: {
+        'circle-radius': [
+          'case',
+          ['==', ['get', 'active'], 'true'], 7,
+          5,
+        ],
+        'circle-color': '#fff',
+      },
+    },
+    {
+      id: 'gl-draw-vertex-inner',
+      type: 'circle',
+      filter: ['all', ['==', '$type', 'Point'], ['==', 'meta', 'vertex'], ['!=', 'mode', 'simple_select']],
+      paint: {
+        'circle-radius': [
+          'case',
+          ['==', ['get', 'active'], 'true'], 5,
+          3,
+        ],
+        'circle-color': '#fbb03b',
+      },
+    },
+    {
+      id: 'gl-draw-midpoint',
+      type: 'circle',
+      filter: ['all', ['==', 'meta', 'midpoint']],
+      paint: {
+        'circle-radius': 3,
+        'circle-color': '#fbb03b',
+      },
+    },
+  ];
+
+  const draw = new MapboxDraw({
+    displayControlsDefault: false,
+    controls: {
+      polygon: true,
+      trash: true,
+    },
+    defaultMode: 'simple_select',
+    styles: drawStyles,
+  });
+
+  map.addControl(draw, 'top-right');
+
+  map.on('draw.create', updateArea);
+  map.on('draw.update', updateArea);
+  map.on('draw.delete', updateArea);
+
+  function updateArea() {
+    const data = draw.getAll();
+
+    if (data.features.length === 0) {
+      calculatedArea.innerHTML = '';
+      return;
+    }
+
+    const areaInSquareMeters = turf.area(data);
+    const areaInHectares = areaInSquareMeters / 10000;
+    const areaInSquareKilometers = areaInSquareMeters / 1000000;
+
+    calculatedArea.innerHTML = `
+      <p><strong>${Math.round(areaInSquareMeters).toLocaleString()}</strong> m²</p>
+      <p><strong>${areaInHectares.toFixed(2)}</strong> hectares</p>
+      <p><strong>${areaInSquareKilometers.toFixed(3)}</strong> km²</p>
+    `;
+  }
+</script>
+</body>
+</html>
