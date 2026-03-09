@@ -1,0 +1,66 @@
+version: '3'
+
+vars:
+  EXAMPLES_PACKAGE: ch.ralscha.classfileapi
+  MVNW: '{{if eq OS "windows"}}cmd /c .\\mvnw.cmd{{else}}./mvnw{{end}}'  
+
+tasks:
+  default:
+    desc: Show the available tasks
+    cmds:
+      - task --list
+    silent: true
+
+  format:
+    desc: Format source code with Spring Java Format
+    cmds:
+      - '{{.MVNW}} spring-javaformat:apply'
+
+  compile:
+    desc: Compile the project
+    sources:
+      - pom.xml
+      - src/main/java/**/*.java
+      - src/main/resources/**
+    generates:
+      - target/classes/**
+    cmds:
+      - '{{.MVNW}} clean compile'
+
+  example:generate-hello:
+    desc: Run the generated Hello class example
+    deps:
+      - compile
+    cmds:
+      - '{{.MVNW}} exec:java -Dexec.mainClass={{.EXAMPLES_PACKAGE}}.GenerateHelloWorldClass'
+
+  example:parse-hello:
+    desc: Parse the generated Hello class example
+    deps:
+      - example:generate-hello
+    cmds:
+      - task: example:generate-hello
+      - '{{.MVNW}} exec:java -Dexec.mainClass={{.EXAMPLES_PACKAGE}}.ParseHelloWorldClass'
+
+  example:transform-hello:
+    desc: Transform the generated Hello class example
+    deps:
+      - example:generate-hello
+    cmds:
+      - task: example:generate-hello
+      - '{{.MVNW}} exec:java -Dexec.mainClass={{.EXAMPLES_PACKAGE}}.TransformHelloWorldClass'
+
+  example:json-serializer:
+    desc: Run the JSON serializer example
+    deps:
+      - compile
+    cmds:
+      - '{{.MVNW}} exec:java -Dexec.mainClass={{.EXAMPLES_PACKAGE}}.GenerateJsonSerializer'
+
+  example:all:
+    desc: Run all examples in sequence
+    cmds:
+      - task: example:generate-hello
+      - task: example:parse-hello
+      - task: example:transform-hello
+      - task: example:json-serializer
