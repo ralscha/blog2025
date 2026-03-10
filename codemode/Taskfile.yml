@@ -1,0 +1,31 @@
+version: '3'
+
+tasks:
+  default:
+    desc: List available tasks
+    cmds:
+      - task --list-all
+    silent: true
+
+  run:
+    desc: 'Run the codemode CLI. Pass CLI args after --, for example: task run -- -prompt "hello"'
+    cmds:
+      - go run ./cmd/codemode {{.CLI_ARGS}}
+
+  format:
+    desc: Format Go code
+    cmds:
+      - go fix ./...
+      - go fmt ./...
+
+  lint:
+    desc: Run golangci-lint in Docker
+    cmds:
+      - docker run --rm -v "${PWD}:/app" -w /app golangci/golangci-lint:v2.10.1 golangci-lint run -v --timeout=10m
+
+  check:
+    desc: Format, lint, and test the project
+    deps:
+      - format
+      - lint
+      - test
