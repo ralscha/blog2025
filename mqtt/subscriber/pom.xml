@@ -21,7 +21,7 @@
 		<dependency>
 			<groupId>com.google.protobuf</groupId>
 			<artifactId>protobuf-java</artifactId>
-			<version>4.33.2</version>
+			<version>4.34.0</version>
 		</dependency>
 	</dependencies>
 
@@ -39,7 +39,7 @@
 							<goal>run</goal>
 						</goals>
 						<configuration>
-							<protocVersion>4.33.2</protocVersion>
+							<protocVersion>4.34.0</protocVersion>
 							<inputDirectories>
 								<include>${project.basedir}/../schema</include>
 							</inputDirectories>

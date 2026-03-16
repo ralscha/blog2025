@@ -1,0 +1,20 @@
+{
+  "name": "starbucks-map-ui",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "maplibre-gl": "5.20.1"
+  },
+  "devDependencies": {
+    "prettier": "3.5.3",
+    "typescript": "5.9.3",
+    "vite": "8.0.0"
+  }
+}

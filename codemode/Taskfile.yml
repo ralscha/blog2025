@@ -12,6 +12,11 @@ tasks:
     cmds:
       - go run ./cmd/codemode {{.CLI_ARGS}}
 
+  build:
+    desc: Builds codemode example
+    cmds:
+      - go build -o codemode{{exeExt}} ./cmd/codemode 
+
   format:
     desc: Format Go code
     cmds:
@@ -21,7 +26,7 @@ tasks:
   lint:
     desc: Run golangci-lint in Docker
     cmds:
-      - docker run --rm -v "${PWD}:/app" -w /app golangci/golangci-lint:v2.10.1 golangci-lint run -v --timeout=10m
+      - docker run --rm -v "${PWD}:/app" -w /app golangci/golangci-lint:v2.11.3 golangci-lint run -v --timeout=10m
 
   check:
     desc: Format, lint, and test the project

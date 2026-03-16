@@ -1,0 +1,5 @@
+/.idea/
+/web/node_modules/
+/web/dist/
+starbucks.csv
+*.exe

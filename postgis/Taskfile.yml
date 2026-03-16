@@ -1,0 +1,102 @@
+version: '3'
+
+tasks:
+  default:
+    desc: List available tasks
+    cmds:
+      - task --list-all
+
+  format:
+    desc: Format all Go code
+    cmds:
+      - go fix ./...
+      - go fmt ./...
+
+  lint:
+    cmds:
+      - docker run --rm -v {{toSlash .ROOT_DIR}}:/app -w /app golangci/golangci-lint:v2.11.3 golangci-lint run -v --timeout 5m
+
+  db:up:
+    desc: Start the PostGIS container
+    cmds:
+      - docker compose up -d
+
+  db:down:
+    desc: Stop the PostGIS container
+    cmds:
+      - docker compose down
+
+  db:logs:
+    desc: Follow PostGIS container logs
+    cmds:
+      - docker compose logs -f postgis
+
+  importer:
+    desc: Import the Starbucks CSV into PostGIS
+    cmds:
+      - go run ./importer -csv {{default "./starbucks.csv" .CSV}}{{if eq (default "false" .TRUNCATE) "true"}} -truncate{{end}}
+
+  within:
+    desc: Find nearby stores for a point and radius
+    cmds:
+      - go run ./within -lat {{default "35.6895" .LAT}} -lon {{default "139.6917" .LON}} -radius {{default "1500" .RADIUS}} -limit {{default "5" .LIMIT}}
+
+  clusters:
+    desc: Cluster stores within a country
+    cmds:
+      - go run ./clusters -country {{default "JP" .COUNTRY}} -k {{default "4" .K}}
+
+  corridor:
+    desc: Find stores near a straight route corridor
+    cmds:
+      - go run ./corridor -from-lat {{default "35.6585" .FROM_LAT}} -from-lon {{default "139.7013" .FROM_LON}} -to-lat {{default "35.6895" .TO_LAT}} -to-lon {{default "139.6917" .TO_LON}} -distance {{default "600" .DISTANCE}} -limit {{default "10" .LIMIT}}
+
+  fleet:
+    desc: Start the fleet simulator
+    cmds:
+      - go run ./fleet
+
+  geofence:
+    desc: Start the geofence event poller
+    cmds:
+      - go run ./geofence
+
+  server:
+    desc: Start the Go API server
+    cmds:
+      - go run ./server
+
+  web:install:
+    desc: Install frontend dependencies
+    dir: ./web
+    cmds:
+      - bun install
+
+  web:dev:
+    desc: Start the Vite development server
+    dir: ./web
+    cmds:
+      - bun run dev
+
+  web:build:
+    desc: Build the frontend bundle
+    dir: ./web
+    cmds:
+      - bun run build
+
+  web:preview:
+    desc: Preview the built frontend locally
+    dir: ./web
+    cmds:
+      - bun run preview
+
+  setup:
+    desc: Start PostGIS and install frontend dependencies
+    deps:
+      - db:up
+      - web:install
+
+  build:
+    desc: Build the frontend bundle for the Go server to serve
+    deps:
+      - web:build
