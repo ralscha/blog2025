@@ -8,6 +8,6 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "playwright": "1.58.2"
+    "playwright": "1.59.1"
   }
 }

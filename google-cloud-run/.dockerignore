@@ -1,0 +1,10 @@
+.git
+.pulumi
+bin
+dist
+coverage
+*.md
+*.txt
+cli
+main.go
+Pulumi.*.yaml

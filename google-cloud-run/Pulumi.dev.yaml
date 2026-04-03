@@ -1,0 +1,8 @@
+config:
+  gcp:project: blog-
+  gcp:region: us-central1
+  google-cloud-run-example:artifactRegistryRepository: temperature-images
+  google-cloud-run-example:imageName: temperature-service
+  google-cloud-run-example:imageTag: v1
+  google-cloud-run-example:serviceName: temperature-service
+encryptionsalt: v1:6MLwSshlEDc=:v1:Aynyt6SLsHr2pcjP:EmbYOIZlyoofFBbxtwSrZ3DhlHJraA==

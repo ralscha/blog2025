@@ -1,0 +1,3 @@
+name: google-cloud-run-example
+runtime: go
+description: Pulumi Go example that builds a Docker image and deploys a small Go temperature service to Google Cloud Run.

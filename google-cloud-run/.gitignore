@@ -1,0 +1,9 @@
+.pulumi/
+bin/
+dist/
+coverage/
+*.exe
+*.test
+*.out
+*.log
+blog*.json
