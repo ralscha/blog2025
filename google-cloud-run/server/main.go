@@ -31,7 +31,6 @@ type requestError struct {
 func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", handleIndex)
-	mux.HandleFunc("/healthz", handleHealth)
 	mux.HandleFunc("/api/temperature", handleTemperature)
 
 	addr := ":" + portFromEnv()
@@ -48,14 +47,6 @@ func handleIndex(w http.ResponseWriter, _ *http.Request) {
 		"endpoint":    "/api/temperature?lat=37.7749&lng=-122.4194",
 	})
 }
-
-func handleHealth(w http.ResponseWriter, _ *http.Request) {
-	writeJSON(w, http.StatusOK, map[string]any{
-		"ok":       true,
-		"revision": revision(),
-	})
-}
-
 func handleTemperature(w http.ResponseWriter, r *http.Request) {
 	lat, err := parseCoordinate(r, "lat", -90, 90)
 	if err != nil {
