@@ -1,0 +1,39 @@
+<main class="page-shell">
+  <section class="panel">
+    <h1>Current build</h1>
+
+    <dl class="build-meta">
+      <div>
+        <dt>Build id</dt>
+        <dd>{{ buildInfo.id }}</dd>
+      </div>
+      <div>
+        <dt>Built at</dt>
+        <dd>{{ buildInfo.builtAt }}</dd>
+      </div>
+    </dl>
+
+    <p class="status" aria-live="polite">{{ appUpdate.statusMessage() }}</p>
+  </section>
+</main>
+
+<dialog
+  #reloadDialog
+  class="update-dialog"
+  aria-labelledby="reload-app-title"
+  aria-describedby="reload-app-description"
+  (cancel)="$event.preventDefault()"
+>
+  <form method="dialog" class="update-dialog__content">
+    <h2 id="reload-app-title">Update available</h2>
+    <p id="reload-app-description">A newer build is ready. Reload the app to apply it.</p>
+    <button
+      type="button"
+      class="action"
+      (click)="appUpdate.activateUpdate()"
+      [disabled]="appUpdate.isActivating()"
+    >
+      {{ appUpdate.isActivating() ? 'Reloading...' : 'Reload App' }}
+    </button>
+  </form>
+</dialog>

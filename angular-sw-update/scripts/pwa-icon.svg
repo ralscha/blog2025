@@ -1,0 +1,31 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="512" cy="512" r="332" fill="#0F172A" />
+  <!-- White arrow (upper half, CW from clock 210 to 340)
+       ri=175 ro=262  tip along tangent at 340 deg -->
+  <path
+    d="M 425 664
+       A 175 175 0 0 1 452 347
+       L 540 269
+       L 422 266
+       A 262 262 0 0 0 381 739
+       Z"
+    fill="#FFF7ED"
+  />
+  <!-- Orange arrow (lower half, CW from clock 30 to 165)
+       ri=175 ro=262  tip along tangent at 165 deg -->
+  <path
+    d="M 599 360
+       A 175 175 0 0 1 557 681
+       L 462 752
+       L 580 765
+       A 262 262 0 0 0 643 285
+       Z"
+    fill="#FB923C"
+  />
+  <!-- Centred upload arrow scaled 82 % around (512 512) -->
+  <path
+    transform="translate(512 512) scale(0.82) translate(-512 -512)"
+    d="M512 312L660 460C677 477 677 505 660 522C643 539 615 539 598 522L556 480V618C556 642 536 662 512 662C488 662 468 642 468 618V480L426 522C409 539 381 539 364 522C347 505 347 477 364 460L512 312Z"
+    fill="#FED7AA"
+  />
+</svg>
