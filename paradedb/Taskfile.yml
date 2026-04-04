@@ -1,0 +1,87 @@
+version: '3'
+
+vars:
+  DB_URL: postgres://postgres:postgres@localhost:5432/paradedb_demo?sslmode=disable
+  TARGET_GB: '1.2'
+  MAX_BOOKS: '500'
+
+tasks:
+  default:
+    desc: List available tasks
+    cmds:
+      - task --list-all
+
+  format:
+    desc: Format all Go code
+    cmds:
+      - go fix ./...
+      - go fmt ./...
+
+  db:build-sqlc:
+    desc: Build the sqlc Docker image.
+    cmds:
+      - docker build -t sqlc -f sqlc/Dockerfile .
+
+  db:run-sqlc:
+    desc: Generate sqlc code in Docker.
+    deps: [db:build-sqlc]
+    cmds:
+      - docker run --rm -v {{toSlash .ROOT_DIR}}:/src sqlc
+
+  lint:
+    cmds:
+      - docker run --rm -v {{toSlash .ROOT_DIR}}:/app -w /app golangci/golangci-lint:v2.11.4 golangci-lint run -v --timeout 5m
+
+  up:
+    desc: Start ParadeDB in Docker Compose.
+    cmds:
+      - docker compose up -d
+
+  down:
+    desc: Stop ParadeDB without deleting the volume.
+    cmds:
+      - docker compose down
+
+  reset:
+    desc: Stop ParadeDB and delete the database volume.
+    cmds:
+      - docker compose down -v
+
+  wait:
+    desc: Wait until ParadeDB is ready for connections.
+    cmds:
+      - docker compose up -d
+      - docker compose exec -T db sh -lc "until pg_isready -h 127.0.0.1 -U postgres -d paradedb_demo; do sleep 1; done"
+
+  build:
+    desc: Build the Go CLI.
+    deps: [db:run-sqlc]
+    cmds:
+      - go build -o ./bin/paradedb-demo ./cmd/paradedb-demo
+
+  import:
+    desc: Discover Gutenberg books, download them locally, and import them into ParadeDB.
+    deps: [wait, db:run-sqlc]
+    cmds:
+      - go run ./cmd/paradedb-demo import --db-url "{{.DB_URL}}" --data-dir ./data/downloads --topics-file ./data/manifest/gutenberg-topics.txt --target-gb {{.TARGET_GB}} --max-books {{.MAX_BOOKS}}
+
+  search:
+    desc: Run an ad hoc search. Override with QUERY="phrase here".
+    deps: [wait, db:run-sqlc]
+    vars:
+      QUERY: '{{default "white whale revenge" .QUERY}}'
+    cmds:
+      - go run ./cmd/paradedb-demo search --db-url "{{.DB_URL}}" --limit 5 --snippet "{{.QUERY}}"
+
+  demo:
+    desc: Provision the full demo and run a representative search.
+    deps: [build, import]
+    cmds:
+      - go run ./cmd/paradedb-demo search --db-url "{{.DB_URL}}" --limit 5 --snippet "captain ahab whale"
+
+  smoke:
+    desc: Fast smoke test with a tiny one-topic Gutenberg subset.
+    deps: [wait, db:run-sqlc]
+    cmds:
+      - go run ./cmd/paradedb-demo import --db-url "{{.DB_URL}}" --data-dir ./data/downloads --topics-file ./data/manifest/gutenberg-smoke.txt --target-gb 0.02 --max-books 3 --pages-per-topic 1
+      - go run ./cmd/paradedb-demo search --db-url "{{.DB_URL}}" --limit 3 --snippet "love marriage"

@@ -1,0 +1,20 @@
+services:
+  db:
+    image: paradedb/paradedb:latest-pg18
+    container_name: paradedb-demo-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: paradedb_demo
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U postgres -d paradedb_demo"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    volumes:
+      - paradedb_demo_data:/var/lib/postgresql
+
+volumes:
+  paradedb_demo_data:
