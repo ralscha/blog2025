@@ -48,24 +48,13 @@ FROM sensor_data
 GROUP BY bucket, sensor_id;
 
 -- name: AddSensorHourlyCaggPolicy :exec
-DO $$
-BEGIN
-    PERFORM add_continuous_aggregate_policy(
-        'sensor_hourly',
-        start_offset => interval '2 days',
-        end_offset => interval '10 minutes',
-        schedule_interval => interval '10 minutes'
-    );
-EXCEPTION
-    WHEN duplicate_object THEN NULL;
-    WHEN invalid_parameter_value THEN
-        IF SQLERRM LIKE '%already exists%' THEN
-            NULL;
-        ELSE
-            RAISE;
-        END IF;
-END;
-$$;
+SELECT add_continuous_aggregate_policy(
+    'sensor_hourly',
+    start_offset => INTERVAL '2 days',
+    end_offset => INTERVAL '10 minutes',
+    schedule_interval => INTERVAL '10 minutes',
+    if_not_exists => true
+);
 
 -- name: SetSensorDataColumnstore :exec
 ALTER TABLE sensor_data
@@ -83,19 +72,11 @@ CALL add_columnstore_policy(
 );
 
 -- name: AddSensorDataRetentionPolicy :exec
-DO $$
-BEGIN
-    PERFORM add_retention_policy('sensor_data', interval '30 days');
-EXCEPTION
-    WHEN duplicate_object THEN NULL;
-    WHEN invalid_parameter_value THEN
-        IF SQLERRM LIKE '%already exists%' THEN
-            NULL;
-        ELSE
-            RAISE;
-        END IF;
-END;
-$$;
+SELECT add_retention_policy(
+    'sensor_data',
+    drop_after => INTERVAL '30 days',
+    if_not_exists => true
+);
 
 -- name: AnalyzeSensorData :exec
 ANALYZE sensor_data;
