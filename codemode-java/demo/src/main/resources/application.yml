@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: codemode-demo
+
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      chat:
+        options:
+          model: gpt-5.4
+          max-completion-tokens: 10000
+
+codemode:
+  mcp:
+    base-url: http://localhost:8081
+    endpoint: /mcp
+    api-key: ${DEMO_MCP_SERVER_API_KEY:demo-mcp-api-key}
+  max-turns: 10

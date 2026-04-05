@@ -1,0 +1,15 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: demo-mcp-server
+
+codemode:
+  mcp:
+    name: demo-mcp-server
+    version: 0.0.1
+    instructions: Demo tools.
+    endpoint: /mcp
+    api-key: ${DEMO_MCP_SERVER_API_KEY:demo-mcp-api-key}
+

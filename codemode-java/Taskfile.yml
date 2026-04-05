@@ -1,0 +1,60 @@
+version: '3'
+
+vars:
+  MVNW: '{{if eq OS "windows"}}cmd /c .\\mvnw.cmd{{else}}./mvnw{{end}}'  
+
+tasks:
+  default:
+    desc: List available tasks
+    cmds:
+      - task --list-all
+    silent: true
+
+  mcp-server:start:
+    desc: Build and start the demo MCP server on port 8081
+    dir: demo-mcp-server
+    cmds:
+      - '{{.MVNW}} spring-boot:run'
+
+  mcp-server:build:
+    desc: Build the demo MCP server JAR
+    dir: demo-mcp-server
+    cmds:
+      - '{{.MVNW}} package -q'
+
+  run:
+    desc: 'Run the codemode demo.'
+    dir: demo
+    cmds:
+      - '{{.MVNW}} spring-boot:run -Dspring-boot.run.jvmArguments="-XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCI -Dpolyglot.engine.WarnInterpreterOnly=false" -Dspring-boot.run.arguments="--logging.level.ch.rasc=DEBUG"'
+
+  build:
+    desc: Build all modules
+    cmds:
+      - task: mcp-server:build
+      - task: demo:build
+
+  demo:build:
+    desc: Build the codemode demo JAR
+    dir: demo
+    cmds:
+      - '{{.MVNW}} package -q'
+
+  format:demo:
+    desc: Format demo Java code with Spring Java Format
+    dir: demo
+    cmds:
+      - '{{.MVNW}} spring-javaformat:apply'
+
+  format:mcp-server:
+    desc: Format mcp-server Java code with Spring Java Format
+    dir: demo-mcp-server
+    cmds:
+      - '{{.MVNW}} spring-javaformat:apply'
+
+  format:
+    desc: Format Java code
+    cmds:
+      - task: format:demo
+      - task: format:mcp-server
+
