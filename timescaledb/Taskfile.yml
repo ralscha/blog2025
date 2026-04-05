@@ -1,0 +1,69 @@
+version: '3'
+
+vars:
+  GO: go
+
+tasks:
+  default:
+    desc: Show available tasks
+    cmds:
+      - task --list
+    silent: true
+
+  format:
+    desc: Format Go code
+    cmds:
+      - go fix ./...
+      - go fmt ./...
+
+  db:up:
+    desc: Start TimescaleDB with docker compose
+    cmds:
+      - docker compose up -d
+
+  db:down:
+    desc: Stop TimescaleDB
+    cmds:
+      - docker compose down
+
+  db:reset:
+    desc: Stop TimescaleDB and remove Docker volumes
+    cmds:
+      - docker compose down -v
+
+  run:setup:
+    desc: Run setup demo (creates sensor_data hypertable and sample data)
+    cmds:
+      - "{{.GO}} run ./cmd/setup"
+
+  run:queries:
+    desc: Run time-series query demo
+    cmds:
+      - "{{.GO}} run ./cmd/queries"
+
+  run:batch:
+    desc: Run batch insert demo
+    cmds:
+      - "{{.GO}} run ./cmd/batch"
+
+  run:cleanup:
+    desc: Remove demo tables, hypertables, and continuous aggregate
+    cmds:
+      - "{{.GO}} run ./cmd/cleanup"
+
+  run:all:
+    desc: Run setup, queries, then batch demos
+    cmds:
+      - task run:setup
+      - task run:queries
+      - task run:batch
+
+  db:build-sqlc:
+    desc: Build the sqlc docker image
+    cmds:
+      - docker build -t sqlc -f sqlc/Dockerfile .
+
+  db:run-sqlc:
+    desc: Generate sqlc code in Docker
+    cmds:
+      - docker run --rm -v {{toSlash .ROOT_DIR}}:/src sqlc
