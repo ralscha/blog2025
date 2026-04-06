@@ -1,0 +1,7 @@
+supabase.exe
+**/node_modules/
+**/dist/
+**/.env.local
+*.exe
+supabase/.temp/
+.env

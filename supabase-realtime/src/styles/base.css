@@ -1,0 +1,157 @@
+:root {
+  color-scheme: light;
+  font-family: system-ui, sans-serif;
+  line-height: 1.5;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+}
+
+body {
+  min-width: 320px;
+  color: #1f2937;
+  background: #ffffff;
+}
+
+a {
+  color: inherit;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+code {
+  padding: 0.1rem 0.3rem;
+  border-radius: 0.25rem;
+  background: #f3f4f6;
+}
+
+.page {
+  max-width: 48rem;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.header h1,
+.panel h2,
+.list,
+.stack {
+  margin: 0;
+}
+
+.header p,
+.hint,
+.status,
+.meta {
+  margin: 0.5rem 0 0;
+  color: #4b5563;
+}
+
+.nav {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.nav a {
+  padding: 0.25rem 0.5rem;
+  border: 1px solid #d1d5db;
+  text-decoration: none;
+}
+
+.nav a[aria-current="page"] {
+  font-weight: 600;
+  background: #f3f4f6;
+}
+
+.status {
+  margin-bottom: 1rem;
+}
+
+.status-live {
+  color: #166534;
+}
+
+.grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.grid.two {
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+}
+
+.panel {
+  padding: 1rem;
+  border: 1px solid #d1d5db;
+}
+
+.value {
+  margin: 0.5rem 0 0;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.stack {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.form {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.form input {
+  flex: 1;
+  min-width: 0;
+}
+
+.list {
+  padding-left: 1.25rem;
+}
+
+.todo-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.todo-item.done span {
+  text-decoration: line-through;
+  color: #6b7280;
+}
+
+.grow {
+  flex: 1;
+}
+
+@media (max-width: 640px) {
+  .form {
+    flex-direction: column;
+  }
+}
