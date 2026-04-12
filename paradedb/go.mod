@@ -1,6 +1,6 @@
 module paradedb-demo
 
-go 1.26.1
+go 1.26.2
 
 require (
 	github.com/jackc/pgx/v5 v5.9.1
@@ -15,5 +15,5 @@ require (
 	github.com/sethvargo/go-retry v0.3.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	golang.org/x/sync v0.20.0 // indirect
-	golang.org/x/text v0.35.0 // indirect
+	golang.org/x/text v0.36.0 // indirect
 )
