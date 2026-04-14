@@ -1,0 +1,119 @@
+<main class="page-shell">
+  <div class="page-grid">
+    <section class="hero">
+      <div class="hero-grid">
+        <div>
+          <h1>Browser-held tokens with PKCE</h1>
+
+          <div class="button-row">
+            <button
+              class="button-primary"
+              type="button"
+              (click)="login('alice')"
+              [disabled]="browserFlow.busy()"
+            >
+              Log In as Alice
+            </button>
+            <button
+              class="button-secondary"
+              type="button"
+              (click)="login('bob')"
+              [disabled]="browserFlow.busy()"
+            >
+              Log In as Bob
+            </button>
+            <button
+              class="button-quiet"
+              type="button"
+              (click)="browserFlow.callResourceApi()"
+              [disabled]="!browserFlow.authenticated() || browserFlow.busy()"
+            >
+              Call Protected API
+            </button>
+            <button
+              class="button-quiet"
+              type="button"
+              (click)="logout()"
+              [disabled]="!browserFlow.authenticated() || browserFlow.busy()"
+            >
+              Revoke Local Tokens
+            </button>
+            <button
+              class="button-quiet"
+              type="button"
+              (click)="endProviderSession()"
+              [disabled]="browserFlow.busy()"
+            >
+              End Provider Session
+            </button>
+          </div>
+        </div>
+
+        <aside class="callout">
+          <h2>Runtime</h2>
+          <p class="muted">Provider: {{ providerBaseUrl }}</p>
+          <p class="muted">Client: {{ clientId }}</p>
+          <p class="muted">Redirect URI: {{ redirectUri }}</p>
+          <div class="status-pill">
+            <span>Browser token storage</span>
+            <strong>{{ browserFlow.authenticated() ? 'Present' : 'Empty' }}</strong>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    @if (browserFlow.error(); as message) {
+      <section class="error-banner" aria-live="polite">{{ message }}</section>
+    }
+
+    <section class="panel panel-grid">
+      <article class="stat-card">
+        <h3>Current User</h3>
+        @if (browserFlow.userInfo(); as user) {
+          <p>
+            <strong>{{ user.name }}</strong>
+          </p>
+          <p class="muted">{{ user.email }}</p>
+          <p class="muted">Roles: {{ user.roles.join(', ') || 'none' }}</p>
+        } @else {
+          <p class="muted">No active browser session.</p>
+        }
+      </article>
+    </section>
+
+    <section class="panel">
+      <h2>JWTs Stored in Browser Session Storage</h2>
+      <div class="token-grid">
+        <article class="token-card">
+          <h3>Access Token</h3>
+          <pre class="token-box">{{
+            browserFlow.tokenSet()?.access_token ?? 'No access token yet.'
+          }}</pre>
+        </article>
+        <article class="token-card">
+          <h3>ID Token</h3>
+          <pre class="token-box">{{ browserFlow.tokenSet()?.id_token ?? 'No ID token yet.' }}</pre>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel panel-grid">
+      <article class="token-card">
+        <h3>Decoded Access Token Claims</h3>
+        <pre class="json-box">{{ browserFlow.accessTokenClaims() | json }}</pre>
+      </article>
+      <article class="token-card">
+        <h3>Decoded ID Token Claims</h3>
+        <pre class="json-box">{{ browserFlow.idTokenClaims() | json }}</pre>
+      </article>
+      <article class="token-card">
+        <h3>UserInfo Response</h3>
+        <pre class="json-box">{{ browserFlow.userInfo() | json }}</pre>
+      </article>
+      <article class="token-card">
+        <h3>Protected API Response</h3>
+        <pre class="json-box">{{ browserFlow.resourceApiPayload() | json }}</pre>
+      </article>
+    </section>
+  </div>
+</main>

@@ -1,0 +1,87 @@
+version: '3'
+
+tasks:
+  default:
+    desc: List all tasks
+    cmds:
+      - task --list-all
+    silent: true
+
+  format:
+    desc: Format all
+    cmds:
+      - cmd: cd provider && go fix && go fmt
+      - cmd: cd bff-backend && go fix && go fmt
+      - cmd: cd bff-frontend && ng lint --fix && bun run format && bun run build
+      - cmd: cd pkce-frontend && ng lint --fix && bun run format && bun run build
+
+  lint:
+    desc: Run golangci-lint in Docker
+    cmds:
+      - docker run --rm -v {{toSlash .ROOT_DIR}}:/app -w /app/provider golangci/golangci-lint:v2.11.4 golangci-lint run -v --timeout 5m
+      - docker run --rm -v {{toSlash .ROOT_DIR}}:/app -w /app/bff-backend golangci/golangci-lint:v2.11.4 golangci-lint run -v --timeout 5m
+
+  # Demo services
+
+  provider:
+    desc: Run the OIDC provider (port 8080)
+    cmds:
+      - cd provider && go run .
+
+  bff-backend:
+    desc: Run the combined BFF backend and resource API (port 8082)
+    cmds:
+      - cd bff-backend && go run .
+
+  pkce-frontend:
+    desc: Run the PKCE Angular frontend (port 4200)
+    cmds:
+      - cd pkce-frontend && ng serve
+
+  bff-frontend:
+    desc: Run the BFF Angular frontend (port 4201)
+    cmds:
+      - cd bff-frontend && ng serve --port 4201
+
+  dev:
+    desc: Start all demo services concurrently
+    deps:
+      - task: provider
+      - task: bff-backend
+      - task: pkce-frontend
+      - task: bff-frontend
+
+  # Capture scripts
+
+  capture:install:
+    desc: Install Playwright browser for capture scripts
+    cmds:
+      - npx playwright install chromium
+
+  capture:run:
+    desc: Capture PKCE and BFF auth flows (requires all services running)
+    cmds:
+      - node scripts/capture-auth-flow.mjs
+
+  capture:export:
+    desc: Export latest capture to captured-snippets.md
+    cmds:
+      - node scripts/export-capture-markdown.mjs
+
+  capture:inject-blog:
+    desc: Inject captured snippets into oidc_pkce_vs_bff.md
+    cmds:
+      - node scripts/inject-captured-snippets-into-blog.mjs
+
+  capture:sync-blog:
+    desc: Export capture then inject snippets into blog post
+    cmds:
+      - node scripts/export-capture-markdown.mjs
+      - node scripts/inject-captured-snippets-into-blog.mjs
+
+  capture:all:
+    desc: Capture flows, export markdown, and inject into blog post
+    cmds:
+      - node scripts/capture-auth-flow.mjs
+      - node scripts/export-capture-markdown.mjs
+      - node scripts/inject-captured-snippets-into-blog.mjs

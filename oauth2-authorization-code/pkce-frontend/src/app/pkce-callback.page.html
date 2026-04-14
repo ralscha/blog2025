@@ -1,0 +1,12 @@
+<main class="page-shell">
+  <div class="page-grid">
+    <section class="hero">
+      <h1>Completing the PKCE exchange</h1>
+      <p>{{ status() }}</p>
+      @if (browserFlow.error(); as message) {
+        <div class="error-banner" aria-live="polite">{{ message }}</div>
+      }
+      <p><a class="link-back" routerLink="/">Return to the PKCE dashboard</a></p>
+    </section>
+  </div>
+</main>

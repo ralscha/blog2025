@@ -1,0 +1,87 @@
+<main class="page-shell">
+  <div class="page-grid">
+    <section class="hero">
+      <div class="hero-grid">
+        <div>
+          <h1>Server-held tokens with a browser session cookie</h1>
+
+          <div class="button-row">
+            <button
+              class="button-primary"
+              type="button"
+              (click)="browserSession.beginLogin('alice')"
+              [disabled]="browserSession.busy()"
+            >
+              Log In as Alice
+            </button>
+            <button
+              class="button-secondary"
+              type="button"
+              (click)="browserSession.beginLogin('bob')"
+              [disabled]="browserSession.busy()"
+            >
+              Log In as Bob
+            </button>
+            <button
+              class="button-quiet"
+              type="button"
+              (click)="browserSession.loadSession()"
+              [disabled]="browserSession.busy()"
+            >
+              Refresh Session View
+            </button>
+            <button
+              class="button-quiet"
+              type="button"
+              (click)="browserSession.loadProtectedData()"
+              [disabled]="!browserSession.authenticated() || browserSession.busy()"
+            >
+              Call BFF API
+            </button>
+            <button
+              class="button-quiet"
+              type="button"
+              (click)="logout()"
+              [disabled]="!browserSession.authenticated() || browserSession.busy()"
+            >
+              Revoke Server Session
+            </button>
+            <button
+              class="button-quiet"
+              type="button"
+              (click)="endProviderSession()"
+              [disabled]="browserSession.busy()"
+            >
+              End Provider Session
+            </button>
+          </div>
+        </div>
+
+        <aside class="callout">
+          <h2>Runtime</h2>
+          <p class="muted">BFF backend: {{ backendBaseUrl }}</p>
+          <p class="muted">Browser-visible OAuth tokens: none</p>
+          <div class="status-pill">
+            <span>Browser token storage</span>
+            <strong>Hidden behind cookie</strong>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    @if (browserSession.error(); as message) {
+      <section class="error-banner" aria-live="polite">{{ message }}</section>
+    }
+
+    <section class="panel panel-grid">
+      <article class="token-card">
+        <h3>Session Inspection</h3>
+        <pre class="json-box">{{ browserSession.browserSession() | json }}</pre>
+      </article>
+      <article class="token-card">
+        <h3>Protected Data via BFF</h3>
+        <pre class="json-box">{{ browserSession.resourceData() | json }}</pre>
+      </article>
+    </section>
+  </div>
+</main>

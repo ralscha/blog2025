@@ -1,0 +1,228 @@
+:root {
+  --bg: #f4efe6;
+  --surface: rgba(255, 250, 242, 0.84);
+  --surface-strong: #fffaf3;
+  --text: #30353d;
+  --muted: #656d78;
+  --accent: #6e5a46;
+  --accent-strong: #7a6a5c;
+  --border: rgba(30, 36, 48, 0.12);
+  font-family: 'Aptos', 'Segoe UI', sans-serif;
+  color: var(--text);
+  background: var(--bg);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  min-height: 100vh;
+  line-height: 1.45;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.page-shell {
+  min-height: 100vh;
+  padding: 16px 12px 24px;
+}
+
+.page-grid {
+  display: grid;
+  gap: 12px;
+  max-width: 1040px;
+  margin: 0 auto;
+}
+
+.hero,
+.panel {
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.hero {
+  padding: 16px;
+}
+
+.hero h1,
+.panel h2,
+.panel h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.hero p,
+.muted {
+  color: var(--muted);
+}
+
+.hero p,
+.panel p,
+.panel span,
+.panel strong,
+.callout p,
+.callout span,
+.callout strong {
+  font-size: 0.95rem;
+}
+
+.hero-grid,
+.panel-grid,
+.button-row,
+.stat-grid,
+.token-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.hero-grid {
+  grid-template-columns: minmax(0, 1.8fr) minmax(280px, 1fr);
+  align-items: start;
+}
+
+.button-row {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.button-primary,
+.button-secondary,
+.button-quiet {
+  font-size: 0.95rem;
+  padding: 10px 14px;
+  transition:
+    background-color 140ms ease,
+    border-color 140ms ease;
+}
+
+.button-primary {
+  background: var(--surface-strong);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.button-secondary {
+  background: var(--surface-strong);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.button-quiet {
+  background: transparent;
+  border-color: var(--border);
+  color: var(--muted);
+}
+
+.button-primary:hover,
+.button-secondary:hover,
+.button-quiet:hover,
+.button-primary:focus-visible,
+.button-secondary:focus-visible,
+.button-quiet:focus-visible {
+  background: var(--surface-strong);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.button-primary:disabled,
+.button-secondary:disabled,
+.button-quiet:disabled {
+  cursor: progress;
+  opacity: 0.72;
+}
+
+.panel {
+  padding: 14px;
+}
+
+.panel-grid {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.stat-grid {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.stat-card,
+.token-card,
+.callout,
+.flow-step {
+  padding: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface-strong);
+}
+
+.token-grid {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.token-box,
+.json-box {
+  margin: 8px 0 0;
+  padding: 10px;
+  background: #17202f;
+  color: #f7f4ef;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 0.9rem;
+}
+
+.flow-list {
+  display: grid;
+  gap: 10px;
+}
+
+.flow-step strong {
+  display: block;
+  margin-bottom: 6px;
+}
+
+.error-banner {
+  padding: 10px 12px;
+  background: var(--surface-strong);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 0.95rem;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  background: var(--surface-strong);
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.link-back {
+  color: var(--muted);
+  text-decoration: underline;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 900px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+  }
+}
+/* You can add global styles to this file, and also import other style files */
