@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: bff-spring-security-demo
+  security:
+    oauth2:
+      client:
+        provider:
+          authelia:
+            issuer-uri: ${AUTHELIA_ISSUER:https://127.0.0.1:9091}
+        registration:
+          authelia:
+            provider: authelia
+            client-id: ${AUTHELIA_CLIENT_ID:spring-bff}
+            client-secret: ${AUTHELIA_CLIENT_SECRET:spring-bff-secret}
+            client-name: Authelia
+            authorization-grant-type: authorization_code
+            client-authentication-method: client_secret_basic
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            scope:
+              - openid
+              - profile
+              - email
+              - offline_access
+
+server:
+  port: ${SERVER_PORT:8081}
+  forward-headers-strategy: framework
+  servlet:
+    session:
+      cookie:
+        name: __Host-bff-session
+        path: /
+        http-only: true
+        same-site: lax
+        secure: true
+
+app:
+  security:
+    registration-id: authelia

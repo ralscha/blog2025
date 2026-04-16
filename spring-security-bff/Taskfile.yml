@@ -1,0 +1,73 @@
+version: '3'
+
+vars:
+  MVNW: '{{if eq OS "windows"}}cmd /c .\\mvnw.cmd{{else}}./mvnw{{end}}' 
+
+tasks:
+  default:
+    desc: List available tasks
+    cmds:
+      - task --list
+
+  setup-local-https:
+    desc: Generate the local CA, TLS certificate, and Java truststore for 127.0.0.1
+    cmds:
+      - go run ./scripts/setup-local-https/main.go
+
+  trust-local-https-windows:
+    desc: Trust the generated local CA in the Windows current user root store
+    platforms: [windows]
+    deps:
+      - setup-local-https
+    cmds:
+      - Import-Certificate -FilePath .\infra\https\ca.pem -CertStoreLocation Cert:\CurrentUser\Root
+
+  setup-authelia:
+    desc: Generate the Authelia config, users file, and OIDC signing key
+    cmds:
+      - go run ./scripts/setup-authelia.go {{.CLI_ARGS}}
+
+  authelia-up:
+    desc: Start the Authelia provider and local HTTPS proxy containers
+    deps:
+      - setup-local-https
+    cmds:
+      - docker compose up -d
+
+  authelia-down:
+    desc: Stop the Authelia provider container
+    cmds:
+      - docker compose down
+
+  format:
+    desc: Format source code with Spring Java Format
+    cmds:
+      - '{{.MVNW}} spring-javaformat:apply'
+
+
+  compile:
+    desc: Compile the Spring Boot application without tests
+    cmds:
+      - '{{.MVNW}} -DskipTests compile'
+
+  run:
+    desc: Run the Spring Boot application behind the local HTTPS proxy
+    deps:
+      - setup-local-https
+    env:
+      SERVER_PORT: '8081'
+      JAVA_TOOL_OPTIONS: '-Djavax.net.ssl.trustStore=infra/https/truststore.p12 -Djavax.net.ssl.trustStorePassword=changeit -Djavax.net.ssl.trustStoreType=PKCS12'
+    cmds:
+      - '{{.MVNW}} spring-boot:run'
+
+  build:
+    desc: Build the Spring Boot application jar
+    cmds:
+      - '{{.MVNW}} clean package'
+
+  bootstrap:
+    desc: Generate Authelia config and start the provider and HTTPS proxy containers
+    deps:
+      - setup-local-https
+      - setup-authelia
+      - authelia-up

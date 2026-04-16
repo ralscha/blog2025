@@ -1,0 +1,5 @@
+infra/authelia/configuration.yml
+infra/authelia/users_database.yml
+infra/authelia/data/
+infra/authelia/secrets/
+infra/https/
