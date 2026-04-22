@@ -1,0 +1,9 @@
+com\example\SecurityConfig$FetchMetadataProtectionFilter.class
+com\example\BffController.class
+com\example\ActiveTokenAuthorization.class
+com\example\TokenValidationService.class
+com\example\BffDemoApplication.class
+com\example\RequireActiveToken.class
+com\example\ProtectedController.class
+com\example\SecurityConfig.class
+com\example\OidcLogoutService.class

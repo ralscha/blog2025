@@ -1,0 +1,24 @@
+services:
+  graphhopper:
+    build:
+      context: .
+      dockerfile: Dockerfile.graphhopper
+      args:
+        GRAPHHOPPER_VERSION: ${GRAPHHOPPER_VERSION:-11.0}
+    container_name: graphhopper
+    working_dir: /workspace
+    command:
+      - java
+      - -Xms1g
+      - -Xmx4g
+      - -Ddw.graphhopper.datareader.file=/workspace/${OSM_PBF:-switzerland-latest.osm.pbf}
+      - -Ddw.graphhopper.graph.location=/workspace/graph-cache
+      - -jar
+      - /opt/graphhopper/graphhopper-web.jar
+      - server
+      - /workspace/config.yml
+    ports:
+      - "8989:8989"
+      - "8990:8990"
+    volumes:
+      - ./:/workspace

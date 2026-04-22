@@ -6,7 +6,7 @@
     "typescript": "5.9.3"
   },
   "dependencies": {
-    "@pulumi/hcloud": "1.32.1",
-    "@pulumi/pulumi": "3.230.0"
+    "@pulumi/hcloud": "1.32.2",
+    "@pulumi/pulumi": "3.231.0"
   }
 }

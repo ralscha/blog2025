@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spring Security BFF Demo</title>
+    <link rel="stylesheet" href="/app.css">
+</head>
+<body>
+<main class="page-shell">
+    <div class="button-row">
+        <button id="loginButton" class="button" type="button">Login</button>
+        <button id="protectedButton" class="button" type="button" disabled>Call protected resource</button>
+        <button id="logoutButton" class="button" type="button" disabled>Logout</button>
+    </div>
+
+    <div class="output-grid">
+        <pre id="sessionOutput">Loading...</pre>
+        <pre id="resourceOutput">Click the protected resource button after login.</pre>
+    </div>
+</main>
+
+<script src="/app.js"></script>
+</body>
+</html>

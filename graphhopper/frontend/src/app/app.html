@@ -1,0 +1,105 @@
+<main class="page-shell">
+  <div class="layout-grid">
+    <aside class="panel intro-panel">
+      <section class="map-picker-panel">
+        <div class="map-picker-header">
+          <div class="stat-label">Route profile</div>
+          <div class="map-picker-hint">Choose whether GraphHopper routes for walking or driving.</div>
+        </div>
+
+        <div class="target-toggle" role="group" aria-label="Route profile">
+          @for (profile of routeProfiles; track profile.key) {
+            <button
+              type="button"
+              class="target-button"
+              [class.target-button-active]="routeProfile() === profile.key"
+              (click)="setRouteProfile(profile.key)"
+            >
+              {{ profile.label }}
+            </button>
+          }
+        </div>
+      </section>
+
+      <section class="map-picker-panel">
+        <div class="map-picker-header">
+          <div class="stat-label">Map click target</div>
+          <div class="map-picker-hint">Click the map to place {{ mapSelectionTarget() }}.</div>
+        </div>
+
+        <div class="target-toggle" role="group" aria-label="Map click target">
+          <button
+            type="button"
+            class="target-button"
+            [class.target-button-active]="mapSelectionTarget() === 'start'"
+            (click)="setMapSelectionTarget('start')"
+          >
+            Start
+          </button>
+          <button
+            type="button"
+            class="target-button"
+            [class.target-button-active]="mapSelectionTarget() === 'end'"
+            (click)="setMapSelectionTarget('end')"
+          >
+            End
+          </button>
+        </div>
+      </section>
+
+      <div class="field-grid">
+        @for (row of coordinateRows; track $index) {
+          <div class="field-row">
+            @for (field of row; track field.key) {
+              <label class="field-group">
+                <span class="field-label">{{ field.label }}</span>
+                <input
+                  class="field-input"
+                  type="number"
+                  step="0.0001"
+                  [ngModel]="coordinates[field.key]"
+                  (ngModelChange)="updateCoordinate(field.key, $event)"
+                />
+              </label>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="action-row">
+        <button class="action-button" (click)="loadRoute()" [disabled]="loading() || !canLoadRoute()">
+          {{ loading() ? 'Loading route...' : 'Load route' }}
+        </button>
+        <button class="secondary-button" type="button" (click)="swapEndpoints()" [disabled]="loading() || !canLoadRoute()">
+          Swap
+        </button>
+        <button class="secondary-button" type="button" (click)="clearMapSelection()" [disabled]="loading()">
+          Clear
+        </button>
+      </div>
+
+      @if (errorMessage()) {
+        <div class="status-banner status-banner-error">
+          <span>{{ errorMessage() }}</span>
+        </div>
+      }
+
+      <section class="stats-grid">
+        <article class="stat-card">
+          <div class="stat-label">Distance</div>
+          <div class="stat-value">{{ route()?.distanceMeters ?? 0 | number: '1.0-0' }} m</div>
+        </article>
+        <article class="stat-card">
+          <div class="stat-label">Duration</div>
+          <div class="stat-value">
+            {{ (route()?.timeMillis ?? 0) / 60000 | number: '1.0-1' }} min
+          </div>
+        </article>
+      </section>
+    </aside>
+
+    <section class="panel route-panel">
+      <div id="map" class="map-frame"></div>
+    </section>
+  </div>
+</main>

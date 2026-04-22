@@ -1,0 +1,7 @@
+{
+  "/route": {
+    "target": "http://localhost:8989",
+    "secure": false,
+    "changeOrigin": true
+  }
+}

@@ -1,0 +1,7 @@
+FROM eclipse-temurin:26-jre
+
+ARG GRAPHHOPPER_VERSION=11.0
+
+WORKDIR /opt/graphhopper
+
+ADD https://github.com/graphhopper/graphhopper/releases/download/${GRAPHHOPPER_VERSION}/graphhopper-web-${GRAPHHOPPER_VERSION}.jar /opt/graphhopper/graphhopper-web.jar

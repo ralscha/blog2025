@@ -1,0 +1,8 @@
+/logs
+graphhopper-web-*.jar
+switzerland-latest.osm.pbf
+/graph-cache
+/spring-boot-demo/target
+/angular-demo/node_modules
+/angular-demo/.angular
+/angular-demo/dist

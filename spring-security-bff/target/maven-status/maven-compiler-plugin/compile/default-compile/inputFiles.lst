@@ -1,0 +1,8 @@
+c:\w\ws\blog2025\spring-security-bff\src\main\java\com\example\ActiveTokenAuthorization.java
+c:\w\ws\blog2025\spring-security-bff\src\main\java\com\example\BffController.java
+c:\w\ws\blog2025\spring-security-bff\src\main\java\com\example\BffDemoApplication.java
+c:\w\ws\blog2025\spring-security-bff\src\main\java\com\example\OidcLogoutService.java
+c:\w\ws\blog2025\spring-security-bff\src\main\java\com\example\ProtectedController.java
+c:\w\ws\blog2025\spring-security-bff\src\main\java\com\example\RequireActiveToken.java
+c:\w\ws\blog2025\spring-security-bff\src\main\java\com\example\SecurityConfig.java
+c:\w\ws\blog2025\spring-security-bff\src\main\java\com\example\TokenValidationService.java
