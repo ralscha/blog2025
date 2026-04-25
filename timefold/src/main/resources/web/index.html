@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Festival Grid</title>
+    <style>
+        :root {
+            --bg: #f6f1e8;
+            --panel: #fffaf1;
+            --ink: #211c16;
+            --muted: #6d6257;
+            --line: #d6c7b6;
+            --accent: #b6462b;
+            --accent-soft: #f0c5aa;
+            --card: #fff5ea;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Avenir Next", "Segoe UI", sans-serif;
+            color: var(--ink);
+            background: var(--bg);
+        }
+
+        main {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 32px 20px 48px;
+        }
+
+        .hero {
+            display: flex;
+            justify-content: space-between;
+            gap: 24px;
+            align-items: end;
+            margin-bottom: 28px;
+        }
+
+        h1 {
+            margin: 0;
+            font-family: "Iowan Old Style", Georgia, serif;
+            font-size: clamp(2rem, 4vw, 3.4rem);
+            line-height: 0.95;
+            max-width: 10ch;
+        }
+
+        .lede {
+            max-width: 54ch;
+            color: var(--muted);
+            margin: 12px 0 0;
+            line-height: 1.5;
+        }
+
+        .meta {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            padding: 16px 18px;
+            min-width: 260px;
+        }
+
+        .meta-label {
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--muted);
+        }
+
+        .meta-value {
+            margin-top: 6px;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .meta-link {
+            display: inline-block;
+            margin-top: 10px;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .board-shell,
+        .unassigned-shell {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            padding: 18px;
+        }
+
+        .board-shell {
+            overflow-x: auto;
+        }
+
+        .board {
+            display: grid;
+            gap: 10px;
+            min-width: 980px;
+            align-items: stretch;
+        }
+
+        .corner,
+        .screen-label,
+        .timeslot {
+            background: var(--panel);
+            border: 1px solid var(--line);
+        }
+
+        .corner,
+        .timeslot {
+            min-height: 74px;
+            padding: 14px;
+        }
+
+        .timeslot {
+            display: flex;
+            align-items: end;
+            font-weight: 700;
+        }
+
+        .screen-label {
+            min-height: 120px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .screen-name {
+            font-weight: 700;
+        }
+
+        .screen-capacity {
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .grid-cell {
+            min-height: 120px;
+            border: 1px dashed rgba(109, 98, 87, 0.25);
+            background: #fff;
+        }
+
+        .screening-card {
+            padding: 14px;
+            background: var(--card);
+            border: 1px solid rgba(182, 70, 43, 0.24);
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .screening-card.premiere {
+            background: #ffe9dd;
+            border-color: rgba(182, 70, 43, 0.42);
+        }
+
+        .screening-title {
+            font-family: "Iowan Old Style", Georgia, serif;
+            font-size: 1.08rem;
+            font-weight: 700;
+            line-height: 1.1;
+        }
+
+        .screening-subtitle,
+        .screening-meta {
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .screening-meta {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .unassigned-shell {
+            margin-top: 20px;
+        }
+
+        .unassigned-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 14px;
+            margin-top: 16px;
+        }
+
+        .unassigned-card {
+            padding: 16px;
+            background: #fff2db;
+            border: 1px solid rgba(182, 70, 43, 0.22);
+        }
+
+        .error {
+            padding: 18px;
+            background: #fff0ec;
+            color: #8e2e19;
+            border: 1px solid rgba(142, 46, 25, 0.22);
+        }
+
+        @media (max-width: 840px) {
+            .hero {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .meta {
+                min-width: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+<main>
+    <section class="hero">
+        <div>
+            <h1>Film Festival</h1>
+        </div>
+        <div class="meta">
+            <div class="meta-label">Solver score</div>
+            <div class="meta-value" id="score">Loading...</div>
+            <a class="meta-link" href="/api/schedule" target="_blank" rel="noreferrer">Open raw JSON</a>
+        </div>
+    </section>
+
+    <section class="board-shell">
+        <div class="board" id="board"></div>
+    </section>
+
+    <section class="unassigned-shell" id="unassigned-shell" hidden>
+        <div class="meta-label">Unassigned screenings</div>
+        <div class="unassigned-list" id="unassigned-list"></div>
+    </section>
+</main>
+
+<script>
+async function loadSchedule() {
+    const board = document.getElementById('board');
+    const score = document.getElementById('score');
+
+    try {
+        const response = await fetch('/api/schedule');
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+
+        const data = await response.json();
+        score.textContent = `${data.score} (${data.hardScore} hard / ${data.softScore} soft)`;
+        renderBoard(board, data);
+        renderUnassigned(data.screenings.filter(screening => screening.unassigned));
+    } catch (error) {
+        score.textContent = 'Load failed';
+        board.innerHTML = `<div class="error">Could not load schedule JSON: ${error.message}</div>`;
+    }
+}
+
+function renderBoard(board, data) {
+    const slots = [...data.timeslots].sort((left, right) => left.start.localeCompare(right.start));
+    const screens = data.screens;
+    const slotIndex = new Map(slots.map((slot, index) => [slot.id, index]));
+    const rowIndex = new Map(screens.map((screen, index) => [screen.id, index + 2]));
+
+    board.style.gridTemplateColumns = `190px repeat(${slots.length}, minmax(150px, 1fr))`;
+    board.innerHTML = '';
+
+    const corner = document.createElement('div');
+    corner.className = 'corner';
+    corner.textContent = 'Screens';
+    corner.style.gridColumn = '1';
+    corner.style.gridRow = '1';
+    board.appendChild(corner);
+
+    slots.forEach((slot, index) => {
+        const header = document.createElement('div');
+        header.className = 'timeslot';
+        header.textContent = slot.label;
+        header.style.gridColumn = String(index + 2);
+        header.style.gridRow = '1';
+        board.appendChild(header);
+    });
+
+    screens.forEach((screen, screenPosition) => {
+        const row = screenPosition + 2;
+
+        const label = document.createElement('div');
+        label.className = 'screen-label';
+        label.style.gridColumn = '1';
+        label.style.gridRow = String(row);
+        label.innerHTML = `<div class="screen-name">${screen.name}</div><div class="screen-capacity">${screen.capacity} seats</div>`;
+        board.appendChild(label);
+
+        slots.forEach((slot, slotPosition) => {
+            const cell = document.createElement('div');
+            cell.className = 'grid-cell';
+            cell.style.gridColumn = String(slotPosition + 2);
+            cell.style.gridRow = String(row);
+            board.appendChild(cell);
+        });
+    });
+
+    data.screenings.filter(screening => screening.assigned).forEach(screening => {
+        const startIndex = slotIndex.get(screening.startSlotId);
+        const row = rowIndex.get(screening.screenId);
+        if (startIndex === undefined || row === undefined) {
+            return;
+        }
+
+        const span = Math.max(
+            1,
+            slots.filter(slot => slot.start > screening.start && slot.start < screening.end).length + 1
+        );
+
+        const card = document.createElement('article');
+        card.className = screening.premiere ? 'screening-card premiere' : 'screening-card';
+        card.style.gridColumn = `${startIndex + 2} / span ${span}`;
+        card.style.gridRow = String(row);
+        card.innerHTML = `
+            <div>
+                <div class="screening-title">${screening.title}</div>
+                <div class="screening-subtitle">${screening.director}</div>
+            </div>
+            <div>
+                <div class="screening-subtitle">${screening.scheduleLabel}</div>
+                <div class="screening-meta">
+                    <span>${screening.durationMinutes} min</span>
+                    <span>${screening.expectedAudience} seats forecast</span>
+                    <span>${screening.audienceSegment}</span>
+                </div>
+            </div>
+        `;
+        board.appendChild(card);
+    });
+}
+
+function renderUnassigned(unassigned) {
+    const shell = document.getElementById('unassigned-shell');
+    const list = document.getElementById('unassigned-list');
+    list.innerHTML = '';
+
+    if (unassigned.length === 0) {
+        shell.hidden = true;
+        return;
+    }
+
+    shell.hidden = false;
+    unassigned.forEach(screening => {
+        const card = document.createElement('article');
+        card.className = 'unassigned-card';
+        card.innerHTML = `
+            <div class="screening-title">${screening.title}</div>
+            <div class="screening-subtitle">${screening.director}</div>
+            <div class="screening-meta">
+                <span>${screening.durationMinutes} min</span>
+                <span>${screening.expectedAudience} audience</span>
+                <span>${screening.audienceSegment}</span>
+            </div>
+        `;
+        list.appendChild(card);
+    });
+}
+
+loadSchedule();
+</script>
+</body>
+</html>
