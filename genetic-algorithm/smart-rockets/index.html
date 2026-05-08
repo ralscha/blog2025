@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Smart Rockets Genetic Algorithm</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="top-bar">
+        <div>
+          <p class="eyebrow">Genetic Algorithm Demo</p>
+          <h1>Smart Rocket Navigation</h1>
+        </div>
+        <div class="controls" aria-label="Simulation controls">
+          <label>
+            <span>Population</span>
+            <input
+              id="populationSize"
+              type="range"
+              min="40"
+              max="180"
+              value="96"
+            />
+            <output id="populationSizeValue">96</output>
+          </label>
+          <label>
+            <span>Mutation</span>
+            <input id="mutationRate" type="range" min="1" max="14" value="5" />
+            <output id="mutationRateValue">5%</output>
+          </label>
+          <label>
+            <span>Wind</span>
+            <input id="windStrength" type="range" min="0" max="12" value="5" />
+            <output id="windStrengthValue">5</output>
+          </label>
+          <label>
+            <span>Speed</span>
+            <input id="speed" type="range" min="1" max="6" value="2" />
+            <output id="speedValue">2x</output>
+          </label>
+          <div class="button-row">
+            <button id="startButton" type="button">Start</button>
+            <button id="pauseButton" type="button">Pause</button>
+            <button id="resetButton" type="button">Reset</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="stats-grid" aria-label="Generation statistics">
+        <article>
+          <span>Generation</span>
+          <strong id="generationValue">0</strong>
+        </article>
+        <article>
+          <span>Best fitness</span>
+          <strong id="fitnessValue">0</strong>
+        </article>
+        <article>
+          <span>Closest approach</span>
+          <strong id="distanceValue">0 px</strong>
+        </article>
+        <article>
+          <span>Arrival</span>
+          <strong id="arrivalValue">None</strong>
+        </article>
+      </section>
+
+      <section class="stage-layout">
+        <article class="stage-panel">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Obstacle Course</p>
+              <h2>Force Vectors Become Flight Paths</h2>
+            </div>
+            <p id="statusValue">Idle</p>
+          </div>
+          <canvas id="worldCanvas" width="1120" height="640"></canvas>
+        </article>
+
+        <aside class="side-panel">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">Champion Genome</p>
+              <h2>Flight Plan</h2>
+            </div>
+          </div>
+          <canvas id="genomeCanvas" width="420" height="230"></canvas>
+          <dl class="metric-list">
+            <div>
+              <dt>Fuel used</dt>
+              <dd id="fuelValue">0%</dd>
+            </div>
+            <div>
+              <dt>Impact count</dt>
+              <dd id="collisionValue">0</dd>
+            </div>
+            <div>
+              <dt>Fastest arrival</dt>
+              <dd id="fastestValue">None</dd>
+            </div>
+            <div>
+              <dt>Diversity</dt>
+              <dd id="diversityValue">0</dd>
+            </div>
+          </dl>
+        </aside>
+      </section>
+
+      <section class="analysis-grid">
+        <article>
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">Fitness History</p>
+              <h2>Best vs Average</h2>
+            </div>
+          </div>
+          <canvas id="historyCanvas" width="1120" height="260"></canvas>
+        </article>
+        <article>
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">Population Snapshot</p>
+              <h2>Current Flight Paths</h2>
+            </div>
+          </div>
+          <canvas id="pathsCanvas" width="1120" height="260"></canvas>
+        </article>
+      </section>
+    </main>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

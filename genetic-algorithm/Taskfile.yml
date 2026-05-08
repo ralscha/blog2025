@@ -1,0 +1,43 @@
+version: '3'
+
+tasks:
+  default:
+    desc: List available tasks
+    cmds:
+      - task --list
+
+  format:
+    desc: Format Go and JavaScript examples
+    cmds:
+      - cd helloworld && go fix ./...
+      - cd tsp && go fix ./...
+      - cd helloworld && go fmt ./...
+      - cd tsp && go fmt ./...
+      - cd smart-rockets && bun install && bun run format
+
+  lint:
+    desc: Run Go and JavaScript linters
+    cmds:
+      - task: lint:go
+      - task: lint:js
+
+  lint:go:
+    desc: Run golangci-lint for all Go examples in Docker
+    cmds:
+      - task: lint:helloworld
+      - task: lint:tsp
+
+  lint:helloworld:
+    desc: Run golangci-lint for Hello World in Docker
+    cmds:
+      - docker run --rm -v {{toSlash .ROOT_DIR}}:/app -w /app/helloworld golangci/golangci-lint:v2.12.2 golangci-lint run -v --timeout 5m
+
+  lint:tsp:
+    desc: Run golangci-lint for TSP in Docker
+    cmds:
+      - docker run --rm -v {{toSlash .ROOT_DIR}}:/app -w /app/tsp golangci/golangci-lint:v2.12.2 golangci-lint run -v --timeout 5m
+
+  lint:js:
+    desc: Run ESLint for all JavaScript examples
+    cmds:
+      - cd smart-rockets && bun install && bun run lint
