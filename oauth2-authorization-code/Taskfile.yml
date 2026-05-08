@@ -18,8 +18,8 @@ tasks:
   lint:
     desc: Run golangci-lint in Docker
     cmds:
-      - docker run --rm -v {{toSlash .ROOT_DIR}}:/app -w /app/provider golangci/golangci-lint:v2.11.4 golangci-lint run -v --timeout 5m
-      - docker run --rm -v {{toSlash .ROOT_DIR}}:/app -w /app/bff-backend golangci/golangci-lint:v2.11.4 golangci-lint run -v --timeout 5m
+      - docker run --rm -v {{toSlash .ROOT_DIR}}:/app -w /app/provider golangci/golangci-lint:v2.12.2 golangci-lint run -v --timeout 5m
+      - docker run --rm -v {{toSlash .ROOT_DIR}}:/app -w /app/bff-backend golangci/golangci-lint:v2.12.2 golangci-lint run -v --timeout 5m
 
   # Demo services
 
