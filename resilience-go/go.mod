@@ -1,6 +1,6 @@
 module resilience-go-demo
 
-go 1.26.2
+go 1.26.3
 
 require github.com/failsafe-go/failsafe-go v0.9.6
 
