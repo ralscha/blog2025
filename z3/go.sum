@@ -52,3 +52,7 @@ github.com/Z3Prover/z3/src/api/go v0.0.0-20260504162947-1c6943c2cb9e h1:TONbRxQw
 github.com/Z3Prover/z3/src/api/go v0.0.0-20260504162947-1c6943c2cb9e/go.mod h1:4uqsFzLnAPPSuF7CqYgRd7/UeSBfz8tCtTSocv4uzkU=
 github.com/Z3Prover/z3/src/api/go v0.0.0-20260507223231-2c7b256db21f h1:oIcw+ShXLsPu3GHVeqHe2m0+Wk/qpqiX0aBghpf6GEk=
 github.com/Z3Prover/z3/src/api/go v0.0.0-20260507223231-2c7b256db21f/go.mod h1:4uqsFzLnAPPSuF7CqYgRd7/UeSBfz8tCtTSocv4uzkU=
+github.com/Z3Prover/z3/src/api/go v0.0.0-20260513011927-85465dcc66a4 h1:Zq0qjJkYdwvEaSsjK2Td2xt7MCCS3DwmzJAUV0S802s=
+github.com/Z3Prover/z3/src/api/go v0.0.0-20260513011927-85465dcc66a4/go.mod h1:4uqsFzLnAPPSuF7CqYgRd7/UeSBfz8tCtTSocv4uzkU=
+github.com/Z3Prover/z3/src/api/go v0.0.0-20260513215905-09b75d212207 h1:n7ilBLfDllTspzIe5GXaLhDpBc5Ch9BGjNfCRxcm+TQ=
+github.com/Z3Prover/z3/src/api/go v0.0.0-20260513215905-09b75d212207/go.mod h1:4uqsFzLnAPPSuF7CqYgRd7/UeSBfz8tCtTSocv4uzkU=
