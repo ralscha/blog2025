@@ -2,11 +2,11 @@
   "name": "frpdemo",
   "main": "index.ts",
   "devDependencies": {
-    "@types/node": "25.7.0",
+    "@types/node": "25.9.1",
     "typescript": "5.9.3"
   },
   "dependencies": {
-    "@pulumi/hcloud": "1.35.0",
-    "@pulumi/pulumi": "3.238.0"
+    "@pulumi/hcloud": "1.38.0",
+    "@pulumi/pulumi": "3.244.0"
   }
 }
