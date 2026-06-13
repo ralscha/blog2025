@@ -16,7 +16,6 @@ import org.springframework.stereotype.Component;
 
 import io.modelcontextprotocol.spec.McpSchema;
 import jakarta.annotation.PostConstruct;
-import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.ObjectMapper;
 
 @Component
@@ -342,18 +341,8 @@ public class ToolCatalog {
 		return text.replace("*/", "* /").replace("\n", " ").trim();
 	}
 
-	private Map<String, Object> toSchemaMap(McpSchema.JsonSchema schema) {
-		if (schema == null) {
-			return Map.of();
-		}
-		try {
-			return this.objectMapper.convertValue(schema, new TypeReference<Map<String, Object>>() {
-				// empty
-			});
-		}
-		catch (IllegalArgumentException e) {
-			return Map.of();
-		}
+	private static Map<String, Object> toSchemaMap(Map<String, Object> schema) {
+		return schema == null ? Map.of() : schema;
 	}
 
 	public record ToolEntry(String name, String callable, String description, Map<String, Object> inputSchema,

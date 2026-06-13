@@ -30,7 +30,7 @@ public class DemoMcpClient {
 			.build();
 
 		this.client = McpClient.sync(transport)
-			.clientInfo(new McpSchema.Implementation("codemode-demo", "0.0.1"))
+			.clientInfo(McpSchema.Implementation.builder("codemode-demo", "0.0.1").build())
 			.requestTimeout(Duration.ofSeconds(30))
 			.build();
 		this.client.initialize();

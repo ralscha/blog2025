@@ -83,7 +83,7 @@ public class McpServerConfiguration {
 	@SuppressWarnings("static-method")
 	private McpServerFeatures.SyncToolSpecification addNumbersTool(McpJsonMapper jsonMapper, DemoMcpTools tools) {
 		return toolSpecification(jsonMapper, "add_numbers", "Add two decimal numbers together.",
-				objectSchema(Map.of("a", numberProperty("First number"), "b", numberProperty("Second number")), "a",
+				objectSchemaMap(Map.of("a", numberProperty("First number"), "b", numberProperty("Second number")), "a",
 						"b"),
 				objectSchemaMap(Map.of("a", numberProperty("The first input number."), "b",
 						numberProperty("The second input number."), "sum", numberProperty("The sum of a and b.")), "a",
@@ -94,7 +94,7 @@ public class McpServerConfiguration {
 	@SuppressWarnings("static-method")
 	private McpServerFeatures.SyncToolSpecification cityTimeTool(McpJsonMapper jsonMapper, DemoMcpTools tools) {
 		return toolSpecification(jsonMapper, "city_time", "Get the current time for a supported city.",
-				objectSchema(
+				objectSchemaMap(
 						Map.of("city",
 								stringProperty(
 										"Supported city name such as Zurich, Amsterdam, Berlin, Madrid, or New York")),
@@ -111,7 +111,7 @@ public class McpServerConfiguration {
 	@SuppressWarnings("static-method")
 	private McpServerFeatures.SyncToolSpecification shiftTimeTool(McpJsonMapper jsonMapper, DemoMcpTools tools) {
 		return toolSpecification(jsonMapper, "shift_time", "Shift an RFC3339 timestamp by a number of hours.",
-				objectSchema(Map.of("rfc3339", stringProperty("Timestamp in RFC3339 / ISO-8601 format"), "hours",
+				objectSchemaMap(Map.of("rfc3339", stringProperty("Timestamp in RFC3339 / ISO-8601 format"), "hours",
 						numberProperty("Hours to add or subtract")), "rfc3339", "hours"),
 				objectSchemaMap(
 						Map.of("original", stringProperty("The original RFC3339 timestamp that was provided."), "hours",
@@ -125,7 +125,7 @@ public class McpServerConfiguration {
 	private McpServerFeatures.SyncToolSpecification listCarriersTool(McpJsonMapper jsonMapper, DemoMcpTools tools) {
 		return toolSpecification(jsonMapper, "list_carriers",
 				"List deterministic carriers for a shipping route between two countries.",
-				objectSchema(
+				objectSchemaMap(
 						Map.of("originCountry", stringProperty("Origin ISO 3166-1 alpha-2 country code"),
 								"destinationCountry", stringProperty("Destination ISO 3166-1 alpha-2 country code")),
 						"originCountry", "destinationCountry"),
@@ -145,7 +145,7 @@ public class McpServerConfiguration {
 	private McpServerFeatures.SyncToolSpecification quoteRateTool(McpJsonMapper jsonMapper, DemoMcpTools tools) {
 		return toolSpecification(jsonMapper, "quote_rate",
 				"Get a deterministic base shipping quote for a carrier and package weight.",
-				objectSchema(
+				objectSchemaMap(
 						Map.of("carrier", stringProperty("Carrier identifier"), "originCountry",
 								stringProperty("Origin ISO country code"), "destinationCountry",
 								stringProperty("Destination ISO country code"), "weightKg",
@@ -168,7 +168,7 @@ public class McpServerConfiguration {
 	private McpServerFeatures.SyncToolSpecification estimateDeliveryTool(McpJsonMapper jsonMapper, DemoMcpTools tools) {
 		return toolSpecification(jsonMapper, "estimate_delivery",
 				"Estimate a deterministic business-day delivery window for a carrier and route.",
-				objectSchema(
+				objectSchemaMap(
 						Map.of("carrier", stringProperty("Carrier identifier"), "originCountry",
 								stringProperty("Origin ISO country code"), "destinationCountry",
 								stringProperty("Destination ISO country code")),
@@ -187,7 +187,7 @@ public class McpServerConfiguration {
 	private McpServerFeatures.SyncToolSpecification applySurchargeTool(McpJsonMapper jsonMapper, DemoMcpTools tools) {
 		return toolSpecification(jsonMapper, "apply_surcharge",
 				"Calculate deterministic surcharges for package traits such as weight, remote area, and fragile handling.",
-				objectSchema(
+				objectSchemaMap(
 						Map.of("carrier", stringProperty("Carrier identifier"), "weightKg",
 								numberProperty("Weight in kilograms"), "isRemoteArea",
 								booleanProperty("Whether the destination is a remote area"), "isFragile",
@@ -211,7 +211,7 @@ public class McpServerConfiguration {
 	private McpServerFeatures.SyncToolSpecification quoteSummaryTool(McpJsonMapper jsonMapper, DemoMcpTools tools) {
 		return toolSpecification(jsonMapper, "quote_summary",
 				"Normalize a shipping quote into a sortable final summary.",
-				objectSchema(Map.of("carrier", stringProperty("Carrier identifier"), "basePriceEur",
+				objectSchemaMap(Map.of("carrier", stringProperty("Carrier identifier"), "basePriceEur",
 						numberProperty("Base price in EUR"), "surchargeEur", numberProperty("Surcharge total in EUR"),
 						"minDays", integerProperty("Minimum business days"), "maxDays",
 						integerProperty("Maximum business days")), "carrier", "basePriceEur", "surchargeEur", "minDays",
@@ -233,13 +233,11 @@ public class McpServerConfiguration {
 	}
 
 	private static McpServerFeatures.SyncToolSpecification toolSpecification(McpJsonMapper jsonMapper, String name,
-			String description, McpSchema.JsonSchema inputSchema, Map<String, Object> outputSchema,
+			String description, Map<String, Object> inputSchema, Map<String, Object> outputSchema,
 			BiFunction<McpSyncServerExchange, McpSchema.CallToolRequest, Object> handler) {
 
-		McpSchema.Tool tool = McpSchema.Tool.builder()
-			.name(name)
+		McpSchema.Tool tool = McpSchema.Tool.builder(name, inputSchema)
 			.description(description)
-			.inputSchema(inputSchema)
 			.outputSchema(outputSchema)
 			.build();
 
@@ -253,10 +251,6 @@ public class McpServerConfiguration {
 				return McpSchema.CallToolResult.builder().isError(true).addTextContent(ex.getMessage()).build();
 			}
 		}).build();
-	}
-
-	private static McpSchema.JsonSchema objectSchema(Map<String, Object> properties, String... required) {
-		return new McpSchema.JsonSchema("object", properties, List.of(required), false, null, null);
 	}
 
 	private static Map<String, Object> objectSchemaMap(Map<String, Object> properties, String... required) {
