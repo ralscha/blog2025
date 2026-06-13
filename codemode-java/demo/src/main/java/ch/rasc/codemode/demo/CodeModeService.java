@@ -16,7 +16,6 @@ import org.springframework.ai.chat.model.Generation;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.ai.openai.OpenAiChatOptions;
-import org.springframework.ai.openai.api.OpenAiApi;
 import org.springframework.ai.tool.ToolCallback;
 import org.springframework.ai.tool.definition.ToolDefinition;
 import org.springframework.beans.factory.annotation.Value;
@@ -123,9 +122,7 @@ public class CodeModeService {
 
 		OpenAiChatOptions options = OpenAiChatOptions.builder()
 			.toolCallbacks(toolCallbacks)
-			.toolChoice(firstTurn ? OpenAiApi.ChatCompletionRequest.ToolChoiceBuilder.function("search")
-					: OpenAiApi.ChatCompletionRequest.ToolChoiceBuilder.AUTO)
-			.internalToolExecutionEnabled(false)
+			.toolChoice(firstTurn ? "required" : "auto")
 			.build();
 
 		return new Prompt(allMessages, options);

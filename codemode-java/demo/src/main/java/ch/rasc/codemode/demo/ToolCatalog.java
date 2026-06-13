@@ -16,7 +16,6 @@ import org.springframework.stereotype.Component;
 
 import io.modelcontextprotocol.spec.McpSchema;
 import jakarta.annotation.PostConstruct;
-import tools.jackson.databind.ObjectMapper;
 
 @Component
 public class ToolCatalog {
@@ -27,14 +26,11 @@ public class ToolCatalog {
 
 	private final ToolSearcher toolSearcher;
 
-	private final ObjectMapper objectMapper;
-
 	private final Map<String, ToolEntry> catalog = new LinkedHashMap<>();
 
-	public ToolCatalog(DemoMcpClient mcpClient, ToolSearcher toolSearcher, ObjectMapper objectMapper) {
+	public ToolCatalog(DemoMcpClient mcpClient, ToolSearcher toolSearcher) {
 		this.mcpClient = mcpClient;
 		this.toolSearcher = toolSearcher;
-		this.objectMapper = objectMapper;
 	}
 
 	@PostConstruct
