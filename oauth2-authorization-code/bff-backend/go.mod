@@ -1,6 +1,6 @@
 module oidc-demo/bff-backend
 
-go 1.26.3
+go 1.26.4
 
 require (
 	github.com/alexedwards/scs/v2 v2.9.0

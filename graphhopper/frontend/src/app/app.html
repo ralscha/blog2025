@@ -4,7 +4,9 @@
       <section class="map-picker-panel">
         <div class="map-picker-header">
           <div class="stat-label">Route profile</div>
-          <div class="map-picker-hint">Choose whether GraphHopper routes for walking or driving.</div>
+          <div class="map-picker-hint">
+            Choose whether GraphHopper routes for walking or driving.
+          </div>
         </div>
 
         <div class="target-toggle" role="group" aria-label="Route profile">
@@ -67,13 +69,27 @@
       </div>
 
       <div class="action-row">
-        <button class="action-button" (click)="loadRoute()" [disabled]="loading() || !canLoadRoute()">
+        <button
+          class="action-button"
+          (click)="loadRoute()"
+          [disabled]="loading() || !canLoadRoute()"
+        >
           {{ loading() ? 'Loading route...' : 'Load route' }}
         </button>
-        <button class="secondary-button" type="button" (click)="swapEndpoints()" [disabled]="loading() || !canLoadRoute()">
+        <button
+          class="secondary-button"
+          type="button"
+          (click)="swapEndpoints()"
+          [disabled]="loading() || !canLoadRoute()"
+        >
           Swap
         </button>
-        <button class="secondary-button" type="button" (click)="clearMapSelection()" [disabled]="loading()">
+        <button
+          class="secondary-button"
+          type="button"
+          (click)="clearMapSelection()"
+          [disabled]="loading()"
+        >
           Clear
         </button>
       </div>

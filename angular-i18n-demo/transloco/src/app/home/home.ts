@@ -1,4 +1,9 @@
-import { Component, effect, inject } from '@angular/core';
+import {
+  Component,
+  effect,
+  inject,
+  ChangeDetectionStrategy
+} from '@angular/core';
 import { UpperCasePipe } from '@angular/common';
 import {
   translateObjectSignal,
@@ -28,6 +33,7 @@ import { TranslocoMarkupComponent } from 'dfx-transloco-markup';
     UpperCasePipe
   ],
   templateUrl: './home.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './home.css'
 })
 export class Home {

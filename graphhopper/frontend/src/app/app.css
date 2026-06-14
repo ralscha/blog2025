@@ -103,7 +103,9 @@
   color: #0f172a;
   background: #ffffff;
   box-sizing: border-box;
-  transition: border-color 160ms ease, box-shadow 160ms ease;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
 }
 
 .field-input:focus {
@@ -129,7 +131,9 @@
   background: #0f766e;
   box-shadow: none;
   cursor: pointer;
-  transition: background-color 180ms ease, opacity 180ms ease;
+  transition:
+    background-color 180ms ease,
+    opacity 180ms ease;
 }
 
 .action-button:hover:not(:disabled) {

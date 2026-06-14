@@ -86,13 +86,7 @@ export class App {
 
     try {
       const route = await firstValueFrom(
-        this.routeApi.getRoute(
-          this.routeProfile(),
-          fromLat,
-          fromLng,
-          toLat,
-          toLng,
-        ),
+        this.routeApi.getRoute(this.routeProfile(), fromLat, fromLng, toLat, toLng),
       );
 
       this.route.set(route);
