@@ -3,7 +3,7 @@ module einoexamples
 go 1.26.4
 
 require (
-	github.com/cloudwego/eino v0.9.6
+	github.com/cloudwego/eino v0.9.8
 	github.com/cloudwego/eino-ext/components/model/openai v0.1.13
 	github.com/cloudwego/eino-ext/components/tool/mcp v0.0.8
 	github.com/mark3labs/mcp-go v0.54.1

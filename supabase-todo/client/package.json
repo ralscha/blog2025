@@ -18,7 +18,7 @@
     "@angular/forms": "22.0.1",
     "@angular/platform-browser": "22.0.1",
     "@angular/router": "22.0.1",
-    "@supabase/supabase-js": "2.108.1",
+    "@supabase/supabase-js": "2.108.2",
     "daisyui": "5.5.23",
     "rxjs": "7.8.2",
     "tailwindcss": "4.3.1",
@@ -36,6 +36,6 @@
     "postcss": "8.5.15",
     "prettier": "3.8.4",
     "typescript": "6.0.3",
-    "typescript-eslint": "8.61.0"
+    "typescript-eslint": "8.61.1"
   }
 }
