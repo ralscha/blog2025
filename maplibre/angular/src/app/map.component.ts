@@ -1,10 +1,4 @@
-import {
-  Component,
-  ChangeDetectionStrategy,
-  computed,
-  signal,
-} from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, computed, signal } from '@angular/core';
 import {
   ControlComponent,
   MapComponent as NgxMapComponent,
@@ -27,7 +21,6 @@ interface Mountain {
 @Component({
   selector: 'app-map',
   imports: [
-    FormsModule,
     NgxMapComponent,
     ControlComponent,
     NavigationControlDirective,
@@ -37,7 +30,6 @@ interface Mountain {
   ],
   templateUrl: './map.component.html',
   styleUrl: './map.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MapComponent {
   protected readonly mapStyle =

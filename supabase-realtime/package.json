@@ -11,11 +11,11 @@
   "dependencies": {
     "@supabase/supabase-js": "2.108.2",
     "@tailwindcss/vite": "4.3.1",
-    "daisyui": "5.5.23",
+    "daisyui": "5.6.3",
     "tailwindcss": "4.3.1"
   },
   "devDependencies": {
     "typescript": "6.0.3",
-    "vite": "8.0.16"
+    "vite": "8.1.0"
   }
 }

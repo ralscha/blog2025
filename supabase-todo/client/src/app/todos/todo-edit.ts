@@ -1,27 +1,16 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  inject,
-  input,
-  OnInit,
-  signal,
-  viewChild,
-} from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, ElementRef, inject, input, OnInit, signal, viewChild } from '@angular/core';
+import { FormField, FormRoot, form, minLength, required } from '@angular/forms/signals';
 import { Router } from '@angular/router';
 import { SupabaseService, Todo } from '../supabase.service';
 
 @Component({
   selector: 'app-todo-edit',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ReactiveFormsModule],
+  imports: [FormField, FormRoot],
   templateUrl: './todo-edit.html',
 })
 export class TodoEditComponent implements OnInit {
   private readonly supabase = inject(SupabaseService);
   private readonly router = inject(Router);
-  private readonly fb = inject(FormBuilder);
 
   id = input<string>();
 
@@ -34,11 +23,15 @@ export class TodoEditComponent implements OnInit {
 
   private deleteModal = viewChild<ElementRef<HTMLDialogElement>>('deleteModal');
 
-  form = this.fb.group({
-    title: ['', [Validators.required, Validators.minLength(1)]],
-    description: [''],
-    priority: ['medium' as Todo['priority']],
-    due_date: [''],
+  readonly todoModel = signal({
+    title: '',
+    description: '',
+    priority: 'medium' as Todo['priority'],
+    due_date: '',
+  });
+  readonly form = form(this.todoModel, (path) => {
+    required(path.title);
+    minLength(path.title, 1);
   });
 
   private existingIsComplete = false;
@@ -67,7 +60,7 @@ export class TodoEditComponent implements OnInit {
 
     const todo = data;
     this.existingIsComplete = todo.is_complete;
-    this.form.patchValue({
+    this.todoModel.set({
       title: todo.title,
       description: todo.description ?? '',
       priority: todo.priority,
@@ -77,15 +70,15 @@ export class TodoEditComponent implements OnInit {
 
   async onSubmit() {
     this.submitted.set(true);
-    if (this.form.invalid) return;
+    if (!this.form().valid()) return;
 
     this.saving.set(true);
     this.errorMessage.set(null);
 
-    const { title, description, priority, due_date } = this.form.value;
+    const { title, description, priority, due_date } = this.todoModel();
 
     const payload = {
-      title: title!,
+      title,
       description: description || null,
       priority: (priority ?? 'medium') as Todo['priority'],
       due_date: due_date || null,

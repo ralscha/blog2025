@@ -1,19 +1,9 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  DestroyRef,
-  effect,
-  inject,
-  input,
-  output,
-  signal,
-} from '@angular/core';
+import { Component, DestroyRef, effect, inject, input, output, signal } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { SupabaseService } from '../supabase.service';
 
 @Component({
   selector: 'app-avatar',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './avatar.html',
 })
 export class AvatarComponent {

@@ -1,19 +1,16 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { SupabaseService } from '../supabase.service';
 import { AvatarComponent } from './avatar';
 
 @Component({
   selector: 'app-profile',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ReactiveFormsModule, AvatarComponent],
+  imports: [AvatarComponent],
   templateUrl: './profile.html',
 })
 export class ProfileComponent implements OnInit {
   private readonly supabase = inject(SupabaseService);
   private readonly router = inject(Router);
-  private readonly fb = inject(FormBuilder);
 
   loading = signal(false);
   signingOut = signal(false);
@@ -21,8 +18,6 @@ export class ProfileComponent implements OnInit {
   successMessage = signal<string | null>(null);
   userEmail = signal('');
   avatarUrl = signal<string | null>(null);
-
-  form = this.fb.group({});
 
   async ngOnInit() {
     const user = await this.supabase.getUser();
@@ -46,7 +41,6 @@ export class ProfileComponent implements OnInit {
   }
 
   async updateProfile() {
-    if (this.form.invalid) return;
     await this.saveProfile();
   }
 

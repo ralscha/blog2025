@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { JsonPipe } from '@angular/common';
 
 import { environment } from '../environments/environment';
@@ -6,7 +6,6 @@ import { BffBrowserSessionService } from './bff-session.service';
 
 @Component({
   selector: 'app-bff-home-page',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [JsonPipe],
   templateUrl: './bff-home.page.html',
   styleUrl: './bff-home.page.css',

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import {
   AuthChangeEvent,
   createClient,
@@ -31,9 +31,7 @@ type TodoUpdatePayload = Partial<Pick<Todo, TodoWriteColumn>>;
 
 const TODO_READ_COLUMNS_SQL = 'id,title,description,is_complete,priority,due_date';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class SupabaseService {
   private supabase: SupabaseClient;
 

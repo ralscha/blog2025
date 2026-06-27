@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { JsonPipe } from '@angular/common';
 
 import { environment } from '../environments/environment';
@@ -6,7 +6,6 @@ import { PkceBrowserFlowService } from './pkce-auth.service';
 
 @Component({
   selector: 'app-pkce-home-page',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [JsonPipe],
   templateUrl: './pkce-home.page.html',
   styleUrl: './pkce-home.page.css',

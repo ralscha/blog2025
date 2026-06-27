@@ -1,7 +1,6 @@
 import {
   ApplicationConfig,
   provideBrowserGlobalErrorListeners,
-  provideZonelessChangeDetection,
   isDevMode
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
@@ -20,7 +19,6 @@ import { provideTranslocoLocale } from '@jsverse/transloco-locale';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideZonelessChangeDetection(),
     provideRouter(routes),
     provideHttpClient(withXhr()),
     provideTranslocoLocale({

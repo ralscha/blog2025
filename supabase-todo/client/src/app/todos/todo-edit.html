@@ -40,18 +40,18 @@
             </div>
           }
 
-          <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-3">
+          <form [formRoot]="form" (submit)="onSubmit()" class="flex flex-col gap-3">
             <fieldset class="fieldset">
               <legend class="fieldset-legend">Title <span class="text-error">*</span></legend>
               <input
                 type="text"
-                formControlName="title"
+                [formField]="form.title"
                 placeholder="What needs to be done?"
                 class="input w-full"
-                [class.input-error]="submitted() && form.controls.title.invalid"
+                [class.input-error]="submitted() && !form.title().valid()"
                 autocomplete="off"
               />
-              @if (submitted() && form.controls.title.invalid) {
+              @if (submitted() && !form.title().valid()) {
                 <p class="label text-error text-xs">Title is required</p>
               }
             </fieldset>
@@ -59,7 +59,7 @@
             <fieldset class="fieldset">
               <legend class="fieldset-legend">Description</legend>
               <textarea
-                formControlName="description"
+                [formField]="form.description"
                 placeholder="Add details (optional)…"
                 class="textarea w-full"
                 rows="3"
@@ -69,7 +69,7 @@
             <div class="grid grid-cols-2 gap-3">
               <fieldset class="fieldset">
                 <legend class="fieldset-legend">Priority</legend>
-                <select formControlName="priority" class="select w-full">
+                <select [formField]="form.priority" class="select w-full">
                   <option value="low">🟢 Low</option>
                   <option value="medium">🟡 Medium</option>
                   <option value="high">🔴 High</option>
@@ -78,7 +78,7 @@
 
               <fieldset class="fieldset">
                 <legend class="fieldset-legend">Due Date</legend>
-                <input type="date" formControlName="due_date" class="input w-full" />
+                <input type="date" [formField]="form.due_date" class="input w-full" />
               </fieldset>
             </div>
 

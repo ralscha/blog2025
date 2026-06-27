@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Router } from '@angular/router';
 
@@ -6,7 +6,6 @@ import { PkceBrowserFlowService } from './pkce-auth.service';
 
 @Component({
   selector: 'app-pkce-callback-page',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterLink],
   templateUrl: './pkce-callback.page.html',
   styleUrl: './pkce-callback.page.css',

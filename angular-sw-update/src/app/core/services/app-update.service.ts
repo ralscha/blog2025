@@ -1,10 +1,10 @@
 import { DOCUMENT } from '@angular/common';
-import { DestroyRef, Injectable, inject, signal } from '@angular/core';
+import { DestroyRef, Service, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SwUpdate, type VersionEvent } from '@angular/service-worker';
 import { interval, startWith } from 'rxjs';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class AppUpdateService {
   readonly #destroyRef = inject(DestroyRef);
   readonly #document = inject(DOCUMENT);

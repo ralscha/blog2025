@@ -85,11 +85,12 @@
             [attr.aria-label]="'Edit ' + todo.title"
             [class.opacity-60]="todo.is_complete"
           >
-            <div class="pt-0.5" (click)="$event.stopPropagation()">
+            <div class="pt-0.5">
               <input
                 type="checkbox"
                 class="checkbox checkbox-primary checkbox-sm"
                 [checked]="todo.is_complete"
+                (click)="$event.stopPropagation()"
                 (change)="toggleComplete(todo)"
                 [attr.aria-label]="
                   'Mark ' + todo.title + ' as ' + (todo.is_complete ? 'incomplete' : 'complete')

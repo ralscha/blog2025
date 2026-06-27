@@ -1,17 +1,9 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  effect,
-  inject,
-  viewChild,
-} from '@angular/core';
+import { Component, ElementRef, effect, inject, viewChild } from '@angular/core';
 import { AppUpdateService } from './core/services/app-update.service';
 import { BUILD_INFO } from './build-info';
 
 @Component({
   selector: 'app-root',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './app.html',
   styleUrl: './app.css',
 })

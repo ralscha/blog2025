@@ -1,18 +1,10 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  OnInit,
-  signal,
-} from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { LocaleDatePipe } from '../locale-date.pipe';
 import { SupabaseService, Todo } from '../supabase.service';
 
 @Component({
   selector: 'app-todo-list',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LocaleDatePipe],
   templateUrl: './todo-list.html',
 })

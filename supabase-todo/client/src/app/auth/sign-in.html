@@ -43,18 +43,18 @@
       </div>
     }
 
-    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
+    <form [formRoot]="form" (submit)="onSubmit()" class="flex flex-col gap-4">
       <fieldset class="fieldset">
         <legend class="fieldset-legend">Email</legend>
         <input
           type="email"
-          formControlName="email"
+          [formField]="form.email"
           placeholder="you@example.com"
           class="input w-full"
-          [class.input-error]="submitted() && form.controls.email.invalid"
+          [class.input-error]="submitted() && !form.email().valid()"
           autocomplete="email"
         />
-        @if (submitted() && form.controls.email.invalid) {
+        @if (submitted() && !form.email().valid()) {
           <p class="label text-error text-xs">Valid email is required</p>
         }
       </fieldset>
@@ -63,13 +63,13 @@
         <legend class="fieldset-legend">Password</legend>
         <input
           type="password"
-          formControlName="password"
+          [formField]="form.password"
           placeholder="••••••••"
           class="input w-full"
-          [class.input-error]="submitted() && form.controls.password.invalid"
+          [class.input-error]="submitted() && !form.password().valid()"
           autocomplete="current-password"
         />
-        @if (submitted() && form.controls.password.invalid) {
+        @if (submitted() && !form.password().valid()) {
           <p class="label text-error text-xs">Password is required</p>
         }
       </fieldset>

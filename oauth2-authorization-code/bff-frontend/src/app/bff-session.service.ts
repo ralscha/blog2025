@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Service, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
 import { environment } from '../environments/environment';
@@ -26,7 +26,7 @@ interface BrowserSessionPayload {
 
 type ResourceDataPayload = Record<string, unknown>;
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class BffBrowserSessionService {
   private readonly http = inject(HttpClient);
 

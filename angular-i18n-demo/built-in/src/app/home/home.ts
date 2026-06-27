@@ -1,10 +1,9 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component } from '@angular/core';
 import { CurrencyPipe, DatePipe, PercentPipe } from '@angular/common';
 
 @Component({
   selector: 'app-home',
   imports: [CurrencyPipe, DatePipe, PercentPipe],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './home.html'
 })
 export class Home {

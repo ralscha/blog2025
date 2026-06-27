@@ -1,4 +1,5 @@
 import maplibregl, { GeoJSONSource, LngLatBounds } from 'maplibre-gl';
+import type { FeatureCollection as GeoJSONFeatureCollection, Geometry, Polygon } from 'geojson';
 
 type Mode = 'nearby' | 'clusters' | 'corridor' | 'geofence';
 type PointCoord = [number, number];
@@ -79,7 +80,7 @@ interface GeofenceArea {
   geofenceID: string;
   name: string;
   category: string;
-  geometry: GeoJSON.Polygon;
+  geometry: Polygon;
 }
 
 interface GeofencesResponse {
@@ -93,7 +94,7 @@ interface GeofenceLiveResponse {
   serverTime: string;
 }
 
-type FeatureCollection = GeoJSON.FeatureCollection<GeoJSON.Geometry>;
+type FeatureCollection = GeoJSONFeatureCollection<Geometry>;
 
 const defaultGeofenceID = 'home-depot-sodo';
 const defaultGeofenceRefreshMs = 2000;
@@ -996,7 +997,7 @@ function pointCoord(longitude: number, latitude: number): PointCoord {
   return [longitude, latitude];
 }
 
-function geometryPoints(geometry: GeoJSON.Polygon): PointCoord[] {
+function geometryPoints(geometry: Polygon): PointCoord[] {
   return geometry.coordinates.flatMap((ring) =>
     ring.map(([longitude, latitude]) => pointCoord(longitude, latitude)),
   );

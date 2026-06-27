@@ -59,8 +59,8 @@
                   class="field-input"
                   type="number"
                   step="0.0001"
-                  [ngModel]="coordinates[field.key]"
-                  (ngModelChange)="updateCoordinate(field.key, $event)"
+                  [formField]="coordinateForm[field.key]"
+                  (input)="resetAfterCoordinateInput()"
                 />
               </label>
             }

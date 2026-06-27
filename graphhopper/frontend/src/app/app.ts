@@ -1,19 +1,25 @@
 import { DecimalPipe } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { afterNextRender, Component, inject, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormField, form } from '@angular/forms/signals';
 import type { FeatureCollection, LineString, Point } from 'geojson';
 import maplibregl, { type GeoJSONSource } from 'maplibre-gl';
 import { firstValueFrom } from 'rxjs';
 
 import { RouteApi, type RouteProfile, type RouteSummary } from './route-api';
 
-type CoordinateState = {
+interface CoordinateState {
   fromLat: number | null;
   fromLng: number | null;
   toLat: number | null;
   toLng: number | null;
-};
+}
+interface CompleteCoordinateState {
+  fromLat: number;
+  fromLng: number;
+  toLat: number;
+  toLng: number;
+}
 
 const DEFAULT_COORDINATES = {
   fromLat: 47.3769,
@@ -46,7 +52,7 @@ const COORDINATE_ROWS = [
 
 @Component({
   selector: 'app-root',
-  imports: [FormsModule, DecimalPipe],
+  imports: [FormField, DecimalPipe],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
@@ -55,7 +61,8 @@ export class App {
 
   protected readonly coordinateRows = COORDINATE_ROWS;
   protected readonly routeProfiles = ROUTE_PROFILES;
-  protected readonly coordinates: CoordinateState = { ...DEFAULT_COORDINATES };
+  protected readonly coordinates = signal<CoordinateState>({ ...DEFAULT_COORDINATES });
+  protected readonly coordinateForm = form(this.coordinates);
 
   protected readonly loading = signal(false);
   protected readonly errorMessage = signal<string | null>(null);
@@ -71,10 +78,11 @@ export class App {
     });
   }
 
-  protected readonly canLoadRoute = (): boolean => this.hasCompleteCoordinates();
+  protected readonly canLoadRoute = (): boolean => this.hasCompleteCoordinates(this.coordinates());
 
   protected async loadRoute(): Promise<void> {
-    if (!this.hasCompleteCoordinates()) {
+    const coordinates = this.coordinates();
+    if (!this.hasCompleteCoordinates(coordinates)) {
       this.errorMessage.set('Set both start and end points before loading a route.');
       return;
     }
@@ -82,7 +90,7 @@ export class App {
     this.loading.set(true);
     this.errorMessage.set(null);
 
-    const { fromLat, fromLng, toLat, toLng } = this.coordinates;
+    const { fromLat, fromLng, toLat, toLng } = coordinates;
 
     try {
       const route = await firstValueFrom(
@@ -117,24 +125,24 @@ export class App {
     this.routeProfile.set(profile);
     this.resetRouteState();
 
-    if (this.hasCompleteCoordinates()) {
+    if (this.hasCompleteCoordinates(this.coordinates())) {
       void this.loadRoute();
     }
   }
 
   protected async swapEndpoints(): Promise<void> {
-    if (!this.hasCompleteCoordinates() || this.loading()) {
+    if (!this.hasCompleteCoordinates(this.coordinates()) || this.loading()) {
       return;
     }
 
     const nextCoordinates: CoordinateState = {
-      fromLat: this.coordinates.toLat,
-      fromLng: this.coordinates.toLng,
-      toLat: this.coordinates.fromLat,
-      toLng: this.coordinates.fromLng,
+      fromLat: this.coordinates().toLat,
+      fromLng: this.coordinates().toLng,
+      toLat: this.coordinates().fromLat,
+      toLng: this.coordinates().fromLng,
     };
 
-    Object.assign(this.coordinates, nextCoordinates);
+    this.coordinates.set(nextCoordinates);
     this.resetRouteState();
     this.updateWaypointSource();
     await this.loadRoute();
@@ -145,7 +153,7 @@ export class App {
       return;
     }
 
-    Object.assign(this.coordinates, {
+    this.coordinates.set({
       fromLat: null,
       fromLng: null,
       toLat: null,
@@ -291,10 +299,7 @@ export class App {
     this.map.once('load', updateSource);
   }
 
-  protected updateCoordinate(key: CoordinateKey, value: number | string): void {
-    const nextValue = typeof value === 'number' ? value : Number(value);
-
-    this.coordinates[key] = Number.isFinite(nextValue) ? nextValue : null;
+  protected resetAfterCoordinateInput(): void {
     this.resetRouteState();
     this.updateWaypointSource();
   }
@@ -307,19 +312,25 @@ export class App {
     const target = this.mapSelectionTarget();
 
     if (target === 'start') {
-      this.coordinates.fromLat = lat;
-      this.coordinates.fromLng = lng;
+      this.coordinates.update((coordinates) => ({
+        ...coordinates,
+        fromLat: lat,
+        fromLng: lng,
+      }));
       this.mapSelectionTarget.set('end');
     } else {
-      this.coordinates.toLat = lat;
-      this.coordinates.toLng = lng;
+      this.coordinates.update((coordinates) => ({
+        ...coordinates,
+        toLat: lat,
+        toLng: lng,
+      }));
       this.mapSelectionTarget.set('start');
     }
 
     this.resetRouteState();
     this.updateWaypointSource();
 
-    if (this.hasCompleteCoordinates()) {
+    if (this.hasCompleteCoordinates(this.coordinates())) {
       void this.loadRoute();
     }
   }
@@ -350,13 +361,14 @@ export class App {
 
   private createWaypointFeatureCollection(): FeatureCollection<Point> {
     const features = [] as FeatureCollection<Point>['features'];
+    const coordinates = this.coordinates();
 
-    if (this.coordinates.fromLat !== null && this.coordinates.fromLng !== null) {
+    if (coordinates.fromLat !== null && coordinates.fromLng !== null) {
       features.push({
         type: 'Feature',
         geometry: {
           type: 'Point',
-          coordinates: [this.coordinates.fromLng, this.coordinates.fromLat],
+          coordinates: [coordinates.fromLng, coordinates.fromLat],
         },
         properties: {
           role: 'start',
@@ -365,12 +377,12 @@ export class App {
       });
     }
 
-    if (this.coordinates.toLat !== null && this.coordinates.toLng !== null) {
+    if (coordinates.toLat !== null && coordinates.toLng !== null) {
       features.push({
         type: 'Feature',
         geometry: {
           type: 'Point',
-          coordinates: [this.coordinates.toLng, this.coordinates.toLat],
+          coordinates: [coordinates.toLng, coordinates.toLat],
         },
         properties: {
           role: 'end',
@@ -392,19 +404,14 @@ export class App {
     };
   }
 
-  private hasCompleteCoordinates(): this is this & {
-    coordinates: {
-      fromLat: number;
-      fromLng: number;
-      toLat: number;
-      toLng: number;
-    };
-  } {
+  private hasCompleteCoordinates(
+    coordinates: CoordinateState,
+  ): coordinates is CompleteCoordinateState {
     return (
-      this.coordinates.fromLat !== null &&
-      this.coordinates.fromLng !== null &&
-      this.coordinates.toLat !== null &&
-      this.coordinates.toLng !== null
+      coordinates.fromLat !== null &&
+      coordinates.fromLng !== null &&
+      coordinates.toLat !== null &&
+      coordinates.toLng !== null
     );
   }
 }

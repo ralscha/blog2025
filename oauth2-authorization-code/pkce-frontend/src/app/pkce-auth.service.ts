@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Service, signal } from '@angular/core';
 import { OAuthErrorEvent, OAuthService } from 'angular-oauth2-oidc';
 import { firstValueFrom } from 'rxjs';
 
@@ -27,7 +27,7 @@ interface UserInfo {
 
 type ResourceApiPayload = Record<string, unknown>;
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class PkceBrowserFlowService {
   private readonly http = inject(HttpClient);
   private readonly oauthService = inject(OAuthService);

@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import type { LineString } from 'geojson';
 import { map } from 'rxjs';
 
@@ -23,7 +23,7 @@ interface GraphhopperRouteResponse {
   paths: GraphhopperPath[];
 }
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class RouteApi {
   private readonly http = inject(HttpClient);
   private readonly routeUrl = `${environment.graphhopperBaseUrl}/route`;

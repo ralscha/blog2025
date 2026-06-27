@@ -63,18 +63,18 @@
       </div>
     }
 
-    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
+    <form [formRoot]="form" (submit)="onSubmit()" class="flex flex-col gap-4">
       <fieldset class="fieldset">
         <legend class="fieldset-legend">Email</legend>
         <input
           type="email"
-          formControlName="email"
+          [formField]="form.email"
           placeholder="you@example.com"
           class="input w-full"
-          [class.input-error]="submitted() && form.controls.email.invalid"
+          [class.input-error]="submitted() && !form.email().valid()"
           autocomplete="email"
         />
-        @if (submitted() && form.controls.email.invalid) {
+        @if (submitted() && !form.email().valid()) {
           <p class="label text-error text-xs">Valid email is required</p>
         }
       </fieldset>
@@ -83,16 +83,16 @@
         <legend class="fieldset-legend">Password</legend>
         <input
           type="password"
-          formControlName="password"
+          [formField]="form.password"
           placeholder="At least 8 characters"
           class="input w-full"
-          [class.input-error]="submitted() && form.controls.password.invalid"
+          [class.input-error]="submitted() && !form.password().valid()"
           autocomplete="new-password"
         />
-        @if (submitted() && form.controls.password.errors?.['required']) {
+        @if (submitted() && form.password().getError('required')) {
           <p class="label text-error text-xs">Password is required</p>
         }
-        @if (submitted() && form.controls.password.errors?.['minlength']) {
+        @if (submitted() && form.password().getError('minLength')) {
           <p class="label text-error text-xs">Password must be at least 8 characters</p>
         }
       </fieldset>
@@ -101,16 +101,15 @@
         <legend class="fieldset-legend">Confirm Password</legend>
         <input
           type="password"
-          formControlName="confirmPassword"
+          [formField]="form.confirmPassword"
           placeholder="••••••••"
           class="input w-full"
           [class.input-error]="
-            submitted() &&
-            (form.controls.confirmPassword.invalid || form.errors?.['passwordMismatch'])
+            submitted() && (!form.confirmPassword().valid() || passwordMismatch())
           "
           autocomplete="new-password"
         />
-        @if (submitted() && form.errors?.['passwordMismatch']) {
+        @if (submitted() && passwordMismatch()) {
           <p class="label text-error text-xs">Passwords do not match</p>
         }
       </fieldset>
