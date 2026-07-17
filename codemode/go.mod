@@ -3,10 +3,10 @@ module github.com/preblog/codemode
 go 1.26.5
 
 require (
-	github.com/anthropics/anthropic-sdk-go v1.56.0
+	github.com/anthropics/anthropic-sdk-go v1.58.0
 	github.com/joho/godotenv v1.5.1
 	github.com/modelcontextprotocol/go-sdk v1.6.1
-	modernc.org/quickjs v0.21.0
+	modernc.org/quickjs v0.21.1
 )
 
 require (
@@ -16,7 +16,7 @@ require (
 	github.com/google/jsonschema-go v0.4.3 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/invopop/jsonschema v0.14.0 // indirect
-	github.com/mattn/go-isatty v0.0.22 // indirect
+	github.com/mattn/go-isatty v0.0.23 // indirect
 	github.com/ncruces/go-strftime v1.0.0 // indirect
 	github.com/pb33f/ordered-map/v2 v2.3.1 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
