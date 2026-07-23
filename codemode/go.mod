@@ -3,7 +3,7 @@ module github.com/preblog/codemode
 go 1.26.5
 
 require (
-	github.com/anthropics/anthropic-sdk-go v1.58.0
+	github.com/anthropics/anthropic-sdk-go v1.59.0
 	github.com/joho/godotenv v1.5.1
 	github.com/modelcontextprotocol/go-sdk v1.6.1
 	modernc.org/quickjs v0.21.1
