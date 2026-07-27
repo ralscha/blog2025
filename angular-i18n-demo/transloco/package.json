@@ -33,7 +33,7 @@
     "@angular/build": "22.0.8",
     "@angular/cli": "22.0.8",
     "@angular/compiler-cli": "22.0.8",
-    "@jsverse/transloco-keys-manager": "8.1.0",
+    "@jsverse/transloco-keys-manager": "8.1.1",
     "@jsverse/transloco-optimize": "8.4.0",
     "@jsverse/transloco-validator": "8.4.0",
     "prettier": "3.9.6",
