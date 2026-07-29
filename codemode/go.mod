@@ -5,13 +5,13 @@ go 1.26.5
 require (
 	github.com/anthropics/anthropic-sdk-go v1.61.0
 	github.com/joho/godotenv v1.5.1
-	github.com/modelcontextprotocol/go-sdk v1.6.1
-	modernc.org/quickjs v0.21.1
+	github.com/modelcontextprotocol/go-sdk v1.7.0
+	modernc.org/quickjs v0.22.0
 )
 
 require (
 	github.com/bahlo/generic-list-go v0.2.0 // indirect
-	github.com/buger/jsonparser v1.2.0 // indirect
+	github.com/buger/jsonparser v1.5.0 // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/google/jsonschema-go v0.4.3 // indirect
 	github.com/google/uuid v1.6.0 // indirect
@@ -32,8 +32,9 @@ require (
 	golang.org/x/oauth2 v0.36.0 // indirect
 	golang.org/x/sync v0.22.0 // indirect
 	golang.org/x/sys v0.47.0 // indirect
-	modernc.org/libc v1.74.3 // indirect
-	modernc.org/libquickjs v0.12.10 // indirect
+	golang.org/x/time v0.15.0 // indirect
+	modernc.org/libc v1.74.4 // indirect
+	modernc.org/libquickjs v0.13.0 // indirect
 	modernc.org/mathutil v1.7.1 // indirect
 	modernc.org/memory v1.11.0 // indirect
 )
