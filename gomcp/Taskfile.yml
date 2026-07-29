@@ -1,6 +1,17 @@
 version: '3'
 
 tasks:
+  format:
+    desc: Format all Go code
+    cmds:
+      - go fix ./...
+      - go fmt ./...
+
+  build:
+    desc: Build all Go packages
+    cmds:
+      - go build ./...
+
   inspector:
     desc: Start the MCP inspector
     cmds:

@@ -7,6 +7,17 @@ tasks:
       - task --list-all
     silent: true
 
+  format:
+    desc: Format all Go code
+    cmds:
+      - go fix ./...
+      - go fmt ./...
+
+  build:
+    desc: Build all Go packages
+    cmds:
+      - go build ./...
+
   service:up:
     desc: Start Playwright PDF service
     cmds:

@@ -13,7 +13,7 @@ require (
 require (
 	github.com/bahlo/generic-list-go v0.2.0 // indirect
 	github.com/bmatcuk/doublestar/v4 v4.10.0 // indirect
-	github.com/buger/jsonparser v1.5.0 // indirect
+	github.com/buger/jsonparser v1.6.0 // indirect
 	github.com/bytedance/gopkg v0.1.4 // indirect
 	github.com/bytedance/sonic v1.15.2 // indirect
 	github.com/bytedance/sonic/loader v0.5.1 // indirect

@@ -69,8 +69,8 @@ github.com/go-git/go-billy/v6 v6.0.0-alpha.2 h1:1Sv5WemXL8CxKrAx1gioJ+uHNb2bZJhi
 github.com/go-git/go-billy/v6 v6.0.0-alpha.2/go.mod h1:r/bsv9i/iDyyEU8/Z6mjC+YraOVwie1ddfUqBCElKXQ=
 github.com/go-git/go-git-fixtures/v6 v6.0.0-alpha.1 h1:gmqi2jvsreu0s8JMLylYDFq4sbjHwwlhktMw0DUg3mA=
 github.com/go-git/go-git-fixtures/v6 v6.0.0-alpha.1/go.mod h1:ECf1MqJlBdYpKggBrOXjo/0EnvRZx6D++I86UYjPgAQ=
-github.com/go-git/go-git/v6 v6.0.0-alpha.4 h1:aDTc2UGanmaE7FkGLSlBEB9nohMnQ+RKXcfq/D+esDQ=
-github.com/go-git/go-git/v6 v6.0.0-alpha.4/go.mod h1:4ODa/G7hPWrh4Y+7lmt59Ij3zW38IEfvRoAZxLYYBhc=
+github.com/go-git/go-git/v6 v6.0.0-alpha.5 h1:sE+OlkHgYWNMVmN1s9sR7uyFgsWLtxcNWse/vBYKxRE=
+github.com/go-git/go-git/v6 v6.0.0-alpha.5/go.mod h1:3IjhiZnM+uBmUrOGSeqrJpsmi4Vd0H2NZO/uK2a7d0s=
 github.com/go-logr/logr v1.2.2/go.mod h1:jdQByPbusPIv2/zmleS9BjJVeZ6kBagPoEUsqbVz/1A=
 github.com/go-logr/logr v1.4.4 h1:tG4xh9yMsRCAiodLVTxyrkzSZ9+o0L1Kg/+cPVcbP/8=
 github.com/go-logr/logr v1.4.4/go.mod h1:9T104GzyrTigFIr8wt5mBrctHMim0Nb2HLGrmQ40KvY=
@@ -174,8 +174,8 @@ github.com/pulumi/appdash v0.0.0-20231130102222-75f619a67231 h1:vkHw5I/plNdTr435
 github.com/pulumi/appdash v0.0.0-20231130102222-75f619a67231/go.mod h1:murToZ2N9hNJzewjHBgfFdXhZKjY3z5cYC1VXk+lbFE=
 github.com/pulumi/pulumi-docker/sdk/v4 v4.11.2 h1:mc9IbrRi1pWSg9HWEFT6EcQ274WnZ97nyP2pmUEvSp4=
 github.com/pulumi/pulumi-docker/sdk/v4 v4.11.2/go.mod h1:gPNbbz+ywFqnRRQMDxQQbMp4nXJIk43QBUj0N+xWXbw=
-github.com/pulumi/pulumi-gcp/sdk/v9 v9.31.0 h1:QZciAW2ZvIVg8sRhSxid/UFE6gyJv2Ozls7eRjAhRgQ=
-github.com/pulumi/pulumi-gcp/sdk/v9 v9.31.0/go.mod h1:bNncxXI+D9u/Pdcdo+bOqBrC1zBbqsH1v6mMQfcQZ+g=
+github.com/pulumi/pulumi-gcp/sdk/v9 v9.32.1 h1:k0DB8PZif+dI0oRa7CHlnteY7okusawSP0Ash1NB16A=
+github.com/pulumi/pulumi-gcp/sdk/v9 v9.32.1/go.mod h1:bNncxXI+D9u/Pdcdo+bOqBrC1zBbqsH1v6mMQfcQZ+g=
 github.com/pulumi/pulumi/sdk/v3 v3.255.0 h1:G872L4M1EPW3l60yEc52GgLpFRdXAVf0rn96q3MwDVQ=
 github.com/pulumi/pulumi/sdk/v3 v3.255.0/go.mod h1:b99ZkmEGjVyW55blOwL94IfPLcaajhOfV8OTePZrRJM=
 github.com/rivo/uniseg v0.4.7 h1:WUdvkW8uEhrYfLC4ZzdpI2ztxP1I582+49Oc5Mq64VQ=

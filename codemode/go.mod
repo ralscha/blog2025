@@ -11,7 +11,7 @@ require (
 
 require (
 	github.com/bahlo/generic-list-go v0.2.0 // indirect
-	github.com/buger/jsonparser v1.5.0 // indirect
+	github.com/buger/jsonparser v1.6.0 // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/google/jsonschema-go v0.4.3 // indirect
 	github.com/google/uuid v1.6.0 // indirect

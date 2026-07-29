@@ -16,6 +16,11 @@ tasks:
       - go fix ./...
       - go fmt ./...
 
+  build:
+    desc: Build all Go packages
+    cmds:
+      - go build ./...
+
   db:up:
     desc: Start TimescaleDB with docker compose
     cmds:

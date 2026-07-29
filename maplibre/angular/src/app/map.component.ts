@@ -35,7 +35,7 @@ export class MapComponent {
   protected readonly mapStyle =
     'https://vectortiles.geo.admin.ch/styles/ch.swisstopo.basemap.vt/style.json';
   protected readonly initialCenter: [number, number] = [8.2312, 46.8182];
-  protected readonly initialZoom: [number] = [7];
+  protected readonly initialZoom = 7;
   protected readonly fitBoundsOptions = {
     padding: 50,
     maxZoom: 10,
@@ -100,8 +100,8 @@ export class MapComponent {
     this.showMarkers() ? [7.7873, 46.007] : this.initialCenter,
   );
 
-  protected readonly zoom = computed<[number]>(() =>
-    this.showMarkers() ? [8] : this.initialZoom,
+  protected readonly zoom = computed<number>(() =>
+    this.showMarkers() ? 8 : this.initialZoom,
   );
 
   protected readonly bounds = computed<LngLatBoundsLike | null>(() => {
