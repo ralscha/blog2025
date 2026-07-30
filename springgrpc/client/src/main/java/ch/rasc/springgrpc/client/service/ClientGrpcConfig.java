@@ -1,13 +1,15 @@
 package ch.rasc.springgrpc.client.service;
 
-import ch.rasc.springgrpc.proto.IotAnomalyServiceGrpc;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.grpc.client.ChannelBuilderOptions;
 import org.springframework.grpc.client.GrpcChannelFactory;
 import org.springframework.grpc.client.interceptor.security.BasicAuthenticationInterceptor;
+
+import ch.rasc.springgrpc.proto.IotAnomalyServiceGrpc;
 
 @Configuration
 public class ClientGrpcConfig {
