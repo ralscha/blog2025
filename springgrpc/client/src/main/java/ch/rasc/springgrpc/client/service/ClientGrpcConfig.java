@@ -12,6 +12,9 @@ import org.springframework.grpc.client.interceptor.security.BasicAuthenticationI
 @Configuration
 public class ClientGrpcConfig {
 
+  @Value("${app.grpc.target:localhost:9090}")
+  private String target;
+
   @Value("${app.grpc.username}")
   private String username;
 
@@ -20,12 +23,12 @@ public class ClientGrpcConfig {
 
   @Bean
   IotAnomalyServiceGrpc.IotAnomalyServiceBlockingStub anomalyBlockingStub(GrpcChannelFactory channels) {
-    return IotAnomalyServiceGrpc.newBlockingStub(channels.createChannel("anomaly-server", channelOptions()));
+    return IotAnomalyServiceGrpc.newBlockingStub(channels.createChannel(this.target, channelOptions()));
   }
 
   @Bean
   IotAnomalyServiceGrpc.IotAnomalyServiceStub anomalyAsyncStub(GrpcChannelFactory channels) {
-    return IotAnomalyServiceGrpc.newStub(channels.createChannel("anomaly-server", channelOptions()));
+    return IotAnomalyServiceGrpc.newStub(channels.createChannel(this.target, channelOptions()));
   }
 
   private ChannelBuilderOptions channelOptions() {

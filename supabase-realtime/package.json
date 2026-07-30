@@ -11,7 +11,7 @@
   "dependencies": {
     "@supabase/supabase-js": "2.111.0",
     "@tailwindcss/vite": "4.3.3",
-    "daisyui": "5.7.7",
+    "daisyui": "5.7.8",
     "tailwindcss": "4.3.3"
   },
   "devDependencies": {
