@@ -3,10 +3,10 @@ module github.com/preblog/codemode
 go 1.26.5
 
 require (
-	github.com/anthropics/anthropic-sdk-go v1.61.0
+	github.com/anthropics/anthropic-sdk-go v1.62.0
 	github.com/joho/godotenv v1.5.1
 	github.com/modelcontextprotocol/go-sdk v1.7.0
-	modernc.org/quickjs v0.22.0
+	modernc.org/quickjs v0.23.0
 )
 
 require (
@@ -33,8 +33,8 @@ require (
 	golang.org/x/sync v0.22.0 // indirect
 	golang.org/x/sys v0.47.0 // indirect
 	golang.org/x/time v0.15.0 // indirect
-	modernc.org/libc v1.74.4 // indirect
-	modernc.org/libquickjs v0.13.0 // indirect
+	modernc.org/libc v1.75.1 // indirect
+	modernc.org/libquickjs v0.13.1 // indirect
 	modernc.org/mathutil v1.7.1 // indirect
-	modernc.org/memory v1.11.0 // indirect
+	modernc.org/memory v1.12.0 // indirect
 )
