@@ -12,7 +12,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
-  <dependencies></dependencies>
+  <dependencies/>
 
   <build>
     <plugins>
@@ -58,7 +58,7 @@
       <plugin>
         <groupId>io.spring.javaformat</groupId>
         <artifactId>spring-javaformat-maven-plugin</artifactId>
-        <version>0.0.47</version>
+        <version>0.0.48</version>
       </plugin>
 
       <plugin>

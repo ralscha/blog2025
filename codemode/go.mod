@@ -1,9 +1,9 @@
 module github.com/preblog/codemode
 
-go 1.26.5
+go 1.26.6
 
 require (
-	github.com/anthropics/anthropic-sdk-go v1.62.0
+	github.com/anthropics/anthropic-sdk-go v1.63.1
 	github.com/joho/godotenv v1.5.1
 	github.com/modelcontextprotocol/go-sdk v1.7.0
 	modernc.org/quickjs v0.23.0
