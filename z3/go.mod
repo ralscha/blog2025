@@ -1,5 +1,5 @@
 module z3demo
 
-go 1.26.6
+go 1.27.0
 
-require github.com/Z3Prover/z3/src/api/go v0.0.0-20260814154923-673d3fbdb4ca
+require github.com/Z3Prover/z3/src/api/go v0.0.0-20260822010419-8d32b2b02ab3

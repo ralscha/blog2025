@@ -110,3 +110,11 @@ github.com/Z3Prover/z3/src/api/go v0.0.0-20260808215137-e7b7d85d234a h1:QfQW/hEn
 github.com/Z3Prover/z3/src/api/go v0.0.0-20260808215137-e7b7d85d234a/go.mod h1:4uqsFzLnAPPSuF7CqYgRd7/UeSBfz8tCtTSocv4uzkU=
 github.com/Z3Prover/z3/src/api/go v0.0.0-20260814154923-673d3fbdb4ca h1:cQ2BDl5kRE/ubYoXbhivdxJZSG7Z0RDVeIMAtxCfTzE=
 github.com/Z3Prover/z3/src/api/go v0.0.0-20260814154923-673d3fbdb4ca/go.mod h1:4uqsFzLnAPPSuF7CqYgRd7/UeSBfz8tCtTSocv4uzkU=
+github.com/Z3Prover/z3/src/api/go v0.0.0-20260820111922-c1c2f9498c85 h1:DLk9VjeTi+ty8aE0l5Bp3rBjy84gwNwgySKsj1iDJe8=
+github.com/Z3Prover/z3/src/api/go v0.0.0-20260820111922-c1c2f9498c85/go.mod h1:4uqsFzLnAPPSuF7CqYgRd7/UeSBfz8tCtTSocv4uzkU=
+github.com/Z3Prover/z3/src/api/go v0.0.0-20260820185857-414189804519 h1:x3rEeg4TCNxX0H3zbbmuyoLT7f0a2T55L1MwHyvseGM=
+github.com/Z3Prover/z3/src/api/go v0.0.0-20260820185857-414189804519/go.mod h1:4uqsFzLnAPPSuF7CqYgRd7/UeSBfz8tCtTSocv4uzkU=
+github.com/Z3Prover/z3/src/api/go v0.0.0-20260821041101-2d4f43c3bfa6 h1:1PXXkQfAG/dUOLV/SBYUCfO+DxJ3SexNJq5KrVRZJcc=
+github.com/Z3Prover/z3/src/api/go v0.0.0-20260821041101-2d4f43c3bfa6/go.mod h1:4uqsFzLnAPPSuF7CqYgRd7/UeSBfz8tCtTSocv4uzkU=
+github.com/Z3Prover/z3/src/api/go v0.0.0-20260822010419-8d32b2b02ab3 h1:ujs6HgRyWB57Fj3fUemYIZFkMMSoIyWnnG5sB1u/ZKY=
+github.com/Z3Prover/z3/src/api/go v0.0.0-20260822010419-8d32b2b02ab3/go.mod h1:4uqsFzLnAPPSuF7CqYgRd7/UeSBfz8tCtTSocv4uzkU=

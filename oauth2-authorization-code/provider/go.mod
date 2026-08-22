@@ -1,3 +1,3 @@
 module oidc-demo/provider
 
-go 1.26.6
+go 1.27.0
