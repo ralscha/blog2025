@@ -6,7 +6,7 @@ require (
 	github.com/anthropics/anthropic-sdk-go v1.66.0
 	github.com/joho/godotenv v1.5.1
 	github.com/modelcontextprotocol/go-sdk v1.7.0
-	modernc.org/quickjs v0.24.0
+	modernc.org/quickjs v0.24.1
 )
 
 require (
