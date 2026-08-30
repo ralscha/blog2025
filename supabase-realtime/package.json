@@ -9,9 +9,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@supabase/supabase-js": "2.112.3",
+    "@supabase/supabase-js": "2.112.4",
     "@tailwindcss/vite": "4.3.3",
-    "daisyui": "5.7.20",
+    "daisyui": "5.7.22",
     "tailwindcss": "4.3.3"
   },
   "devDependencies": {

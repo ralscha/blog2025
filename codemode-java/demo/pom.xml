@@ -19,7 +19,7 @@
     <java.version>25</java.version>
     <spring-ai.version>2.0.1</spring-ai.version>
     <mcp-sdk.version>2.0.1</mcp-sdk.version>
-    <graal.version>25.2.4</graal.version>
+    <graal.version>25.3.4.1</graal.version>
     <tool-search-tool.version>2.1.0</tool-search-tool.version>
   </properties>
 
