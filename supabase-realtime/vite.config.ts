@@ -9,9 +9,9 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: {
-        iss: resolve(__dirname, 'iss/index.html'),
-        presence: resolve(__dirname, 'presence/index.html'),
-        todos: resolve(__dirname, 'todos/index.html'),
+        iss: resolve(import.meta.dirname, 'iss/index.html'),
+        presence: resolve(import.meta.dirname, 'presence/index.html'),
+        todos: resolve(import.meta.dirname, 'todos/index.html'),
       },
     },
   },

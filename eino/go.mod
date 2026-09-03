@@ -1,12 +1,12 @@
 module einoexamples
 
-go 1.27.0
+go 1.27.1
 
 require (
-	github.com/cloudwego/eino v0.9.18
+	github.com/cloudwego/eino v0.9.19
 	github.com/cloudwego/eino-ext/components/model/openai v0.1.13
 	github.com/cloudwego/eino-ext/components/tool/mcp v0.0.9
-	github.com/mark3labs/mcp-go v0.58.0
+	github.com/mark3labs/mcp-go v1.0.0
 	gopkg.in/yaml.v3 v3.0.1
 )
 

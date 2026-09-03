@@ -11,27 +11,23 @@ import (
 	"net/url"
 	"os"
 	"os/signal"
-	"strconv"
 	"strings"
 	"syscall"
 	"time"
 )
 
 const (
-	realtimeTopic = "iss-position"
-	realtimeEvent = "iss-update"
-	openNotifyURL = "http://api.open-notify.org/iss-now.json"
-	interval      = 10 * time.Second
-	timeout       = 8 * time.Second
+	realtimeTopic  = "iss-position"
+	realtimeEvent  = "iss-update"
+	issPositionURL = "https://api.wheretheiss.at/v1/satellites/25544"
+	interval       = 10 * time.Second
+	timeout        = 8 * time.Second
 )
 
-type openNotifyResponse struct {
-	Message     string `json:"message"`
-	Timestamp   int64  `json:"timestamp"`
-	ISSPosition struct {
-		Latitude  string `json:"latitude"`
-		Longitude string `json:"longitude"`
-	} `json:"iss_position"`
+type issPositionResponse struct {
+	Timestamp int64   `json:"timestamp"`
+	Latitude  float64 `json:"latitude"`
+	Longitude float64 `json:"longitude"`
 }
 
 type broadcastPayload struct {
@@ -40,7 +36,6 @@ type broadcastPayload struct {
 	Timestamp   int64   `json:"timestamp"`
 	Latitude    float64 `json:"latitude"`
 	Longitude   float64 `json:"longitude"`
-	Message     string  `json:"message"`
 }
 
 type broadcastMessage struct {
@@ -123,7 +118,7 @@ func publishOnce(parent context.Context, client *http.Client, broadcastURL, anon
 }
 
 func fetchISSPosition(ctx context.Context, client *http.Client) (broadcastPayload, error) {
-	request, err := http.NewRequestWithContext(ctx, http.MethodGet, openNotifyURL, nil)
+	request, err := http.NewRequestWithContext(ctx, http.MethodGet, issPositionURL, nil)
 	if err != nil {
 		return broadcastPayload{}, fmt.Errorf("build ISS request: %w", err)
 	}
@@ -138,28 +133,21 @@ func fetchISSPosition(ctx context.Context, client *http.Client) (broadcastPayloa
 		return broadcastPayload{}, fmt.Errorf("ISS API returned status %d", response.StatusCode)
 	}
 
-	var issData openNotifyResponse
+	var issData issPositionResponse
 	if err := json.NewDecoder(response.Body).Decode(&issData); err != nil {
 		return broadcastPayload{}, fmt.Errorf("decode ISS response: %w", err)
 	}
 
-	latitude, err := parseCoordinate("latitude", issData.ISSPosition.Latitude)
-	if err != nil {
-		return broadcastPayload{}, err
-	}
-
-	longitude, err := parseCoordinate("longitude", issData.ISSPosition.Longitude)
-	if err != nil {
-		return broadcastPayload{}, err
+	if issData.Timestamp <= 0 || issData.Latitude < -90 || issData.Latitude > 90 || issData.Longitude < -180 || issData.Longitude > 180 {
+		return broadcastPayload{}, errors.New("ISS API returned invalid position data")
 	}
 
 	return broadcastPayload{
-		Source:      "open-notify",
+		Source:      "wheretheiss.at",
 		RequestedAt: time.Now().UTC().Format(time.RFC3339),
 		Timestamp:   issData.Timestamp,
-		Latitude:    latitude,
-		Longitude:   longitude,
-		Message:     issData.Message,
+		Latitude:    issData.Latitude,
+		Longitude:   issData.Longitude,
 	}, nil
 }
 
@@ -229,13 +217,4 @@ func envOrError(key string) (string, error) {
 	}
 
 	return value, nil
-}
-
-func parseCoordinate(name, value string) (float64, error) {
-	parsed, err := strconv.ParseFloat(strings.TrimSpace(value), 64)
-	if err != nil {
-		return 0, fmt.Errorf("parse %s: %w", name, err)
-	}
-
-	return parsed, nil
 }

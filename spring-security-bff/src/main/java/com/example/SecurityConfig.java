@@ -137,7 +137,7 @@ public class SecurityConfig {
 		protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
 				FilterChain filterChain) throws ServletException, IOException {
 			String fetchSite = request.getHeader("Sec-Fetch-Site");
-			if (fetchSite == null || (!"same-origin".equals(fetchSite) && !"same-site".equals(fetchSite))) {
+			if (!"same-origin".equals(fetchSite)) {
 				response.sendError(HttpServletResponse.SC_FORBIDDEN, "Cross-site request rejected");
 				return;
 			}

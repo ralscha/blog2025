@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS books (
 );
 
 CREATE INDEX IF NOT EXISTS books_search_idx ON books
-USING bm25 (
+USING paradedb (
 	gutenberg_id,
 	title,
 	author,

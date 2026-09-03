@@ -1,10 +1,10 @@
 module paradedb-demo
 
-go 1.27.0
+go 1.27.1
 
 require (
 	github.com/jackc/pgx/v5 v5.10.0
-	github.com/pressly/goose/v3 v3.27.3
+	github.com/pressly/goose/v3 v3.28.0
 )
 
 require (

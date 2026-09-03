@@ -7,6 +7,7 @@ const corsHeaders = {
 
 const realtimeTopic = "iss-position";
 const realtimeEvent = "iss-update";
+const issPositionUrl = "https://api.wheretheiss.at/v1/satellites/25544";
 
 function jsonResponse(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
@@ -37,11 +38,11 @@ Deno.serve(async (request) => {
   let issResponse: Response;
 
   try {
-    issResponse = await fetch("http://api.open-notify.org/iss-now.json");
+    issResponse = await fetch(issPositionUrl);
   } catch (error) {
     return jsonResponse(
       {
-        error: "Failed to reach open-notify API",
+        error: "Failed to reach the ISS position API",
         details: error instanceof Error ? error.message : String(error),
       },
       502,
@@ -51,7 +52,7 @@ Deno.serve(async (request) => {
   if (!issResponse.ok) {
     return jsonResponse(
       {
-        error: "open-notify API returned an error",
+        error: "The ISS position API returned an error",
         status: issResponse.status,
       },
       502,
@@ -60,13 +61,24 @@ Deno.serve(async (request) => {
 
   const issData = await issResponse.json();
 
+  const timestamp = Number(issData.timestamp);
+  const latitude = Number(issData.latitude);
+  const longitude = Number(issData.longitude);
+
+  if (
+    !Number.isFinite(timestamp) || timestamp <= 0 ||
+    !Number.isFinite(latitude) || latitude < -90 || latitude > 90 ||
+    !Number.isFinite(longitude) || longitude < -180 || longitude > 180
+  ) {
+    return jsonResponse({ error: "The ISS position API returned invalid data" }, 502);
+  }
+
   const payload = {
-    source: "open-notify",
+    source: "wheretheiss.at",
     requestedAt: new Date().toISOString(),
-    timestamp: Number(issData.timestamp),
-    latitude: Number(issData.iss_position?.latitude),
-    longitude: Number(issData.iss_position?.longitude),
-    message: issData.message,
+    timestamp,
+    latitude,
+    longitude,
   };
 
   const broadcastResponse = await fetch(
