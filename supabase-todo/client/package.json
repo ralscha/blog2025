@@ -10,7 +10,7 @@
     "lint": "ng lint"
   },
   "private": true,
-  "packageManager": "pnpm@12.1.0",
+  "packageManager": "pnpm@12.3.2",
   "dependencies": {
     "@angular/common": "22.1.5",
     "@angular/compiler": "22.1.5",
@@ -18,7 +18,7 @@
     "@angular/forms": "22.1.5",
     "@angular/platform-browser": "22.1.5",
     "@angular/router": "22.1.5",
-    "@supabase/supabase-js": "2.112.4",
+    "@supabase/supabase-js": "2.115.0",
     "daisyui": "5.7.28",
     "rxjs": "7.8.2",
     "tailwindcss": "4.3.3",
@@ -32,7 +32,7 @@
     "@eslint/js": "10.0.1",
     "@tailwindcss/postcss": "4.3.3",
     "angular-eslint": "22.2.0",
-    "eslint": "10.9.1",
+    "eslint": "10.10.0",
     "postcss": "8.5.28",
     "prettier": "3.9.6",
     "typescript": "6.0.3",
