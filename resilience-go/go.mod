@@ -2,7 +2,7 @@ module resilience-go-demo
 
 go 1.27.1
 
-require github.com/failsafe-go/failsafe-go v0.9.7
+require github.com/failsafe-go/failsafe-go v0.9.8
 
 require (
 	github.com/bits-and-blooms/bitset v1.25.0 // indirect
