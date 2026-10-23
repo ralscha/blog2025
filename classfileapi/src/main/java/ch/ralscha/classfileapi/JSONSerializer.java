@@ -2,6 +2,7 @@ package ch.ralscha.classfileapi;
 
 import java.lang.classfile.ClassFile;
 import java.lang.classfile.CodeBuilder;
+import java.lang.classfile.Opcode;
 import java.lang.classfile.TypeKind;
 import java.lang.constant.ClassDesc;
 import java.lang.constant.ConstantDescs;
@@ -83,6 +84,8 @@ public interface JSONSerializer<T> {
 	private static void buildSerializeMethod(CodeBuilder codeBuilder, RecordComponent[] components,
 			ClassDesc recordClassDesc, ClassDesc stringBuilderClass, MethodTypeDesc constructorType,
 			MethodTypeDesc appendType, MethodTypeDesc toStringType) {
+		codeBuilder.aload(codeBuilder.parameterSlot(0)).ifThen(Opcode.IFNULL,
+				b -> b.ldc("null").areturn());
 		if (components.length == 0) {
 			codeBuilder.ldc("{}").areturn();
 			return;
@@ -104,8 +107,8 @@ public interface JSONSerializer<T> {
 				.invokevirtual(stringBuilderClass, "append", appendType)
 				.aload(recordSlot)
 				.invokevirtual(recordClassDesc, component.getName(), MethodTypeDesc.of(ConstantDescs.CD_String))
-				.invokevirtual(stringBuilderClass, "append", appendType)
-				.ldc("\"")
+				.invokestatic(ClassDesc.of(JSONSerializer.class.getName()), "jsonString",
+						MethodTypeDesc.of(ConstantDescs.CD_String, ConstantDescs.CD_String), true)
 				.invokevirtual(stringBuilderClass, "append", appendType);
 		}
 
@@ -116,7 +119,35 @@ public interface JSONSerializer<T> {
 	}
 
 	private static String componentPrefix(RecordComponent component, int index) {
-		return index == 0 ? "{\"" + component.getName() + "\":\"" : ",\"" + component.getName() + "\":\"";
+		return (index == 0 ? "{" : ",") + jsonString(component.getName()) + ":";
+	}
+
+	static String jsonString(String value) {
+		if (value == null) {
+			return "null";
+		}
+		StringBuilder json = new StringBuilder("\"");
+		for (int i = 0; i < value.length(); i++) {
+			char c = value.charAt(i);
+			switch (c) {
+				case '"' -> json.append("\\\"");
+				case '\\' -> json.append("\\\\");
+				case '\b' -> json.append("\\b");
+				case '\f' -> json.append("\\f");
+				case '\n' -> json.append("\\n");
+				case '\r' -> json.append("\\r");
+				case '\t' -> json.append("\\t");
+				default -> {
+					if (c < 0x20 || Character.isSurrogate(c)) {
+						json.append(String.format("\\u%04x", (int) c));
+					}
+					else {
+						json.append(c);
+					}
+				}
+			}
+		}
+		return json.append('"').toString();
 	}
 
 	private static String implementationClassName(Class<?> recordClass) {

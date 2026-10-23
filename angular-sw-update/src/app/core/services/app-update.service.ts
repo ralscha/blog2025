@@ -60,7 +60,7 @@ export class AppUpdateService {
     }
   }
 
-  async activateUpdate(): Promise<void> {
+  activateUpdate(): void {
     if (!this.#swUpdate.isEnabled || this.#isActivating()) {
       return;
     }
@@ -69,7 +69,6 @@ export class AppUpdateService {
     this.#statusMessage.set('Applying the latest version and reloading the app...');
 
     try {
-      await this.#swUpdate.activateUpdate();
       document.location.reload();
     } catch (error) {
       console.error('Could not activate the latest version', error);

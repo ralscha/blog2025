@@ -20,7 +20,7 @@ write_files:
           environment:
             - POSTGRES_DB=bitwarden
           volumes:
-            - postgres_data:/var/lib/postgresql/data
+            - postgres_data:/var/lib/postgresql
           healthcheck:
             test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d bitwarden"]
             interval: 10s

@@ -33,7 +33,7 @@ func main() {
 		Stateless: false,
 	})
 
-	addr := ":8080"
+	addr := "127.0.0.1:8080"
 	srv := &http.Server{
 		Addr:         addr,
 		Handler:      handler,
