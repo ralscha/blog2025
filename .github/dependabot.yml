@@ -1,6 +1,4 @@
-# Weekly version updates; security updates are enabled in repository settings.
-# Minor and patch releases are grouped; major releases remain separate.
-# Temporarily hold TypeScript below 7 for Angular projects; remove the ignore rule when compatible.
+# Pulumi still requires TypeScript <7; Angular restrictions remain separate.
 version: 2
 updates:
 - package-ecosystem: docker
@@ -15,7 +13,7 @@ updates:
   schedule:
     interval: weekly
     day: monday
-    time: "09:00"
+    time: 09:00
     timezone: Europe/Zurich
   open-pull-requests-limit: 5
   groups:
@@ -37,7 +35,7 @@ updates:
   schedule:
     interval: weekly
     day: monday
-    time: "09:00"
+    time: 09:00
     timezone: Europe/Zurich
   open-pull-requests-limit: 5
   groups:
@@ -72,7 +70,7 @@ updates:
   schedule:
     interval: weekly
     day: monday
-    time: "09:00"
+    time: 09:00
     timezone: Europe/Zurich
   open-pull-requests-limit: 5
   groups:
@@ -104,7 +102,7 @@ updates:
   schedule:
     interval: weekly
     day: monday
-    time: "09:00"
+    time: 09:00
     timezone: Europe/Zurich
   open-pull-requests-limit: 5
   groups:
@@ -119,7 +117,7 @@ updates:
   schedule:
     interval: weekly
     day: monday
-    time: "09:00"
+    time: 09:00
     timezone: Europe/Zurich
   open-pull-requests-limit: 5
   groups:
@@ -134,13 +132,12 @@ updates:
   - /genetic-algorithm/smart-rockets
   - /playwrightpdf/playwright-service
   - /postgis/web
-  - /pulumi-frp
   - /supabase-realtime
 - package-ecosystem: npm
   schedule:
     interval: weekly
     day: monday
-    time: "09:00"
+    time: 09:00
     timezone: Europe/Zurich
   open-pull-requests-limit: 5
   groups:
@@ -160,6 +157,27 @@ updates:
   - /oauth2-authorization-code/bff-frontend
   - /oauth2-authorization-code/pkce-frontend
   - /supabase-todo/client
+  ignore:
+  - dependency-name: typescript
+    versions:
+    - '>=7.0.0'
+- package-ecosystem: npm
+  schedule:
+    interval: weekly
+    day: monday
+    time: 09:00
+    timezone: Europe/Zurich
+  open-pull-requests-limit: 5
+  groups:
+    minor-and-patch:
+      applies-to: version-updates
+      patterns:
+      - '*'
+      update-types:
+      - minor
+      - patch
+  directories:
+  - /pulumi-frp
   ignore:
   - dependency-name: typescript
     versions:

@@ -1,4 +1,4 @@
-FROM eclipse-temurin:26-jre
+FROM eclipse-temurin:27-jre
 
 ARG GRAPHHOPPER_VERSION=11.0
 
