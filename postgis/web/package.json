@@ -10,7 +10,7 @@
     "format": "prettier --write ."
   },
   "dependencies": {
-    "maplibre-gl": "6.15.0"
+    "maplibre-gl": "6.16.0"
   },
   "devDependencies": {
     "prettier": "3.9.10",
