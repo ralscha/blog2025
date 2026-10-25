@@ -1,4 +1,5 @@
-import maplibregl, { GeoJSONSource, LngLatBounds } from 'maplibre-gl';
+import * as maplibregl from 'maplibre-gl';
+import { GeoJSONSource, LngLatBounds } from 'maplibre-gl';
 import type { FeatureCollection as GeoJSONFeatureCollection, Geometry, Polygon } from 'geojson';
 
 type Mode = 'nearby' | 'clusters' | 'corridor' | 'geofence';

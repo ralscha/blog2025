@@ -3,7 +3,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { afterNextRender, Component, inject, signal } from '@angular/core';
 import { FormField, form } from '@angular/forms/signals';
 import type { FeatureCollection, LineString, Point } from 'geojson';
-import maplibregl, { type GeoJSONSource } from 'maplibre-gl';
+import * as maplibregl from 'maplibre-gl';
+import type { GeoJSONSource } from 'maplibre-gl';
 import { firstValueFrom } from 'rxjs';
 
 import { RouteApi, type RouteProfile, type RouteSummary } from './route-api';
