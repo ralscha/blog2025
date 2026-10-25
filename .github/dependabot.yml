@@ -1,0 +1,145 @@
+# Weekly version updates; security updates are enabled in repository settings.
+# Minor and patch releases are grouped; major releases remain separate.
+version: 2
+updates:
+- package-ecosystem: docker
+  directories:
+  - /google-cloud-run
+  - /graphhopper
+  - /mqtt
+  - /paradedb/sqlc
+  - /playwrightpdf/playwright-service
+  - /pulumi-frp
+  - /timescaledb/sqlc
+  schedule:
+    interval: weekly
+    day: monday
+    time: "09:00"
+    timezone: Europe/Zurich
+  open-pull-requests-limit: 5
+  groups:
+    minor-and-patch:
+      applies-to: version-updates
+      patterns:
+      - '*'
+      update-types:
+      - minor
+      - patch
+- package-ecosystem: docker-compose
+  directories:
+  - /graphhopper
+  - /paradedb
+  - /playwrightpdf
+  - /postgis
+  - /spring-security-bff
+  - /timescaledb
+  schedule:
+    interval: weekly
+    day: monday
+    time: "09:00"
+    timezone: Europe/Zurich
+  open-pull-requests-limit: 5
+  groups:
+    minor-and-patch:
+      applies-to: version-updates
+      patterns:
+      - '*'
+      update-types:
+      - minor
+      - patch
+- package-ecosystem: gomod
+  directories:
+  - /codemode
+  - /eino
+  - /errgroup
+  - /genetic-algorithm/helloworld
+  - /genetic-algorithm/tsp
+  - /gomcp
+  - /gomtls/client
+  - /gomtls/server
+  - /google-cloud-run
+  - /mqtt/publisher
+  - /oauth2-authorization-code/bff-backend
+  - /oauth2-authorization-code/provider
+  - /paradedb
+  - /playwrightpdf
+  - /postgis
+  - /resilience-go
+  - /supabase-realtime/tools/iss-broadcast
+  - /timescaledb
+  - /z3
+  schedule:
+    interval: weekly
+    day: monday
+    time: "09:00"
+    timezone: Europe/Zurich
+  open-pull-requests-limit: 5
+  groups:
+    minor-and-patch:
+      applies-to: version-updates
+      patterns:
+      - '*'
+      update-types:
+      - minor
+      - patch
+- package-ecosystem: maven
+  directories:
+  - /classfileapi
+  - /codemode-java/demo
+  - /codemode-java/demo-mcp-server
+  - /json-b
+  - /json-view
+  - /methanol/client
+  - /methanol/server
+  - /mqtt/subscriber
+  - /spel/basic
+  - /spel/spring
+  - /spring-security-bff
+  - /springgrpc/client
+  - /springgrpc/server
+  - /timefold
+  - /x509client/client
+  - /x509client/server
+  schedule:
+    interval: weekly
+    day: monday
+    time: "09:00"
+    timezone: Europe/Zurich
+  open-pull-requests-limit: 5
+  groups:
+    minor-and-patch:
+      applies-to: version-updates
+      patterns:
+      - '*'
+      update-types:
+      - minor
+      - patch
+- package-ecosystem: npm
+  directories:
+  - /angular-i18n-demo/built-in
+  - /angular-i18n-demo/transloco
+  - /angular-sw-update
+  - /genetic-algorithm/smart-rockets
+  - /graphhopper/frontend
+  - /maplibre/angular
+  - /oauth2-authorization-code/bff-frontend
+  - /oauth2-authorization-code/pkce-frontend
+  - /playwrightpdf/playwright-service
+  - /postgis/web
+  - /pulumi-frp
+  - /supabase-realtime
+  - /supabase-todo/client
+  schedule:
+    interval: weekly
+    day: monday
+    time: "09:00"
+    timezone: Europe/Zurich
+  open-pull-requests-limit: 5
+  groups:
+    minor-and-patch:
+      applies-to: version-updates
+      patterns:
+      - '*'
+      update-types:
+      - minor
+      - patch
