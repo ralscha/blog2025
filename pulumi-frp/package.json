@@ -3,7 +3,7 @@
   "main": "index.ts",
   "devDependencies": {
     "@types/node": "26.6.5",
-    "typescript": "6.0.3"
+    "typescript": "7.0.2"
   },
   "dependencies": {
     "@pulumi/hcloud": "1.43.2",
