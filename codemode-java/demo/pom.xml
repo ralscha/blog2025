@@ -19,7 +19,7 @@
     <java.version>25</java.version>
     <spring-ai.version>2.0.2</spring-ai.version>
     <mcp-sdk.version>2.1.0</mcp-sdk.version>
-    <graal.version>25.4.4.1.1</graal.version>
+    <graal.version>25.5.5.0.3</graal.version>
     <tool-search-tool.version>2.1.0</tool-search-tool.version>
   </properties>
 
@@ -106,7 +106,7 @@
             <path>
               <groupId>com.google.errorprone</groupId>
               <artifactId>error_prone_core</artifactId>
-              <version>2.51.0</version>
+              <version>2.52.0</version>
             </path>
           </annotationProcessorPaths>
         </configuration>
