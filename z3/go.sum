@@ -1,2 +1,6 @@
-github.com/Z3Prover/z3/src/api/go v0.0.0-20261031153856-8fbb275aba04 h1:EHzOEqc6wmIWXbIQayB+i0yvVPFAkDOyEdaGtR4Ta/M=
-github.com/Z3Prover/z3/src/api/go v0.0.0-20261031153856-8fbb275aba04/go.mod h1:4uqsFzLnAPPSuF7CqYgRd7/UeSBfz8tCtTSocv4uzkU=
+github.com/Z3Prover/z3/src/api/go v0.0.0-20261111191554-9e450b2e08d8 h1:tLvPbXgRQMMpGxOVV5MRk7dQRVreCrSH57oVQBzIAaA=
+github.com/Z3Prover/z3/src/api/go v0.0.0-20261111191554-9e450b2e08d8/go.mod h1:4uqsFzLnAPPSuF7CqYgRd7/UeSBfz8tCtTSocv4uzkU=
+github.com/Z3Prover/z3/src/api/go v0.0.0-20261112152241-400f52ea37bd h1:irXy6+efW2eZA9ajYnIhn9jjMRLMzeWYxUAaZDJc0lM=
+github.com/Z3Prover/z3/src/api/go v0.0.0-20261112152241-400f52ea37bd/go.mod h1:4uqsFzLnAPPSuF7CqYgRd7/UeSBfz8tCtTSocv4uzkU=
+github.com/Z3Prover/z3/src/api/go v0.0.0-20261113112138-708879ef2359 h1:9w24rNnF4LhoPnB7FsIC7Bw9mC4OdXz8FKmZ5zu2oYI=
+github.com/Z3Prover/z3/src/api/go v0.0.0-20261113112138-708879ef2359/go.mod h1:4uqsFzLnAPPSuF7CqYgRd7/UeSBfz8tCtTSocv4uzkU=

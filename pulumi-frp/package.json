@@ -7,6 +7,6 @@
   },
   "dependencies": {
     "@pulumi/hcloud": "1.43.4",
-    "@pulumi/pulumi": "3.273.0"
+    "@pulumi/pulumi": "3.276.0"
   }
 }
