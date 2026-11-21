@@ -6,7 +6,7 @@ require (
 	github.com/cloudwego/eino v0.9.23
 	github.com/cloudwego/eino-ext/components/model/openai v0.1.13
 	github.com/cloudwego/eino-ext/components/tool/mcp v0.0.9
-	github.com/mark3labs/mcp-go v1.5.0
+	github.com/mark3labs/mcp-go v1.6.0
 	gopkg.in/yaml.v3 v3.0.1
 )
 
@@ -43,7 +43,7 @@ require (
 	github.com/yargevad/filepathx v1.0.0 // indirect
 	github.com/yosida95/uritemplate/v3 v3.0.2 // indirect
 	golang.org/x/arch v0.33.0 // indirect
-	golang.org/x/exp v0.0.0-20261113113407-e3970619a1a4 // indirect
+	golang.org/x/exp v0.0.0-20261120182113-8801fbdfac81 // indirect
 	golang.org/x/sys v0.50.0 // indirect
 	golang.org/x/text v0.44.0 // indirect
 )
